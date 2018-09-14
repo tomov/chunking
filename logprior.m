@@ -2,7 +2,7 @@
 %
 function logp = logprior(H, D, h)
     logp = 0;
-    cnt = zeros(1, max(H.c));
+    cnt = zeros(size(H.cnt));
     cnt(H.c(1)) = 1;
     for i = 2:D.G.N
         c = H.c(i);
