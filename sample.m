@@ -1,9 +1,9 @@
-function [samples] = sample(D, h)
+function [samples, post] = sample(D, h)
     %
     % TODO write out generative model
 
-    nsamples = 100;
-    burnin = 100;
+    nsamples = 10;
+    burnin = 10;
     lag = 10;
 
     H = init_H(D, h);
@@ -12,37 +12,37 @@ function [samples] = sample(D, h)
     % Roberts & Rosenthal (2009)
     for n = 1:nsamples * lag + burnin
         for i = 1:D.G.N
-            logpost = @(c_i) logpost_c_i(c_i, i, H, D, h);
+            logp = @(c_i) logpost_c_i(c_i, i, H, D, h);
             proprnd = @(c_i_old) proprnd_c_i(c_i_old, i, H, D, h);
             logprop = @(c_i_new, c_i_old) logprop_c_i(c_i_new, c_i_old, i, H, D, h);
 
-            [c_i, accept] = mhsample(H.c(i), 1, 'logpdf', logpost, 'proprnd', proprnd, 'logproppdf', logprop);
+            [c_i, accept] = mhsample(H.c(i), 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
             H = update_c_i(c_i, i, H);
         end
 
-        logpost = @(p) logpost_p(p, H, D, h);
+        logp = @(p) logpost_p(p, H, D, h);
         proprnd = @(p_old) proprnd_p(p_old, H, D, h);
         logprop = @(p_new, p_old) logprop_p(p_new, p_old, H, D, h);
 
-        [p, accept] = mhsample(H.p, 1, 'logpdf', logpost, 'proprnd', proprnd, 'logproppdf', logprop); % TODO adaptive
+        [p, accept] = mhsample(H.p, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop); % TODO adaptive
         H.p = p;
 
-        [q, accept] = mhsample(H.q, 1, 'logpdf', logpost, 'proprnd', proprnd, 'logproppdf', logprop);
+        [q, accept] = mhsample(H.q, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
         H.q = q;
 
-        [hp, accept] = mhsample(H.hp, 1, 'logpdf', logpost, 'proprnd', proprnd, 'logproppdf', logprop);
+        [hp, accept] = mhsample(H.hp, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
         H.hp = hp;
 
-        [tp, accept] = mhsample(H.tp, 1, 'logpdf', logpost, 'proprnd', proprnd, 'logproppdf', logprop);
+        [tp, accept] = mhsample(H.tp, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
         H.tp = tp;
 
         for k = 1:H.N
             for l = 1:k-1
-                logpost = @(e) logpost_E_k_l(e, k, l, H, D, h);
+                logp = @(e) logpost_E_k_l(e, k, l, H, D, h);
                 proprnd = @(e_old) proprnd_E_k_l(e_old, k, l, H, D, h);
                 logprop = @(e_new, e_old) logprop_E_k_l(e_new, e_old, k, l, H, D, h);
 
-                [e, accept] = mhsample(H.E(k,l), 1, 'logpdf', logpost, 'proprnd', proprnd, 'logproppdf', logprop);  % TODO adaptive
+                [e, accept] = mhsample(H.E(k,l), 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);  % TODO adaptive
                 H.E(k,l) = e;
                 H.E(l,k) = e;
             end
@@ -51,6 +51,7 @@ function [samples] = sample(D, h)
         % TODO bridges
 
         samples(n) = H;
+        post(n) = logpost(H,D,h);
     end
 
     %samples = samples(burnin:lag:end);

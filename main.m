@@ -6,4 +6,9 @@ H = init_H(D, h);
 
 rng default;
 
-samples = sample(D, h);
+[samples, post] = sample(D, h);
+
+[~,i] = max(post);
+H = samples(i);
+
+H
