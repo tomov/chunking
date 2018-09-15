@@ -1,7 +1,8 @@
 function D = init_D_from_txt(filename)
     f = fopen(filename, 'r');
 
-    D.name = freadline(f, '%s');
+    D.name = fgets(f);
+    D.name = strip(D.name);
     A = freadline(f, '%d %d');
     N = A(1); M = A(2);
     D.G.N = N;

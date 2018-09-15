@@ -22,10 +22,12 @@ function H = init_H(D, h)
 
     H.p = betarnd(1,1); % TODO const 
     H.q = betarnd(1,1); % TODO const 
-    H.hp = betarnd(1,1); % TODO const 
     H.tp = betarnd(1,1); % TODO const 
 
+    % TODO H graph
+    %{
     H.N = length(cnt);
+    H.hp = betarnd(1,1); % TODO const 
     H.E = zeros(H.N, H.N); % TODO sparse ?
     for k = 1:H.N
         for l = 1:k-1
@@ -35,6 +37,7 @@ function H = init_H(D, h)
             end
         end
     end
+    %}
 
     % TODO bridges
 end

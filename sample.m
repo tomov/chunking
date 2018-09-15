@@ -2,8 +2,8 @@ function [samples, post] = sample(D, h)
     %
     % TODO write out generative model
 
-    nsamples = 10000;
-    burnin = 0;
+    nsamples = 1000;
+    burnin = 1;
     lag = 1;
 
     H = init_H(D, h);
@@ -30,11 +30,13 @@ function [samples, post] = sample(D, h)
         [q, accept] = mhsample(H.q, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
         H.q = q;
 
-        [hp, accept] = mhsample(H.hp, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
-        H.hp = hp;
-
         [tp, accept] = mhsample(H.tp, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
         H.tp = tp;
+
+        % TODO H graph
+        %{
+        [hp, accept] = mhsample(H.hp, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
+        H.hp = hp;
 
         for k = 1:H.N
             for l = 1:k-1
@@ -47,6 +49,7 @@ function [samples, post] = sample(D, h)
                 H.E(l,k) = e;
             end
         end
+        %}
 
         % TODO bridges
 
@@ -54,7 +57,7 @@ function [samples, post] = sample(D, h)
         post(n) = logpost(H,D,h);
     end
 
-    %samples = samples(burnin:lag:end);
+    samples = samples(burnin:lag:end);
 end
 
 
@@ -68,7 +71,7 @@ end
 % Update H.c(i) and counts
 % TODO makes copy of H -- super slow...
 %
-function H = update_c_i(c_i, i, H)
+function H = update_c_i(c_i, i, H) % TODO FIXME H.N is broken!!
     H.cnt(H.c(i)) = H.cnt(H.c(i)) - 1;
     H.c(i) = c_i;
     if c_i <= length(H.cnt)
