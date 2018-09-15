@@ -2,9 +2,9 @@ function [samples, post] = sample(D, h)
     %
     % TODO write out generative model
 
-    nsamples = 100;
-    burnin = 100;
-    lag = 20;
+    nsamples = 10000;
+    burnin = 0;
+    lag = 1;
 
     H = init_H(D, h);
 
