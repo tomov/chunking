@@ -19,7 +19,7 @@ function D = init_D_from_txt(filename)
     n = freadline(f, '%d');
     for t = 1:n
         A = freadline(f, '%d %d');
-        s = A(1); m = A(2);
+        s = A(1); g = A(2);
         D.tasks.s = [D.tasks.s s];
         D.tasks.g = [D.tasks.g g];
     end

@@ -17,8 +17,6 @@ function logp = logprior(H, D, h)
 
     logp = logp + log(betapdf(H.p,1,1)) + log(betapdf(H.q,1,1)) + log(betapdf(H.tp,1,1)); % TODO const
 
-    % TODO H graph
-    %{
     for k = 1:H.N
         for l = 1:k-1
             if H.E(k,l)
@@ -30,7 +28,6 @@ function logp = logprior(H, D, h)
     end
 
     logp = logp + log(betapdf(H.hp,1,1));
-    %}
      
     % TODO bridges
 

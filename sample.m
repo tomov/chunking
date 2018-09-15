@@ -1,10 +1,18 @@
-function [samples, post] = sample(D, h)
+function [samples, post] = sample(D, h, nsamples, burnin, lag)
     %
     % TODO write out generative model
 
-    nsamples = 1000;
-    burnin = 1;
-    lag = 1;
+    if ~exist('nsamples', 'var')
+        nsamples = 10000;
+    end
+
+    if ~exist('burnin', 'var')
+        burnin = 1; % no burn-in
+    end
+
+    if ~exist('lag', 'var')
+        lag = 1;
+    end
 
     H = init_H(D, h);
 
@@ -33,8 +41,6 @@ function [samples, post] = sample(D, h)
         [tp, accept] = mhsample(H.tp, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
         H.tp = tp;
 
-        % TODO H graph
-        %{
         [hp, accept] = mhsample(H.hp, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
         H.hp = hp;
 
@@ -49,7 +55,6 @@ function [samples, post] = sample(D, h)
                 H.E(l,k) = e;
             end
         end
-        %}
 
         % TODO bridges
 
