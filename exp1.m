@@ -1,15 +1,10 @@
-
+% TODO dedupe with demo1.m
 
 clear all;
 
-%{
 h.alpha = 1.5;
 
-D(1) = init_D_from_txt('hourglass.txt');
-D(2) = init_D_from_txt('solway1.txt');
-D(3) = init_D_from_txt('solway2.txt');
-D(4) = init_D_from_txt('schapiro.txt');
-D(5) = init_D_from_txt('lynn.txt');
+D(1) = init_D_from_txt('exp1.txt');
 
 for i = 1:length(D)
     tic 
@@ -21,9 +16,7 @@ for i = 1:length(D)
     toc
 end
 
-save demo1.mat
-%}
-load demo1.mat;
+save('exp1.mat');
 
 figure;
 
@@ -43,16 +36,3 @@ for i = 1:length(D)
     end
 end
 
-%figure;
-%        subplot(length(D),5, (i-1)*5+j);
-%        plot_H(H(i,j), D(i));
-%        if j == 1
-%            ylabel(D(i).name);
-%        end
-
-%D(2) = init_D_from_csv('/Users/momchil/Dropbox/Research/chunking/occluder3D_data/100931.csv');
-
-
-%H = MAP_H(D, h);
-%plot_H(H, D);
-%title(D.name);
