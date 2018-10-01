@@ -1,10 +1,6 @@
 function H = init_H(D, h)
     % Initializes a hierarchy H based on data D and hyperparameters h
     %
-    % H.c = clusters / state chunks i.e. H.c(i) = state chunk of state i
-    % H.cnt = number of states in each chunk
-    % H.p =  TODO finish
-    %
 
     % Chinese restaurant process
     H.c = [1];

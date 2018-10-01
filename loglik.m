@@ -1,7 +1,6 @@
-% P(D|H)
-%
 function logp = loglik(H, D, h)
-    % TODO write formula
+    % P(D|H) = P(G,tasks|H) = P(tasks|G,H) P(G|H) 
+    %
 
     logp = 0;
     for i = 1:D.G.N

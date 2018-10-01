@@ -1,6 +1,8 @@
-% P(H)
-%
 function logp = logprior(H, D, h)
+    %
+    % P(H)
+    %
+
     logp = 0;
     cnt = zeros(size(H.cnt));
     cnt(H.c(1)) = 1;

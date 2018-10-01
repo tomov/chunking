@@ -1,6 +1,30 @@
 function [samples, post] = sample(D, h, nsamples, burnin, lag)
     %
-    % TODO write out generative model
+    % Draw samples from posterior P(H|D) using Metropolis-Hastings-within-Gibbs sampling.
+    % hierarchy H = (c, p, q, p', p", E', V')
+    % data D = (G, tasks)
+    % graph G = (E, V)
+    % tasks = (task_1, task_2 ...)
+    % task = (s, g)
+    %
+    % Generative model:
+    %
+    % P(H):
+    % state chunks = c ~ CRP
+    % within-cluster density = p ~ Beta
+    % across-cluster density = pq, q ~ Beta
+    % H graph density = p' = hp ~ Beta
+    % probability goal state is in different chunk from starting state = p" = tp ~ Beta
+    % 
+    % P(G|H):
+    % E(i,j) ~ Bern(p) if c(i) == c(j)
+    % E(i,j) ~ Bern(pq) if c(i) != c(j)
+    % 
+    % P(tasks|G,H) = product P(task|G,H)
+    % P(task|G,H):
+    % starting state = s ~ Cat(all vertices in G)
+    % goal state = g ~ Cat(1,1,1,1... for all i s.t. c(i) == c(s), ... p", p", p"... for all i s.t. c(i) != c(s)
+    %
 
     if ~exist('nsamples', 'var')
         nsamples = 10000;
@@ -16,7 +40,6 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
 
     H = init_H(D, h);
 
-    % Metropolis-Hastings-within-Gibbs sampling
     % Roberts & Rosenthal (2009)
     for n = 1:nsamples * lag + burnin
         for i = 1:D.G.N
