@@ -17,20 +17,8 @@ function logp = logprior(H, D, h)
     end
     assert(isequal(cnt, H.cnt));
 
-    logp = logp + log(betapdf(H.p,1,1)) + log(betapdf(H.q,1,1)) + log(betapdf(H.tp,1,1)); % TODO const
+    logp = logp + log(betapdf(H.p,1,1)) + log(betapdf(H.q,1,1)); % TODO const
 
-    for k = 1:H.N
-        for l = 1:k-1
-            if H.E(k,l)
-                logp = logp + log(H.hp);
-            else
-                logp = logp + log(1 - H.hp);
-            end
-        end
-    end
-
-    logp = logp + log(betapdf(H.hp,1,1));
-     
     % TODO bridges
 
 end

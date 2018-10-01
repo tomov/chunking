@@ -2,10 +2,8 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
     %
     % Draw samples from posterior P(H|D) using Metropolis-Hastings-within-Gibbs sampling.
     % hierarchy H = (c, p, q, p', p", E', V')
-    % data D = (G, tasks)
+    % data D = (G)
     % graph G = (E, V)
-    % tasks = (task_1, task_2 ...)
-    % task = (s, g)
     %
     % Generative model:
     %
@@ -13,17 +11,10 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
     % state chunks = c ~ CRP
     % within-cluster density = p ~ Beta
     % across-cluster density = pq, q ~ Beta
-    % H graph density = p' = hp ~ Beta
-    % probability goal state is in different chunk from starting state = p" = tp ~ Beta
     % 
     % P(G|H):
     % E(i,j) ~ Bern(p) if c(i) == c(j)
     % E(i,j) ~ Bern(pq) if c(i) != c(j)
-    % 
-    % P(tasks|G,H) = product P(task|G,H)
-    % P(task|G,H):
-    % starting state = s ~ Cat(all vertices in G)
-    % goal state = g ~ Cat(1,1,1,1... for all i s.t. c(i) == c(s), ... p", p", p"... for all i s.t. c(i) != c(s)
     %
 
     if ~exist('nsamples', 'var')
@@ -61,24 +52,6 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
         [q, accept] = mhsample(H.q, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
         H.q = q;
 
-        [tp, accept] = mhsample(H.tp, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
-        H.tp = tp;
-
-        [hp, accept] = mhsample(H.hp, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
-        H.hp = hp;
-
-        for k = 1:H.N
-            for l = 1:k-1
-                logp = @(e) logpost_E_k_l(e, k, l, H, D, h);
-                proprnd = @(e_old) proprnd_E_k_l(e_old, k, l, H, D, h);
-                logprop = @(e_new, e_old) logprop_E_k_l(e_new, e_old, k, l, H, D, h);
-
-                [e, accept] = mhsample(H.E(k,l), 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);  % TODO adaptive
-                H.E(k,l) = e;
-                H.E(l,k) = e;
-            end
-        end
-
         % TODO bridges
 
         samples(n) = H;
@@ -99,7 +72,7 @@ end
 % Update H.c(i) and counts
 % TODO makes copy of H -- super slow...
 %
-function H = update_c_i(c_i, i, H) % TODO FIXME H.N is broken!!
+function H = update_c_i(c_i, i, H)
     H.cnt(H.c(i)) = H.cnt(H.c(i)) - 1;
     H.c(i) = c_i;
     if c_i <= length(H.cnt)
@@ -173,31 +146,3 @@ function logp = logprop_p(p_new, p_old, H, D, h)
     logp = log(normpdf(p_new, p_old, 1)) - log(Z);
 end
 
-
-% P(H|D) for updates of E
-%
-function logp = logpost_E_k_l(e, k, l, H, D, h)
-    H.E(k,l) = e;
-    H.E(l,k) = e;
-    logp = logpost(H, D, h);
-end
-
-% proposal PMF for E
-% keep the same, or draw from prior w/ some small prob
-%
-function P = propP_E_k_l(e_old, k, l, H, D, h)
-    P = [1 - H.hp, H.hp] * 0.3; % draw from prior w/ some small prob
-    P(e_old + 1) = P(e_old + 1) + 0.7; % or keep the same TODO consts
-end
-
-% proposal for E
-%
-function e_new = proprnd_E_k_l(e_old, k, l, H, D, h)
-    P = propP_E_k_l(e_old, k, l, H, D, h);
-    e_new = find(mnrnd(1, P)) - 1;
-end
-
-function logp = logprop_E_k_l(e_new, e_old, k, l, H, D, h) % TODO merge w/ proprnd
-    P = propP_E_k_l(e_old, k, l, H, D, h);
-    logp = log(P(e_new + 1));
-end
