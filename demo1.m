@@ -1,7 +1,8 @@
 
 
-%clear all;
+clear all;
 
+%{
 h.alpha = 1.5;
 
 D(1) = init_D_from_txt('hourglass.txt');
@@ -21,8 +22,8 @@ for i = 5:length(D)
 end
 
 save demo1.mat
-%load four.mat;
-%load four_repro.mat;
+%}
+load demo1.mat;
 
 figure;
 
