@@ -1,0 +1,88 @@
+<html>
+<head>
+    <title> Subway Navigation </title>
+    <!--Load in ajax and jquery related API's-->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="jquery-1.10.2.min.js"></script>
+</head>
+
+
+<body onkeydown="checkKeyPressed()">
+
+  <div  id = "captcha" data-type="image" class="g-recaptcha" data-sitekey="6Lcv-WkUAAAAAEdcoHLA76IUW4_6tUkw1e-L5nUy" data-callback="correctCaptcha" style="position:absolute; top:650px;left:600px;"></div>
+
+
+  <div id="consent_page" style = "font-size: 20px; display: block;" align = "center" hidden>
+      <h3>Consent form for participation in this online experiment</h3>
+      <p>
+          Designed by: Momchil Tomov and Rohan Hundia<br>
+      </p>
+      <p>Before you decide whether you want to take part, it is important for you to <br>read the following information carefully.</p>
+      <p>The study provides information about the nature of learning and decision making</p>
+      <p>The study will take about <b>25 minutes on average</b>. You will <b>receive $3</b> for your participation.</p>
+      <p>If you have any suggestions on how we can improve this or future HITs, <br> please do not hesitate to get in touch.</p>
+      <br>
+      <p>By clicking on the button below, you agree to the following:</p>
+      <p>I have read the above information.</p>
+      <p>I understand that I am free to withdraw from the study without penalty if I so wish.</p>
+      <p>I understand that my information will be treated as strictly confidential and handled in <br>accordance with the Data Protection Act 1998. </p>
+      <p>I understand that the information I have submitted will be published as a report; <br>confidentiality and anonymity will be maintained.</p>
+      <br>
+      <button type="button" name="button" style="font-size: 22px;" id="agree" ;>Agree</button>
+  </div>
+
+
+  <div id="instruction_page" style="font-size: 22px; display:block;" align = "center" hidden>
+      <h3>Welcome: </h3>
+      <p> TODO write subway story</p>
+      <p> Once you reach the goal planet, press the <b>'SPACE' key</b> to deliver the package.<br> A 'congratulations' message will appear and you will automatically proceed to the next trial. </p>
+      <p> Please put your screen in full-size mode and disable any ad-blockers before starting the experiment.</p>
+      <!-- <img src="images/demo1.png" height="320" width="690"> <br> -->
+      <button type="button" id="continue" style="font-size: 22px;">Continue</button>
+  </div>
+
+
+  <div id = "new_trial_page" class="trial_page" hidden>
+      <p>From</p>
+      <h1 id="from_state">FROM</h1>
+      <p>go to</p>
+      <h1 id="to_state">TO</h1>
+  </div>
+
+
+  <div id = "trial_page" class="trial_page" hidden>
+      <h1 id="cur_state" style="position: absolute; left: 0; top: 30%; width: 100%; text-align: center;">CUR STATE</h1>
+
+      <h3 id="right_state" style="position: absolute; left: 50%; top: 30%; width: 40%; text-align: center;">RIGHT STATE</h3>
+      <h3 id="up_state" style="position: absolute; left: 0; top: 15%; width: 100%; text-align: center;">UP STATE</h3>
+      <h3 id="left_state" style="position: absolute; left: 10%; top: 30%; width: 40%; text-align: center;">LEFT STATE</h3>
+      <h3 id="down_state" style="position: absolute; left: 0; top: 45%; width: 100%; text-align: center;">DOWN STATE</h3>
+
+      <p id="goal_state" style="position: absolute; left: 10%; top: 10%; text-align: left;">Goal</p>
+
+      <p id="message" style="position: absolute; left: 0; top: 60%; width: 100%; text-align: center;">message</p>
+      <p id="countdown" style="position: absolute; left: 0; top: 70%; width: 100%; text-align: center;">countdown</p>
+  </div>
+
+  <div id = "test_page" class="trial_page">
+      <h3>For the second part, ... TODO</h3>
+  </div>
+
+  <div id = "final_page">
+      <h3>Congratulations! You have completed the experiment.</h3>
+  </div>
+
+
+
+  <script type="text/javascript">
+      $("#consent_page").hide();
+      $("#instruction_page").hide();
+      $("#captcha").hide();
+      $("#new_trial_page").hide();
+      $("#trial_page").show();
+      $("#test_page").hide();
+      $("#final_page").hide();
+  </script>
+
+</body>
+</html>
