@@ -39,6 +39,10 @@
       <p> Please put your screen in full-size mode and disable any ad-blockers before starting the experiment.</p>
       <!-- <img src="images/demo1.png" height="320" width="690"> <br> -->
       <button type="button" id="continue" style="font-size: 22px;">Continue</button>
+
+      <textarea id="experiment">
+          TODO
+      </textarea>
   </div>
 
 
@@ -61,11 +65,12 @@
       <p id="goal_state" style="position: absolute; left: 10%; top: 10%; text-align: left;">Goal</p>
 
       <p id="message" style="position: absolute; left: 0; top: 60%; width: 100%; text-align: center;">message</p>
-      <p id="countdown" style="position: absolute; left: 0; top: 70%; width: 100%; text-align: center;">countdown</p>
+      <p id="countdown" style="position: absolute; left: 0; top: 90%; width: 100%; text-align: center;">countdown</p>
   </div>
 
   <div id = "test_page" class="trial_page">
       <h3>For the second part, ... TODO</h3>
+        <button type ="button" name ="button" id ="advance"; style="position:absolute; top:25vw; left: 50vw;"> Advance </button>
   </div>
 
   <div id = "final_page">
@@ -76,13 +81,45 @@
 
   <script type="text/javascript">
       $("#consent_page").hide();
-      $("#instruction_page").hide();
       $("#captcha").hide();
+      $("#instruction_page").show();
       $("#new_trial_page").hide();
-      $("#trial_page").show();
+      $("#trial_page").hide();
       $("#test_page").hide();
       $("#final_page").hide();
+
+  $("#agree").click(function () {
+    $("#captcha").show();
+
+    var response = grecaptcha.getResponse();
+    var correctCaptcha = function(response) {
+        console.log(response);
+        if (response.length == 0) console.log("You can't proceed!");
+        else {
+          $("#captcha").hide();
+          $("#consent_page").hide();
+          $("#instruction_page").show();
+        }
+    };
+
+    window.correctCaptcha = correctCaptcha;
+  })
+
+  $("#continue").click(function () {
+    $("#instruction_page").hide();
+      nextTrial();
+  })
+
+  $("#advance").click(function () {
+    $("#test_page").hide();
+      nextTrial();
+  })
+
+
   </script>
+  <script type ="text/javascript" src ="exp.js"></script>
+  <script src="https://www.google.com/recaptcha/api.js"></script>
+
 
 </body>
 </html>
