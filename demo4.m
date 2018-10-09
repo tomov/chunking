@@ -1,26 +1,19 @@
-% hourglass, solway, schapiro -- see demo1 branch; this is outdated...
+% subway experiment simulation
 
-clear all;
-
-%{
 h.alpha = 1.5;
 
-D(1) = init_D_from_txt('hourglass.txt');
-D(2) = init_D_from_txt('solway1.txt');
-D(3) = init_D_from_txt('solway2.txt');
-D(4) = init_D_from_txt('schapiro.txt');
+
+D(1) = init_D_from_txt('subway9.txt');
+D(2) = init_D_from_txt('subway9_wt.txt');
 
 for i = 1:length(D)
-    [samples, post] = sample(D(i), h);
+    [samples, post] = sample(D(i), h, 1000);
     for j = 1:length(samples)
         H(i,j) = samples(j);
         P(i,j) = post(j);
     end
 end
-%}
 
-%load four.mat;
-load four_repro.mat;
 
 figure;
 

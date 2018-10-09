@@ -34,6 +34,12 @@ function D = init_D_from_csv(filename)
 
         s = T.Displayed(i);
         g = T.Goals(i);
+        if iscell(s)
+            s = str2num(s{1});
+        end
+        if iscell(g)
+            g = str2num(g{1});
+        end
         D.tasks.s = [D.tasks.s s];
         D.tasks.g = [D.tasks.g g];
         D.G.N = max([D.G.N s g]);

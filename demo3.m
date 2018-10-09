@@ -1,3 +1,5 @@
+% data from Rohan's chunking experiment
+
 clear all;
 
 h.alpha = 1.5;

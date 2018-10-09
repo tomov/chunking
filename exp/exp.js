@@ -302,7 +302,7 @@ function checkKeyPressed(e) {
 function logTrial() {
     var RT_str = (RTs.toString()).replace(/,/g, ' ');
     var path_str = (path.toString()).replace(/,/g, ' ');
-    var key_str = (path.toString()).replace(/,/g, ' ');
+    var key_str = (keys.toString()).replace(/,/g, ' ');
     var row = "A," + subj_id + "," + stage + "," + start.toString() + "," + goal.toString() + "," + path_str + "," + path.length.toString() + "," + RT_str + "," + key_str + "," + RT_tot.toString() + "\n";
     console.log(row);
     $.post("results_data.php", {postresult: row, postfile: file_name});
