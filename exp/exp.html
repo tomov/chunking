@@ -4,6 +4,8 @@
     <!--Load in ajax and jquery related API's-->
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="jquery-1.10.2.min.js"></script>
+    <script type ="text/javascript" src ="exp.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
 </head>
 
 
@@ -40,8 +42,32 @@
       <!-- <img src="images/demo1.png" height="320" width="690"> <br> -->
       <button type="button" id="continue" style="font-size: 22px;">Continue</button>
 
-      <textarea id="experiment">
-          TODO
+      <br/><br/>
+      <textarea id="experiment" rows=30 cols=20>
+            7
+            2 7 -1 -1
+            3 -1 1 -1
+            -1 4 2 -1
+            -1 5 -1 3
+            -1 -1 6 4
+            5 -1 7 -1
+            6 -1 -1 1
+            PARIS
+            MOSCOW
+            BERLIN
+            LONDON
+            PRAGUE
+            SOFIA
+            ROME
+            3
+            -1 -1 5
+            2 4 5
+            4 6 5
+            4
+            2 6 2
+            6 2 2
+            4 7 2
+            7 4 2
       </textarea>
   </div>
 
@@ -78,7 +104,6 @@
   </div>
 
 
-
   <script type="text/javascript">
       $("#consent_page").hide();
       $("#captcha").hide();
@@ -106,19 +131,15 @@
   })
 
   $("#continue").click(function () {
-    $("#instruction_page").hide();
-      nextTrial();
+      $("#instruction_page").hide();
+      initExp();
   })
 
   $("#advance").click(function () {
-    $("#test_page").hide();
+      $("#test_page").hide();
       nextTrial();
   })
-
-
   </script>
-  <script type ="text/javascript" src ="exp.js"></script>
-  <script src="https://www.google.com/recaptcha/api.js"></script>
 
 
 </body>

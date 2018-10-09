@@ -1,25 +1,33 @@
-exp = readExp();
-exp = genExp(exp);
-
-subjid = "1" + Math.random().toString().substring(3,8);
-file_name = subj_id + ".csv";
-
-stage = "train";
-trial_idx = -1;
 in_trial = false;
 
-RTs = [];
-path = [];
-cur = -1;
-start = -1;
-goal = -1;
+function initExp() {
+    console.log("initExp");
 
-nextTrial();
+    exp = readExp();
+    exp = genExp(exp);
+
+    subj_id = "1" + Math.random().toString().substring(3,8);
+    file_name = subj_id + ".csv";
+
+    stage = "train";
+    trial_idx = -1;
+    in_trial = false;
+
+    RTs = [];
+    path = [];
+    cur = -1;
+    start = -1;
+    goal = -1;
+
+    //nextTrial();
+}
 
 
 // Read experiment template from textarea
 //
 function readExp() {
+    console.log("readExp");
+
     var exp = {};
     var lines = $("#experiment").val().split("\n");
     exp.N = parseInt(lines[0], 10);
@@ -35,6 +43,13 @@ function readExp() {
         exp.adj.push(b);
     }
     l = exp.N + 1; // current line
+
+    // read state names
+    exp.names = [];
+    for (var i = 0; i < exp.N; i++) {
+        exp.names.push(lines[l].trim());
+        l++;
+    }
 
     // read training tasks
     exp.ntrain = parseInt(lines[l], 10);
@@ -64,18 +79,13 @@ function readExp() {
         exp.test.push(task);
     }
 
-    // read state names
-    exp.names = [];
-    for (var i = 0; i < exp.N; i++) {
-        exp.names.push(lines[l].trim());
-        l++;
-    }
-
     return exp;
 }
 
 
 function genExp(exp) {
+    console.log("genExp");
+
     // shuffle state names
     exp.names.sort(function(a, b) {return 0.5 - Math.random()});
 
@@ -119,8 +129,32 @@ function genTrials(desc) {
     return trials;
 }
 
+// Fisher-Yates (aka Knuth) Shuffle, from 
+// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+//
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
 
 function nextTrial() {
+    console.log("nextTrial " + trial_idx);
+
     $("#trial_page").hide();
     $("#message").text("");
     in_trial = false;
@@ -132,7 +166,7 @@ function nextTrial() {
         trials = exp.test_trials;
     }
 
-    if trial_idx >= trials.length) {
+    if (trial_idx >= trials.length) {
         if (stage == "train") {
             // kick off test phase
             stage = "test";
@@ -216,6 +250,7 @@ function checkKeyPressed(e) {
                 $("#message").css("color", "green");
                 $("#message").text("SUCCESS!!");
                 logTrial();
+                in_trial = false;
                 sleep(1000).then(() => {
                     nextTrial();
                 });
@@ -225,15 +260,12 @@ function checkKeyPressed(e) {
             }
         }
     }
-
-    // at some poin t
-    // in_trial = false;
 }
 
 
 function logTrial() {
-    RT_str = (RTs.toString()).replace(/,/g/," ");
-    path_str = (path.toString()).replace(/,/g/," ");
+    RT_str = (RTs.toString()).replace(",", " ");
+    path_str = (path.toString()).replace(",", " ");
     console.log(path_str);
     console.log(RT_str);
     row = "A," + subj_id + "," + stage + "," + start.toString() + "," + goal.toString() + "," + path_str + "," + RT_str + "," + RT_tot.toString() + "\n";
