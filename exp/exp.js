@@ -20,6 +20,8 @@ function initExp() {
     start = -1;
     goal = -1;
 
+    $.post("results_data.php", {postresult: "group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot\n", postfile: file_name })
+
     nextTrial();
 }
 
@@ -173,10 +175,6 @@ function nextTrial() {
             stage = "test";
             trial_idx = -1;
             $("#test_page").show();
-            sleep(5000).then(() => {
-                $("#test_page").hide();
-                nextTrial();
-            });
         } else {
             // fin
             $("#final_page").show();
@@ -302,10 +300,10 @@ function checkKeyPressed(e) {
 
 
 function logTrial() {
-    var RT_str = (RTs.toString()).replace(/,/g, '-');
-    var path_str = (path.toString()).replace(/,/g, '-');
-    var key_str = (path.toString()).replace(/,/g, '-');
-    var row = "A," + subj_id + "," + stage + "," + start.toString() + "," + goal.toString() + "," + path_str + "," + RT_str + "," + key_str + "," + RT_tot.toString() + "\n";
+    var RT_str = (RTs.toString()).replace(/,/g, ' ');
+    var path_str = (path.toString()).replace(/,/g, ' ');
+    var key_str = (path.toString()).replace(/,/g, ' ');
+    var row = "A," + subj_id + "," + stage + "," + start.toString() + "," + goal.toString() + "," + path_str + "," + path.length.toString() + "," + RT_str + "," + key_str + "," + RT_tot.toString() + "\n";
     console.log(row);
     $.post("results_data.php", {postresult: row, postfile: file_name});
 }
