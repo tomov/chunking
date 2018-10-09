@@ -14,6 +14,7 @@ function initExp() {
     in_trial = false;
 
     RTs = [];
+    keys = [];
     path = [];
     cur = -1;
     start = -1;
@@ -231,18 +232,19 @@ function stateColor(color) {
 
 function checkKeyPressed(e) {
     e = e || window.event;
-    console.log("key press" + e.which);
 
     if (in_trial) {
+        console.log("key press " + e.which);
+
         RT = (new Date()).getTime() - last_keypress_time;
         last_keypress_time = (new Date()).getTime();
         RTs.push(RT);
+        keys.push((e).keyCode);
         RT_tot += RT;
-        var next = cur;
+        var next = -1;
         $("#message").text("");
 
-        // move to adjacent state 
-        // 
+        // get next state
         if ((e).keyCode == "39") {
             next = exp.adj[cur - 1][0];
         } else if ((e).keyCode == "38") {
@@ -252,31 +254,47 @@ function checkKeyPressed(e) {
         } else if ((e).keyCode == "40") {
             next = exp.adj[cur - 1][3];
         }
-        if (next >= 0 && next != cur) {
-            cur = next;
-            stateColor("grey");
-            in_trial = false;
-            sleep(750).then(() => {
-                stateColor("white");
-                in_trial = true;
-                redraw();
-            });
-        }
 
-        // goal state reached?
-        //
-        if ((e).key === ' ' || (e).key === 'Spacebar') {
-            if (cur == goal) {
-                $("#message").css("color", "green");
-                $("#message").text("SUCCESS!!");
-                logTrial();
+        if (stage == "train") {
+            // move to next state 
+            if (next >= 0) {
+                cur = next;
+                stateColor("grey");
                 in_trial = false;
+                path.push(next);
+                sleep(750).then(() => {
+                    stateColor("white");
+                    in_trial = true;
+                    redraw();
+                });
+            }
+
+            // if goal is reached => start next trial
+            if ((e).key === ' ' || (e).key === 'Spacebar') {
+                if (cur == goal) {
+                    $("#message").css("color", "green");
+                    $("#message").text("SUCCESS!!");
+                    in_trial = false;
+                    logTrial();
+                    sleep(1000).then(() => {
+                        nextTrial();
+                    });
+                } else {
+                    $("#message").css("color", "red");
+                    $("#message").text("Incorrect");
+                }
+            }
+        } else { // stage == "test"
+            // end trial after first button press
+            if (next >= 0) {
+                path.push(next);
+                stateColor("grey");
+                in_trial = false;
+                logTrial();
                 sleep(1000).then(() => {
+                    stateColor("white");
                     nextTrial();
                 });
-            } else {
-                $("#message").css("color", "red");
-                $("#message").text("Incorrect");
             }
         }
     }
@@ -284,9 +302,10 @@ function checkKeyPressed(e) {
 
 
 function logTrial() {
-    RT_str = (RTs.toString()).replace(",", " ");
-    path_str = (path.toString()).replace(",", " ");
-    row = "A," + subj_id + "," + stage + "," + start.toString() + "," + goal.toString() + "," + path_str + "," + RT_str + "," + RT_tot.toString() + "\n";
+    var RT_str = (RTs.toString()).replace(/,/g, '-');
+    var path_str = (path.toString()).replace(/,/g, '-');
+    var key_str = (path.toString()).replace(/,/g, '-');
+    var row = "A," + subj_id + "," + stage + "," + start.toString() + "," + goal.toString() + "," + path_str + "," + RT_str + "," + key_str + "," + RT_tot.toString() + "\n";
     console.log(row);
     $.post("results_data.php", {postresult: row, postfile: file_name});
 }
