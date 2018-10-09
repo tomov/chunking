@@ -19,7 +19,7 @@ function initExp() {
     start = -1;
     goal = -1;
 
-    //nextTrial();
+    nextTrial();
 }
 
 
@@ -200,15 +200,17 @@ function nextTrial() {
         $("#new_trial_page").hide();
         $("#trial_page").show();
         $("#countdown").text("3...");
-        sleep(100).then(() => {
+        stateColor("grey");
+        sleep(750).then(() => {
             $("#countdown").text("2...");
-            sleep(100).then(() => {
+            sleep(750).then(() => {
                 $("#countdown").text("1...");
-                sleep(100).then(() => {
+                sleep(750).then(() => {
                     $("#countdown").text("GO!");
+                    stateColor("white");
                     in_trial = true;
-                    last_keypress_time = Date.getTime();
-                    sleep(100).then(() => {
+                    last_keypress_time = (new Date()).getTime();
+                    sleep(750).then(() => {
                         $("#countdown").text("");
                     });
                 });
@@ -218,33 +220,51 @@ function nextTrial() {
 }
 
 
+function stateColor(color) {
+    $("#cur_state").css("color", color);
+    $("#right_state").css("color", color);
+    $("#up_state").css("color", color);
+    $("#left_state").css("color", color);
+    $("#down_state").css("color", color);
+}
+
+
 function checkKeyPressed(e) {
     e = e || window.event;
     console.log("key press" + e.which);
 
     if (in_trial) {
-        RT = Date.getTime() - last_keypress_time;
-        last_keypress_time = Date.getTime();
+        RT = (new Date()).getTime() - last_keypress_time;
+        last_keypress_time = (new Date()).getTime();
         RTs.push(RT);
         RT_tot += RT;
         var next = cur;
         $("#message").text("");
 
+        // move to adjacent state 
+        // 
         if ((e).keyCode == "39") {
-            next = exp.adj[cur][0];
+            next = exp.adj[cur - 1][0];
         } else if ((e).keyCode == "38") {
-            next = exp.adj[cur][1];
+            next = exp.adj[cur - 1][1];
         } else if ((e).keyCode == "37") {
-            next = exp.adj[cur][2];
+            next = exp.adj[cur - 1][2];
         } else if ((e).keyCode == "40") {
-            next = exp.adj[cur][3];
+            next = exp.adj[cur - 1][3];
         }
-
-        if (next >= 0) {
+        if (next >= 0 && next != cur) {
             cur = next;
-            redraw();
+            stateColor("grey");
+            in_trial = false;
+            sleep(750).then(() => {
+                stateColor("white");
+                in_trial = true;
+                redraw();
+            });
         }
 
+        // goal state reached?
+        //
         if ((e).key === ' ' || (e).key === 'Spacebar') {
             if (cur == goal) {
                 $("#message").css("color", "green");
@@ -266,9 +286,8 @@ function checkKeyPressed(e) {
 function logTrial() {
     RT_str = (RTs.toString()).replace(",", " ");
     path_str = (path.toString()).replace(",", " ");
-    console.log(path_str);
-    console.log(RT_str);
     row = "A," + subj_id + "," + stage + "," + start.toString() + "," + goal.toString() + "," + path_str + "," + RT_str + "," + RT_tot.toString() + "\n";
+    console.log(row);
     $.post("results_data.php", {postresult: row, postfile: file_name});
 }
 
@@ -279,19 +298,19 @@ function redraw() {
     goal_name = exp.names[goal - 1];
     var adj_names = [];
     for (var i = 0; i < 4; i++) {
-        if (adj[cur][i] <= 0) {
+        if (exp.adj[cur - 1][i] <= 0) {
             adj_names.push("&#11044;");
         } else {
-            adj_names.push(exp.names[exp.adj[cur][j]] - 1);
+            adj_names.push(exp.names[exp.adj[cur - 1][i] - 1]);
         }
     }
 
     $("#cur_state").text(cur_name);
     $("#goal_state").text("Go to " + goal_name);
-    $("#right_state").text(adj_names[0]);
-    $("#up_state").text(adj_names[1]);
-    $("#left_state").text(adj_names[2]);
-    $("#down_state").text(adj_names[3]);
+    $("#right_state").html(adj_names[0]);
+    $("#up_state").html(adj_names[1]);
+    $("#left_state").html(adj_names[2]);
+    $("#down_state").html(adj_names[3]);
 
     $("#from_state").text(start_name);
     $("#to_state").text(goal_name);
