@@ -99,7 +99,6 @@ function genExp(exp) {
     exp.test_trials = genTrials(exp.test);
 
     // optionally rotate graph TODO enable
-    /*
     exp.rotate = Math.floor(Math.random() * 4);
     for (var i = 0; i <= exp.N; i++) {
         var a = exp.adj[i].slice();
@@ -107,7 +106,6 @@ function genExp(exp) {
             exp.adj[i][j] = a[(j + exp.rotate) % 4];
         }
     }
-    */
     return exp;
 }
 
@@ -260,11 +258,11 @@ function checkKeyPressed(e) {
                 stateColor("grey");
                 in_trial = false;
                 path.push(next);
-                sleep(750).then(() => {
+               // sleep(750).then(() => {
                     stateColor("white");
                     in_trial = true;
                     redraw();
-                });
+               // });
             }
 
             // if goal is reached => start next trial

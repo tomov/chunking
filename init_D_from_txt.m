@@ -20,6 +20,14 @@ function D = init_D_from_txt(filename)
     for t = 1:n
         A = freadline(f, '%d %d');
         s = A(1); g = A(2);
+
+        if s <= 0
+            s = randi(D.G.N);
+        end
+        while g <= 0 || g == s
+            g = randi(D.G.N);
+        end
+
         D.tasks.s = [D.tasks.s s];
         D.tasks.g = [D.tasks.g g];
     end
