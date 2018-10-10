@@ -99,6 +99,7 @@ function genExp(exp) {
     exp.test_trials = genTrials(exp.test);
 
     // optionally rotate graph TODO enable
+    /*
     exp.rotate = Math.floor(Math.random() * 4);
     for (var i = 0; i <= exp.N; i++) {
         var a = exp.adj[i].slice();
@@ -106,6 +107,7 @@ function genExp(exp) {
             exp.adj[i][j] = a[(j + exp.rotate) % 4];
         }
     }
+    */
     return exp;
 }
 
@@ -320,15 +322,15 @@ function redraw() {
         }
     }
 
-    $("#cur_state").text(cur_name);
-    $("#goal_state").text("Go to " + goal_name);
+    $("#cur_state").text(cur_name + " " + cur);
+    $("#goal_state").text("Go to " + goal_name + " " + goal);
     $("#right_state").html(adj_names[0]);
     $("#up_state").html(adj_names[1]);
     $("#left_state").html(adj_names[2]);
     $("#down_state").html(adj_names[3]);
 
-    $("#from_state").text(start_name);
-    $("#to_state").text(goal_name);
+    $("#from_state").text(start_name + " " + start);
+    $("#to_state").text(goal_name + " " + goal);
 }
 
 
