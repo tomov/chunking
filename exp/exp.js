@@ -100,7 +100,7 @@ function genExp(exp) {
 
     // optionally rotate graph TODO enable
     exp.rotate = Math.floor(Math.random() * 4);
-    for (var i = 0; i <= exp.N; i++) {
+    for (var i = 0; i < exp.N; i++) {
         var a = exp.adj[i].slice();
         for (var j = 0; j < 4; j++) {
             exp.adj[i][j] = a[(j + exp.rotate) % 4];
