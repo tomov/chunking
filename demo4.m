@@ -2,9 +2,8 @@
 
 h.alpha = 1.5;
 
-
-D(1) = init_D_from_txt('subway9.txt');
-D(2) = init_D_from_txt('subway9_wt.txt');
+D(1) = init_D_from_txt('subway9_wt.txt');
+D(2) = init_D_from_txt('subway10_wt.txt');
 
 for i = 1:length(D)
     [samples, post] = sample(D(i), h, 1000);
@@ -14,6 +13,8 @@ for i = 1:length(D)
     end
 end
 
+
+save demo4.mat
 
 figure;
 
