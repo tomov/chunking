@@ -7,7 +7,7 @@ function initExp() {
     exp = genExp(exp);
 
     subj_id = "1" + Math.random().toString().substring(3,8);
-    file_name = subj_id + ".csv";
+    file_name = 'results/' + subj_id + ".csv";
 
     stage = "train";
     trial_idx = -1;
@@ -198,16 +198,16 @@ function nextTrial() {
         $("#trial_page").show();
         $("#countdown").text("3...");
         stateColor("grey");
-        sleep(750).then(() => {
+        sleep(1000).then(() => {
             $("#countdown").text("2...");
-            sleep(750).then(() => {
+            sleep(1000).then(() => {
                 $("#countdown").text("1...");
-                sleep(750).then(() => {
+                sleep(1000).then(() => {
                     $("#countdown").text("GO!");
                     stateColor("white");
                     in_trial = true;
                     last_keypress_time = (new Date()).getTime();
-                    sleep(750).then(() => {
+                    sleep(1000).then(() => {
                         $("#countdown").text("");
                     });
                 });
