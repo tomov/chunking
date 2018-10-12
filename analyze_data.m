@@ -4,6 +4,7 @@ s = [];
 g = [];
 len = [];
 group = [];
+dir = [];
 
 subj_group = [];
 for subj = 1:size(data,1)
@@ -12,38 +13,39 @@ for subj = 1:size(data,1)
         s = [s; data(subj, phase).s(i)];
         g = [g; data(subj, phase).g(i)];
         len = [len; data(subj, phase).len(i)];
+        dir = [dir; data(subj, phase).path{i}(2)];
         group = [group; data(subj, phase).group(i)];
     end
     subj_group = [subj_group; data(subj,1).group(1)];
 end
 
 
-start = [2 4 6 7];
-goal = [6 7 2 4];
+start = [1 6 2 7];
+goal = [6 1 7 2];
 
 figure;
 
 for t = 1:length(start)
-    A = group == 1 & s == start(t);
-    B = group == 2 & s == start(t);
-
-    m = [mean(len(A)), mean(len(B))];
-    se = [sem(len(A)), sem(len(B))];
-
-    [h, p, ci, stat] = ttest2(len(A), len(B));
+    which = s == start(t);
+    move = dir(which);
+    m = unique(move); % kinds of second state (moves)
+    assert(length(m) == 2);
+    c1 = sum(move == m(1)); % count 1
+    c2 = sum(move == m(2)); % count 2
+    d = abs(c1 - c2);
+    n = sum(which);
+    p = 2 * binopdf((n - d) / 2, n, 0.5);
 
     subplot(2,2,t);
-    title(sprintf('%d -> %d: p = %.3f, t(%d) = %.3f', start(t), goal(t), p, stat.df, stat.tstat));
-    hold on
-    bar(1:2,m);
-    errorbar(1:2,m,se,'.');
-    xticklabels({'', 'A', 'B'});
-    ylim([4 5]);
+    bar(1:2, [c1 c2]);
+    xticklabels({num2str(m(1)), num2str(m(2))});
+    title(sprintf('%d -> %d: p = %.3f (d = %d, n = %d)', start(t), goal(t), p, d, n));
+    %ylim([4 5]);
 
     if t == 1
-        ylabel('action chunking')
+   %     ylabel('action chunking')
     elseif t == 3
-        ylabel('state chunking')
+   %     ylabel('state chunking')
     end
 end
 
