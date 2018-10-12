@@ -17,7 +17,7 @@
   <div id="consent_page" style = "font-size: 20px; display: block;" align = "center">
       <h3>Consent form for participation in this online experiment</h3>
       <p>
-          Designed by: Momchil Tomov and Rohan Hundia<br>
+          Designed by: Momchil Tomov<br>
       </p>
       <p>Before you decide whether you want to take part, it is important for you to <br>read the following information carefully.</p>
       <p>The study provides information about the nature of learning and decision making</p>
@@ -38,16 +38,16 @@
       <h2>Subway Navigation</h2>
       <p>Imagine you are a tourist and you have to navigate the subway network in an unfamiliar town.</p>
       <p>On each trial, you will have to navigate from a starting station to a goal station, which will appear on the screen for 2 seconds:</p>
-      <p><img src="images/new_trial.png" height="20%" width="20%"></p>
+      <p><img src="images/new_trial.png" height="300px" ></p>
       <p>The trial will begin with a 3..2..1.. countdown, during which you can plan your trip:
-      <p><img src="images/countdown.png" height="20%" width="20%"></p>
+      <p><img src="images/countdown.png" height="300px" ></p>
       <p>Please try to plan your trip as quickly as possible.</p>
       <p>During your trip, you will see the name of the current station in the middle of the screen, surrounded by its neighboring stations in all four directions:</p>
-      <p><img src="images/trial.png" height="20%" width="20%"></p>
+      <p><img src="images/trial.png" height="300px"></p>
       <p>You can navigate between stations using the <b>arrow keys</b> (up, down, left, right). A circle means that there is no station in that direction.</p>
       <p>Once you reach the goal station, press the <b>space key</b> to end the trial and start the next trial:</p>
-      <p><img src="images/success.png" height="20%" width="20%"></p>
-      <p>There will be 80 trials in the experiment.</p>
+      <p><img src="images/success.png" height="300px"></p>
+      <p>There will be 90 trials in the experiment. All stations are named after cities.</p>
       <p>Please disable any ad-blockers before starting the experiment.</p>
       <button type="button" id="continue" style="font-size: 22px;">Continue</button>
 
@@ -68,14 +68,14 @@
             MOSCOW
             BERLIN
             LONDON
-            PRAGUE
+            DUBLIN
             SOFIA
             ROME
-            MADRID
+            HELSINKI
             WARSAW
-            LISBON
+            OSLO
             4
-            -1 -1 0
+            -1 -1 10
             1 3 20
             4 6 20
             10 7 20
@@ -136,6 +136,7 @@
 
       <h1 id="message" style="position: absolute; left: 0; top: 60%; width: 100%; text-align: center;">message</h1>
       <h1 id="countdown" style="position: absolute; left: 0; top: 70%; width: 100%; text-align: center;">countdown</h1>
+      <p id="tip" style="position: absolute; left: 0; top: 90%; width: 100%; text-align: center; color: grey;">Move using the <b>arrow keys</b> (up, down, left, right). Press <b>space</b> when you reach the goal.</p>
   </div>
 
   <div id="test_page" style="font-size: 22px; display:block;" align = "center" >
@@ -153,9 +154,9 @@
 
 
   <script type="text/javascript">
-      $("#consent_page").hide();
+      $("#consent_page").show();
       $("#captcha").hide();
-      $("#instruction_page").show();
+      $("#instruction_page").hide();
       $("#new_trial_page").hide();
       $("#trial_page").hide();
       $("#test_page").hide();
