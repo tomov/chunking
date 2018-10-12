@@ -1,3 +1,5 @@
+data = load_data;
+
 sem = @(x) std(x) / sqrt(length(x));
 
 s = [];
@@ -20,8 +22,8 @@ for subj = 1:size(data,1)
 end
 
 
-start = [1 6 2 7];
-goal = [6 1 7 2];
+start = [6 7 1 2];
+goal = [1 2 6 7];
 
 figure;
 
@@ -43,9 +45,9 @@ for t = 1:length(start)
     %ylim([4 5]);
 
     if t == 1
-   %     ylabel('action chunking')
+        ylabel('state chunking')
     elseif t == 3
-   %     ylabel('state chunking')
+        ylabel('action chunking / S-A')
     end
 end
 

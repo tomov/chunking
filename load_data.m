@@ -9,7 +9,16 @@ function [data, Ts] = load_data
             continue;
         end
 
-        T = readtable(fullfile(dirname, files(i).name));
+        try
+            T = readtable(fullfile(dirname, files(i).name));
+        catch
+            fprintf('Error reading file %s\n', files(i).name);
+            continue;
+        end
+        if size(T, 1) ~= 100
+            fprintf('Skipping %s: it has only %d rows\n', files(i).name, size(T,1));
+            continue;
+        end
         Ts{subj} = T;
 
         % TODO dedupe with init_D_from_csv.m
