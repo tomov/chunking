@@ -1,25 +1,31 @@
 function [data, Ts] = load_data
 
     dirname = 'exp/results';
+    bad_dirname = 'exp/results/bad';
 
     files = dir(dirname);
     subj = 1;
-    for i = 1:length(files)
-        if ~endsWith(files(i).name, 'csv')
+    for idx = 1:length(files)
+        if ~endsWith(files(idx).name, 'csv')
             continue;
         end
 
+        filepath = fullfile(dirname, files(idx).name);
         try
-            T = readtable(fullfile(dirname, files(i).name));
+            T = readtable(filepath);
         catch
-            fprintf('Error reading file %s\n', files(i).name);
+            fprintf('Error reading file %s\n', files(idx).name);
+            movefile(filepath, bad_dirname);
             continue;
         end
         if size(T, 1) ~= 100
-            fprintf('Skipping %s: it has only %d rows\n', files(i).name, size(T,1));
+            fprintf('Skipping %s: it has only %d rows\n', files(idx).name, size(T,1));
+            movefile(filepath, bad_dirname);
             continue;
         end
         Ts{subj} = T;
+
+        skip_subj = false;
 
         % TODO dedupe with init_D_from_csv.m
         phase = 1;
@@ -71,6 +77,12 @@ function [data, Ts] = load_data
             end
             id = T.subj_id(i);
 
+            if length(path) > 30
+                fprintf('Skipping %s: trial %d has path length %d\n', files(idx).name, i, length(path));
+                skip_subj = true;
+                break;
+            end
+
             data(subj, phase).s(j) = s;
             data(subj, phase).g(j) = g;
             data(subj, phase).path{j} = path;
@@ -81,7 +93,9 @@ function [data, Ts] = load_data
             j = j + 1;
         end
 
-        subj = subj + 1;
+        if ~skip_subj
+            subj = subj + 1;
+        end
     end
 
     save('data.mat', 'data', 'Ts');

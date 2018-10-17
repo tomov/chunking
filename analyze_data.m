@@ -6,12 +6,16 @@ s = [];
 g = [];
 len = [];
 group = [];
-dir = [];
-
+dir = []; % direction = 2nd state on path
+ord = []; % ordinal of trial type within phase (e.g. "first 1->6", "second 1->6", etc)
 subj_group = [];
 for subj = 1:size(data,1)
     phase = 2;
     for i = 1:length(data(subj, phase).s)
+        which = find(data(subj, phase).s == data(subj, phase).s(i) & data(subj, phase).g == data(subj, phase).g(i));
+        clear o;
+        o(which) = find(which);
+        ord = [ord; o(i)];
         s = [s; data(subj, phase).s(i)];
         g = [g; data(subj, phase).g(i)];
         len = [len; data(subj, phase).len(i)];
@@ -28,7 +32,7 @@ goal = [1 2 6 7];
 figure;
 
 for t = 1:length(start)
-    which = s == start(t);
+    which = s == start(t) & ord == 1;
     move = dir(which);
     m = unique(move); % kinds of second state (moves)
     assert(length(m) == 2);
