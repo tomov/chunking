@@ -1,5 +1,8 @@
 in_trial = false;
 
+show_adj = false;
+show_states = true;
+
 function initExp() {
     console.log("initExp");
 
@@ -90,33 +93,45 @@ function genExp(exp) {
     console.log("genExp");
 
     // shuffle state names
-    exp.names.sort(function(a, b) {return 0.5 - Math.random()});
+    exp.names = shuffle(exp.names);
 
     // generate training trials
-    exp.train_trials = genTrials(exp.train);
+    exp.train_trials = genTrials(exp.train, false);
 
     // generate test trials
-    exp.test_trials = genTrials(exp.test);
+    exp.test_trials = genTrials(exp.test, true);
 
-    // optionally rotate graph TODO enable
-    exp.rotate = Math.floor(Math.random() * 4);
-    for (var i = 0; i < exp.N; i++) {
-        var a = exp.adj[i].slice();
-        for (var j = 0; j < 4; j++) {
-            exp.adj[i][j] = a[(j + exp.rotate) % 4];
+
+    // randomly flip graph
+    exp.flip = Math.floor(Math.random() * 2);
+    if (exp.flip) {
+        for (var i = 0; i < exp.N; i++) {
+            var tmp = exp.adj[i][0];
+            exp.adj[i][0] = exp.adj[i][1];
+            exp.adj[i][1] = tmp;
         }
     }
+    
+    // randomly rotate graph TODO enable
+    //exp.rotate = Math.floor(Math.random() * 4);
+    //for (var i = 0; i < exp.N; i++) {
+    //    var a = exp.adj[i].slice();
+    //    for (var j = 0; j < 4; j++) {
+    //        exp.adj[i][j] = a[(j + exp.rotate) % 4];
+    //    }
+    //}
     return exp;
 }
 
 
-function genTrials(desc) {
+function genTrials(desc, grouped) {
     trials = [];
     for (var i = 0; i < desc.length; i++) {
         for (var j = 0; j < desc[i].n; j++) {
             var task = {};
             task.s = desc[i].s;
             task.g = desc[i].g;
+            task.j = j;
             while (task.s <= 0) {
                 task.s = Math.floor(Math.random() * exp.N) + 1;
             }
@@ -126,7 +141,10 @@ function genTrials(desc) {
             trials.push(task);
         }
     }
-    trials.sort(function(a, b) {return 0.5 - Math.random()});
+    trials = shuffle(trials);
+    if (grouped) {
+        trials.sort(function(t1, t2) { return t1.j - t2.j; });
+    }
     return trials;
 }
 
@@ -312,23 +330,35 @@ function redraw() {
     start_name = exp.names[start - 1];
     goal_name = exp.names[goal - 1];
     var adj_names = [];
+    var arrows = ["&#9654;", "&#9650;", "&#9664;", "&#9660;"];
     for (var i = 0; i < 4; i++) {
         if (exp.adj[cur - 1][i] <= 0) {
             adj_names.push("&#11044;");
         } else {
-            adj_names.push(exp.names[exp.adj[cur - 1][i] - 1]);
+            if (show_adj) {
+                adj_names.push(exp.names[exp.adj[cur - 1][i] - 1]);
+            } else {
+                adj_names.push(arrows[i]);
+            }
         }
     }
 
-    $("#cur_state").text(cur_name);
-    $("#goal_state").text("Go to " + goal_name);
     $("#right_state").html(adj_names[0]);
     $("#up_state").html(adj_names[1]);
     $("#left_state").html(adj_names[2]);
     $("#down_state").html(adj_names[3]);
 
-    $("#from_state").text(start_name);
-    $("#to_state").text(goal_name);
+    if (show_states) {
+        $("#cur_state").text(cur_name + ' (' + cur.toString() + ')');
+        $("#goal_state").text("Go to " + goal_name + ' (' + goal.toString() + ')');
+        $("#from_state").text(start_name + ' (' + start.toString() + ')');
+        $("#to_state").text(goal_name + ' (' + goal.toString() + ')');
+    } else {
+        $("#cur_state").text(cur_name);
+        $("#goal_state").text("Go to " + goal_name);
+        $("#from_state").text(start_name);
+        $("#to_state").text(goal_name);
+    }
 }
 
 
