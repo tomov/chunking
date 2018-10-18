@@ -1,7 +1,7 @@
 in_trial = false;
 
 show_adj = false;
-show_states = true;
+show_states = false;
 
 function initExp() {
     console.log("initExp");
@@ -107,19 +107,19 @@ function genExp(exp) {
     if (exp.flip) {
         for (var i = 0; i < exp.N; i++) {
             var tmp = exp.adj[i][0];
-            exp.adj[i][0] = exp.adj[i][1];
-            exp.adj[i][1] = tmp;
+            exp.adj[i][0] = exp.adj[i][2];
+            exp.adj[i][2] = tmp;
         }
     }
     
     // randomly rotate graph TODO enable
-    //exp.rotate = Math.floor(Math.random() * 4);
-    //for (var i = 0; i < exp.N; i++) {
-    //    var a = exp.adj[i].slice();
-    //    for (var j = 0; j < 4; j++) {
-    //        exp.adj[i][j] = a[(j + exp.rotate) % 4];
-    //    }
-    //}
+    exp.rotate = Math.floor(Math.random() * 4);
+    for (var i = 0; i < exp.N; i++) {
+        var a = exp.adj[i].slice();
+        for (var j = 0; j < 4; j++) {
+            exp.adj[i][j] = a[(j + exp.rotate) % 4];
+        }
+    }
     return exp;
 }
 
@@ -333,7 +333,11 @@ function redraw() {
     var arrows = ["&#9654;", "&#9650;", "&#9664;", "&#9660;"];
     for (var i = 0; i < 4; i++) {
         if (exp.adj[cur - 1][i] <= 0) {
-            adj_names.push("&#11044;");
+            if (show_adj) {
+                adj_names.push("&#11044;");
+            } else {
+                adj_names.push("&#x25CF;"); // smaller circle
+            }
         } else {
             if (show_adj) {
                 adj_names.push(exp.names[exp.adj[cur - 1][i] - 1]);
