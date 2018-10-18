@@ -3,8 +3,9 @@ function logp = logprior(H, D, h)
     % P(H)
     %
 
+    % chunks
     logp = 0;
-    cnt = zeros(size(H.cnt));
+    cnt = zeros(1, max(H.c));
     cnt(H.c(1)) = 1;
     for i = 2:D.G.N
         c = H.c(i);
@@ -15,23 +16,8 @@ function logp = logprior(H, D, h)
         end
         cnt(c) = cnt(c) + 1;
     end
-    assert(isequal(cnt, H.cnt));
 
-    logp = logp + log(betapdf(H.p,1,1)) + log(betapdf(H.q,1,1)) + log(betapdf(H.tp,1,1)); % TODO const
-
-    for k = 1:H.N
-        for l = 1:k-1
-            if H.E(k,l)
-                logp = logp + log(H.hp);
-            else
-                logp = logp + log(1 - H.hp);
-            end
-        end
-    end
-
-    logp = logp + log(betapdf(H.hp,1,1));
-     
-    % TODO bridges
-
+    % p's
+    logp = logp + log(betapdf(H.p,1,1)) + log(betapdf(H.q,1,1)) + log(betapdf(H.tp,1,1)) + log(betapdf(H.hp,1,1)); % TODO const
 end
 

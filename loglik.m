@@ -41,6 +41,34 @@ function logp = loglik(H, D, h)
         end
     end
 
+    % (hierarchical) edges
+    N = max(H.c);
+    E = get_H_E(H, D); % TODO prior or likelihood? who knows..
+    for k = 1:N
+        for l = 1:k-1
+            assert(cnt(k) > 0);
+            assert(cnt(j) > 0);
+            if E(k,l)
+                logp = logp + log(H.hp);
+            else
+                logp = logp + log(1 - H.hp);
+            end
+        end
+    end
+
+    % bridges
+    cnt = get_H_cnt(H);
+    for k = 1:N
+        if cnt(k) > 0
+            for j = 1:k-1
+                if cnt(j) > 0 && E(k,l)
+                    logp = logp + log(1) - log(cnt(k)) - log(cnt(l));
+                    logp = logp - log(H.p * H.q); % b/c the bridge is always there, but we penalized / overcounted the corresponding edge when accounting for the connectivity of G
+                end
+            end
+        end
+    end
+
     % tasks
     for i = 1:length(D.tasks.s)
         s = D.tasks.s(i);

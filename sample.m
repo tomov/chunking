@@ -48,7 +48,7 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
             logprop = @(c_i_new, c_i_old) logprop_c_i(c_i_new, c_i_old, i, H, D, h);
 
             [c_i, accept] = mhsample(H.c(i), 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
-            H = update_c_i(c_i, i, H);
+            H.c(i) = c_i;
         end
 
         logp = @(p) logpost_p(p, H, D, h);
@@ -67,18 +67,6 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
         [hp, accept] = mhsample(H.hp, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
         H.hp = hp;
 
-        for k = 1:H.N
-            for l = 1:k-1
-                logp = @(e) logpost_E_k_l(e, k, l, H, D, h);
-                proprnd = @(e_old) proprnd_E_k_l(e_old, k, l, H, D, h);
-                logprop = @(e_new, e_old) logprop_E_k_l(e_new, e_old, k, l, H, D, h);
-
-                [e, accept] = mhsample(H.E(k,l), 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);  % TODO adaptive
-                H.E(k,l) = e;
-                H.E(l,k) = e;
-            end
-        end
-
         % TODO bridges
 
         samples(n) = H;
@@ -96,25 +84,11 @@ function logp = logpost(H, D, h)
     logp = loglik(H, D, h) + logprior(H, D, h);
 end
 
-% Update H.c(i) and counts
-% TODO makes copy of H -- super slow...
-%
-function H = update_c_i(c_i, i, H) % TODO FIXME H.N is broken!!
-    H.cnt(H.c(i)) = H.cnt(H.c(i)) - 1;
-    H.c(i) = c_i;
-    if c_i <= length(H.cnt)
-        H.cnt(H.c(i)) = H.cnt(H.c(i)) + 1;
-    else
-        H.cnt = [H.cnt 1];
-    end
-end
-
-
 % P(H|D) for updates of c_i
 % i.e. with new c's up to c_i, the candidate c_i, then old c's after (and old rest of H)
 %
 function logp = logpost_c_i(c_i, i, H, D, h)
-    H = update_c_i(c_i, i, H);
+    H.c(i) = c_i;
     logp = logpost(H, D, h);
 end
 
@@ -122,7 +96,7 @@ end
 % inspired by Algorithm 5 from Neal 1998: MCMC for DP mixtures
 %
 function P = propP_c_i(c_i_old, i, H, D, h)
-    cnt = H.cnt;
+    cnt = get_H_cnt(H);
     cnt(H.c(i)) = cnt(H.c(i)) - 1;
     z = find(cnt == 0); % reuse empty bins TODO is this legit?
     if isempty(z)
@@ -171,33 +145,4 @@ end
 function logp = logprop_p(p_new, p_old, H, D, h)
     Z = normcdf(1, p_old, 0.1) - normcdf(0, p_old, 0.1); % TODO consts TODO adaptive
     logp = log(normpdf(p_new, p_old, 1)) - log(Z);
-end
-
-
-% P(H|D) for updates of E
-%
-function logp = logpost_E_k_l(e, k, l, H, D, h)
-    H.E(k,l) = e;
-    H.E(l,k) = e;
-    logp = logpost(H, D, h);
-end
-
-% proposal PMF for E
-% keep the same, or draw from prior w/ some small prob
-%
-function P = propP_E_k_l(e_old, k, l, H, D, h)
-    P = [1 - H.hp, H.hp] * 0.3; % draw from prior w/ some small prob
-    P(e_old + 1) = P(e_old + 1) + 0.7; % or keep the same TODO consts
-end
-
-% proposal for E
-%
-function e_new = proprnd_E_k_l(e_old, k, l, H, D, h)
-    P = propP_E_k_l(e_old, k, l, H, D, h);
-    e_new = find(mnrnd(1, P)) - 1;
-end
-
-function logp = logprop_E_k_l(e_new, e_old, k, l, H, D, h) % TODO merge w/ proprnd
-    P = propP_E_k_l(e_old, k, l, H, D, h);
-    logp = log(P(e_new + 1));
 end
