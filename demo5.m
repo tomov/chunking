@@ -2,23 +2,21 @@
 
 clear all;
 
-%{
 h.alpha = 1.5;
 
 % load data
 D = init_Ds_from_data('exp/results/subway10');
 for i = 1:length(D)
-    [samples, post] = sample(D(i), h, 100);
+    [samples, post] = sample(D(i), h, 1000);
     for j = 1:length(samples)
         H(i,j) = samples(j);
         P(i,j) = post(j);
     end
 end
 
-save demo5.mat;
-%}
+%save demo5.mat;
 
-load demo5.mat;
+%load demo5.mat;
 
 %{
 % hack sanity check -- make them all like D(1)
