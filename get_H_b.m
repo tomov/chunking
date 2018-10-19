@@ -3,7 +3,7 @@ function b = get_H_b(H, D)
     % populate bridges (at random)
     
     N = max(H.c);
-    cnt = get_H_cnt(H);
+    cnt = get_H_cnt(H, D);
     E = get_H_E(H, D);
 
     % all potential bridges

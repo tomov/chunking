@@ -96,7 +96,7 @@ end
 % inspired by Algorithm 5 from Neal 1998: MCMC for DP mixtures
 %
 function P = propP_c_i(c_i_old, i, H, D, h)
-    cnt = get_H_cnt(H);
+    cnt = get_H_cnt(H, D);
     cnt(H.c(i)) = cnt(H.c(i)) - 1;
     z = find(cnt == 0); % reuse empty bins TODO is this legit?
     if isempty(z)

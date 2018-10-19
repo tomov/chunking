@@ -1,4 +1,4 @@
-function cnt = get_H_cnt(H)
+function cnt = get_H_cnt(H, D)
 
     % get # of states in each chunk
 
