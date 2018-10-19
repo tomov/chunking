@@ -1,4 +1,4 @@
-% data from chunking experiment
+% simulate data from chunking experiment
 
 clear all;
 

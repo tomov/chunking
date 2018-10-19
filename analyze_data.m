@@ -1,3 +1,5 @@
+% analyze behavioral data from chunking experiment
+
 data = load_data;
 
 sem = @(x) std(x) / sqrt(length(x));
@@ -9,6 +11,7 @@ group = [];
 dir = []; % direction = 2nd state on path
 ord = []; % ordinal of trial type within phase (e.g. "first 1->6", "second 1->6", etc)
 subj_group = [];
+s_id = [];
 for subj = 1:size(data,1)
     phase = 2;
     for i = 1:length(data(subj, phase).s)
@@ -21,10 +24,35 @@ for subj = 1:size(data,1)
         len = [len; data(subj, phase).len(i)];
         dir = [dir; data(subj, phase).path{i}(2)];
         group = [group; data(subj, phase).group(i)];
+        s_id = [s_id; subj];
     end
     subj_group = [subj_group; data(subj,1).group(1)];
 end
 
+
+% show learning
+%
+
+figure;
+ms = [];
+es = [];
+for t = 1:length(data(1,1).len)
+    l = [];
+    for subj = 1:size(data,1)
+        l = [l data(subj,1).len(t)];
+    end
+    m = mean(l);
+    e = std(l) / sqrt(length(l));
+    ms = [ms m];
+    es = [es e];
+end
+
+errorbar(ms, es);
+xlabel('training trial');
+ylabel('path length');
+
+% show test choices
+%
 
 start = [6 7 1 2];
 goal = [1 2 6 7];
@@ -59,4 +87,5 @@ for t = 1:length(start)
         ylabel('action chunking / S-A')
     end
 end
+
 

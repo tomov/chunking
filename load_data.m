@@ -1,7 +1,8 @@
 function [data, Ts] = load_data
 
-    dirname = 'exp/results';
-    bad_dirname = 'exp/results/bad';
+    expected_number_of_rows = 100;
+    dirname = 'exp/results/subway10';
+    %bad_dirname = 'exp/results/bad';
 
     files = dir(dirname);
     subj = 1;
@@ -18,7 +19,7 @@ function [data, Ts] = load_data
             movefile(filepath, bad_dirname);
             continue;
         end
-        if size(T, 1) ~= 110
+        if size(T, 1) ~= expected_number_of_rows
             fprintf('Skipping %s: it has only %d rows\n', files(idx).name, size(T,1));
             movefile(filepath, bad_dirname);
             continue;
@@ -77,11 +78,14 @@ function [data, Ts] = load_data
             end
             id = T.subj_id(i);
 
-            if length(path) > 30
+            % skip subjects with unrealistically long paths
+            %{
+            if length(path) > 25
                 fprintf('Skipping %s: trial %d has path length %d\n', files(idx).name, i, length(path));
                 skip_subj = true;
                 break;
             end
+            %}
 
             data(subj, phase).s(j) = s;
             data(subj, phase).g(j) = g;
@@ -92,6 +96,20 @@ function [data, Ts] = load_data
 
             j = j + 1;
         end
+
+        %{
+        % skip subjects that didn't improve over time
+        if ~skip_subj
+            l = data(subj,1).len;
+            first = l(1:round(length(l) * 0.10));
+            last = l(end-round(length(l) * 0.10):end);
+            [h, p, ci, stat] = ttest2(first, last, 'tail', 'right');
+            if p > 0.1
+                fprintf('Skipping %s: no improvement in path length (p = %.3f, first 20 = %.2f, last 20 = %.2f)\n', files(idx).name, p, mean(first), mean(last));
+                skip_subj = true;
+            end
+        end
+        %}
 
         if ~skip_subj
             subj = subj + 1;
