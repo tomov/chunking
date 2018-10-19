@@ -28,14 +28,19 @@ end
 
 start = [6 7 1 2];
 goal = [1 2 6 7];
+nexts = [
+5 7;
+6 8;
+2 10;
+1 3
+];
 
 figure;
 
 for t = 1:length(start)
     which = s == start(t) & ord == 1;
     move = dir(which);
-    m = unique(move); % kinds of second state (moves)
-    assert(length(m) == 2);
+    m = nexts(t,:);
     c1 = sum(move == m(1)); % count 1
     c2 = sum(move == m(2)); % count 2
     d = abs(c1 - c2);

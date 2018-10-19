@@ -18,7 +18,7 @@ function [data, Ts] = load_data
             movefile(filepath, bad_dirname);
             continue;
         end
-        if size(T, 1) ~= 100
+        if size(T, 1) ~= 110
             fprintf('Skipping %s: it has only %d rows\n', files(idx).name, size(T,1));
             movefile(filepath, bad_dirname);
             continue;

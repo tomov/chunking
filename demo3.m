@@ -4,7 +4,7 @@ clear all;
 
 h.alpha = 1.5;
 
-D = init_Ds_from_data('occluder3D_data');
+D = init_Ds_from_data_Rohan('occluder3D_data');
 
 D = D(8:9);
 
