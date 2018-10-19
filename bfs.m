@@ -9,7 +9,7 @@ function path = bfs(s, g, E)
     f = 1;
     while f <= length(q)
         i = q(f);
-        for j = 1:N
+        for j = randperm(N) % go in random order
             if E(i,j) && ~used(j)
                 q = [q j];
                 used(j) = 1;

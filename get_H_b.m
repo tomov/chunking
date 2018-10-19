@@ -21,12 +21,12 @@ function b = get_H_b(H, D)
     b = cell(N);
     for k = 1:N
         if cnt(k) > 0
-            for j = 1:k-1
-                if cnt(j) > 0 && E(k,l)
+            for l = 1:k-1
+                if cnt(l) > 0 && E(k,l)
                     assert(numel(e{k,l}) > 0);
-                    i = randint(size(e{k,l}, 1));
-                    b{k,l} = e{k,l}[i, :];
-                    b{l,k} = e{l,k}[i, :];
+                    i = randi(size(e{k,l}, 1));
+                    b{k,l} = e{k,l}(i, :);
+                    b{l,k} = e{l,k}(i, :);
                 end
             end
         end
