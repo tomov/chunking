@@ -2,6 +2,7 @@
 
 clear all;
 
+%{
 h.alpha = 1.5;
 
 % load data
@@ -14,9 +15,10 @@ for i = 1:length(D)
     end
 end
 
-%save demo5.mat;
+save demo5.mat;
+%}
 
-%load demo5.mat;
+load demo5.mat;
 
 %{
 % hack sanity check -- make them all like D(1)
@@ -28,7 +30,8 @@ end
 %}
 
 
-% plot figures
+% plot 5 per subject
+%{
 figure;
 k = 5;
 l = min(length(D), 10);
@@ -47,6 +50,29 @@ for i = 1:l
         set(gca, 'ytick', []);
     end
 end
+%}
+
+% plot all subjects
+figure;
+rows = 5;
+cols = 8;
+s = 1;
+for i = 1:rows
+    for j = 1:cols
+        if s > length(D)
+            continue;
+        end
+        post = P(s,:);
+        [~,I] = max(post); % MAP
+
+        subplot(rows, cols, s);
+        plot_H(H(s,I), D(s));
+        set(gca, 'xtick', []);
+        set(gca, 'ytick', []);
+        s = s + 1;
+    end
+end
+
 
 
 
