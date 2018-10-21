@@ -1,12 +1,19 @@
 branch exp_subway_10_1
 
     exp.html: 100 trials (80 train, 20 test), adjacent stations shown, no grouped test trials
-    subway10-batch1 <-- pilot
-    subway10-batch2 <-- 30 more
+
+    [Toyota] momchil-subway-10
+        subway10-batch1 <-- pilot
+        subway10-batch2 <-- 30 more
 
 branch exp_subway10_noadj_1
 
     exp_noadj.html: 110 trials (80 train, 30 test), no adjacent stations, grouped test trials
-    subway_10_batch1_noadj_BAD  <-- pilot 95%; disaster...
-    subway_10_noadj_batch2  <-- 10 more
+
+    [Toyota] momchil subway 10 no_adj
+        subway_10_batch1_noadj_BAD  <-- pilot 95%; disaster...
+        subway_10_noadj_batch2  <-- 10 more
+
+    [Toyota] momchil subway 10 no_adj 2
+        subway_10_noadj_batch3  <-- 40 more
     

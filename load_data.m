@@ -1,8 +1,10 @@
 function [data, Ts] = load_data
 
-    expected_number_of_rows = 100;
-    dirname = 'exp/results/subway10';
-    %bad_dirname = 'exp/results/bad';
+    expected_number_of_rows = 110;
+    %dirname = 'exp/results/subway10'; % expected # rows = 100
+    dirname = 'exp/results/subway10_noadj'; % expected # rows = 110
+    dirname = 'exp/results/ARCHIVE/subway_10_noadj_batch2'; % expected # rows = 110
+    bad_dirname = 'exp/results/bad';
 
     files = dir(dirname);
     subj = 1;
@@ -16,12 +18,12 @@ function [data, Ts] = load_data
             T = readtable(filepath);
         catch
             fprintf('Error reading file %s\n', files(idx).name);
-            movefile(filepath, bad_dirname);
+            %movefile(filepath, bad_dirname);
             continue;
         end
         if size(T, 1) ~= expected_number_of_rows
             fprintf('Skipping %s: it has only %d rows\n', files(idx).name, size(T,1));
-            movefile(filepath, bad_dirname);
+            %movefile(filepath, bad_dirname);
             continue;
         end
         Ts{subj} = T;
@@ -79,13 +81,11 @@ function [data, Ts] = load_data
             id = T.subj_id(i);
 
             % skip subjects with unrealistically long paths
-            %{
             if length(path) > 25
                 fprintf('Skipping %s: trial %d has path length %d\n', files(idx).name, i, length(path));
                 skip_subj = true;
                 break;
             end
-            %}
 
             data(subj, phase).s(j) = s;
             data(subj, phase).g(j) = g;
@@ -113,6 +113,10 @@ function [data, Ts] = load_data
 
         if ~skip_subj
             subj = subj + 1;
+        else
+            if size(data,1) >= subj
+                data(subj,:) = [];
+            end
         end
     end
 

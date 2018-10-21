@@ -1,6 +1,6 @@
 % analyze behavioral data from chunking experiment
 
-data = load_data;
+[data, Ts] = load_data;
 
 sem = @(x) std(x) / sqrt(length(x));
 
