@@ -66,7 +66,7 @@ nexts = [
 
 figure;
 
-for t = 1:length(start)
+for t = 1:4 % length(start)
     which = s == start(t) & ord == 1;
     move = dir(which);
     m = nexts(t,:);
@@ -76,7 +76,7 @@ for t = 1:length(start)
     n = sum(which);
     p = 2 * binopdf((n - d) / 2, n, 0.5);
 
-    subplot(2,3,t);
+    subplot(2,2,t);
     bar(1:2, [c1 c2]);
     xticklabels({num2str(m(1)), num2str(m(2))});
     title(sprintf('%d -> %d: p = %.3f (d = %d, n = %d)', start(t), goal(t), p, d, n));
