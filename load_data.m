@@ -1,9 +1,9 @@
 function [data, Ts] = load_data
 
-    expected_number_of_rows = 110;
-    %dirname = 'exp/results/subway10'; % expected # rows = 100
-    dirname = 'exp/results/subway10_noadj'; % expected # rows = 110
-    dirname = 'exp/results/ARCHIVE/subway_10_noadj_batch2'; % expected # rows = 110
+    expected_number_of_rows = 100;
+    dirname = 'exp/results/subway10'; % expected # rows = 100
+    %dirname = 'exp/results/subway10_noadj'; % expected # rows = 110
+    %dirname = 'exp/results/ARCHIVE/subway_10_noadj_batch2'; % expected # rows = 110
     bad_dirname = 'exp/results/bad';
 
     files = dir(dirname);

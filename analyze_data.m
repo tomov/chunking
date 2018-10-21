@@ -54,14 +54,15 @@ ylabel('path length');
 % show test choices
 %
 
-start = [6 7 1 2];
-goal = [1 2 6 7];
+start = [6 7 1 2 8 3];
+goal = [1 2 6 7 3 8];
 nexts = [
 5 7;
-6 8;
+8 6;
 2 10;
-1 3
-];
+1 3;
+9 7;
+2 4];
 
 figure;
 
@@ -75,7 +76,7 @@ for t = 1:length(start)
     n = sum(which);
     p = 2 * binopdf((n - d) / 2, n, 0.5);
 
-    subplot(2,2,t);
+    subplot(2,3,t);
     bar(1:2, [c1 c2]);
     xticklabels({num2str(m(1)), num2str(m(2))});
     title(sprintf('%d -> %d: p = %.3f (d = %d, n = %d)', start(t), goal(t), p, d, n));
