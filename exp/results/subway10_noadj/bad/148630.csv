@@ -1,0 +1,2 @@
+group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot
+A,148630,train,1,3,1 2 3,3,688 1023 687 593,39 39 38 32,2991
