@@ -1,7 +1,8 @@
 in_trial = false;
 
 show_adj = false;
-show_states = false;
+show_states = true;
+show_countdown = false;
 
 function initExp() {
     console.log("initExp");
@@ -60,32 +61,44 @@ function readExp() {
     // read training tasks
     exp.ntrain = parseInt(lines[l], 10);
     l++;
-    exp.train = [];
-    for (var i = 0; i < exp.ntrain; i++) {
-        var a = lines[l].trim().split(" ");
-        l++;
-        var task = {};
-        task.s = parseInt(a[0], 10);
-        task.g = parseInt(a[1], 10);
-        task.n = parseInt(a[2], 10);
-        exp.train.push(task);
-    }
+    exp.train = readTasks(lines, l, exp.ntrain);
+    l += exp.ntrain;
 
     // read test tasks
     exp.ntest = parseInt(lines[l], 10);
     l++;
-    exp.test = [];
-    for (var i = 0; i < exp.ntest; i++) {
-        var a = lines[l].trim().split(" ");
-        l++;
-        var task = {};
-        task.s = parseInt(a[0], 10);
-        task.g = parseInt(a[1], 10);
-        task.n = parseInt(a[2], 10);
-        exp.test.push(task);
-    }
+    exp.test = readTasks(lines, l, exp.ntest);
+    l += exp.ntest;
 
     return exp;
+}
+
+
+function readTasks(lines, l, n) {
+    var tasks = [];
+    for (var i = 0; i < n; i++) {
+        var a = lines[l].trim().split("x");
+        var b = a[0].trim().split("->");
+
+        var task = {};
+        task.n = parseInt(a[1], 10);
+
+        task.s = [];
+        s = b[0].trim().split(" ");
+        for (var j = 0; j < s.length; j++) {
+            task.s.push(parseInt(s[j], 10));
+        }
+
+        task.g = [];
+        g = b[1].trim().split(" ");
+        for (var j = 0; j < g.length; j++) {
+            task.g.push(parseInt(g[j], 10));
+        }
+
+        tasks.push(task);
+        l++;
+    }
+    return tasks;
 }
 
 
@@ -129,8 +142,8 @@ function genTrials(desc, grouped) {
     for (var i = 0; i < desc.length; i++) {
         for (var j = 0; j < desc[i].n; j++) {
             var task = {};
-            task.s = desc[i].s;
-            task.g = desc[i].g;
+            task.s = desc[i].s[Math.floor(Math.random() * desc[i].s.length)];
+            task.g = desc[i].g[Math.floor(Math.random() * desc[i].g.length)];
             task.j = j;
             while (task.s <= 0) {
                 task.s = Math.floor(Math.random() * exp.N) + 1;
@@ -210,28 +223,39 @@ function nextTrial() {
     redraw();
     $("#new_trial_page").show();
 
-    // countdown
-    sleep(2000).then(() => {
-        $("#new_trial_page").hide();
-        $("#trial_page").show();
-        $("#countdown").text("3...");
-        stateColor("grey");
-        sleep(1000).then(() => {
-            $("#countdown").text("2...");
+    if (show_countdown) {
+        // countdown
+        sleep(2000).then(() => {
+            $("#new_trial_page").hide();
+            $("#trial_page").show();
+            $("#countdown").text("3...");
+            stateColor("grey");
             sleep(1000).then(() => {
-                $("#countdown").text("1...");
+                $("#countdown").text("2...");
                 sleep(1000).then(() => {
-                    $("#countdown").text("GO!");
-                    stateColor("white");
-                    in_trial = true;
-                    last_keypress_time = (new Date()).getTime();
+                    $("#countdown").text("1...");
                     sleep(1000).then(() => {
-                        $("#countdown").text("");
+                        $("#countdown").text("GO!");
+                        stateColor("white");
+                        in_trial = true;
+                        last_keypress_time = (new Date()).getTime();
+                        sleep(1000).then(() => {
+                            $("#countdown").text("");
+                        });
                     });
                 });
             });
         });
-    });
+    } else {
+        // no countdown
+        $("#countdown").text("");
+        sleep(2000).then(() => {
+            $("#new_trial_page").hide();
+            $("#trial_page").show();
+            in_trial = true;
+            last_keypress_time = (new Date()).getTime();
+        });
+    }
 }
 
 
@@ -371,3 +395,7 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// for debugging
+function showTrainTrials() {
+    for (var i = 0; i < exp.train_trials.length; i++) { console.log(exp.train_trials[i]); }
+}

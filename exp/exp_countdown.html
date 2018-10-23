@@ -9,7 +9,7 @@
 </head>
 
 <script type="text/javascript"> show_adj = true; </script>
-<script type="text/javascript"> show_countdown = false; </script>
+<script type="text/javascript"> show_countdown = true; </script>
 
 <body onkeydown="checkKeyPressed()">
 
@@ -23,7 +23,7 @@
       </p>
       <p>Before you decide whether you want to take part, it is important for you to <br>read the following information carefully.</p>
       <p>The study provides information about the nature of learning and decision making</p>
-      <p>The study will take about <b>16 minutes on average</b>. You will <b>receive $3</b> for your participation.</p>
+      <p>The study will take about <b>20 minutes on average</b>. You will <b>receive $3</b> for your participation.</p>
       <p>If you have any suggestions on how we can improve this or future HITs, <br> please do not hesitate to get in touch.</p>
       <br>
       <p>By clicking on the button below, you agree to the following:</p>
@@ -39,15 +39,17 @@
   <div id="instruction_page" style="font-size: 22px; display:block;" align = "center" >
       <h2>Subway Navigation</h2>
       <p>Imagine you are a tourist and you have to navigate the subway network in an unfamiliar town.</p>
-      <p>On each trial, you will have to navigate from a starting station to a goal station, which will appear on the screen:</p>
+      <p>On each trial, you will have to navigate from a starting station to a goal station, which will appear on the screen for 2 seconds:</p>
       <p><img src="images/new_trial.png" height="300px" ></p>
-      <p>Please try to plan your trip as quickly as possible. After 2 seconds, your trip will begin.</p>
+      <p>The trial will begin with a 3..2..1.. countdown, during which you can plan your trip:
+      <p><img src="images/countdown.png" height="300px" ></p>
+      <p>Please try to plan your trip as quickly as possible.</p>
       <p>During your trip, you will see the name of the current station in the middle of the screen, surrounded by its neighboring stations in all four directions:</p>
       <p><img src="images/trial.png" height="300px"></p>
       <p>You can navigate between stations using the <b>arrow keys</b> (up, down, left, right). A circle means that there is no station in that direction.</p>
       <p>Once you reach the goal station, press the <b>space key</b> to end the trial and start the next trial:</p>
       <p><img src="images/success.png" height="300px"></p>
-      <p>There will be 120 trials in the experiment. All stations are named after cities.</p>
+      <p>There will be 100 trials in the experiment. All stations are named after cities.</p>
       <p>The experiment can only be performed on a computer. Please disable any ad-blockers before starting the experiment.</p>
       <button type="button" id="continue" style="font-size: 22px;">Continue</button>
 
@@ -151,18 +153,20 @@
   </div>
 
   <div id = "final_page">
-      <h3>Congratulations! You have completed the experiment. Your completion code is <img src="images/code2.png" ></h3>
+      <h3>Congratulations! You have completed the experiment. Your completion code is <img src="images/code.png" ></h3>
   </div>
 
 
   <script type="text/javascript">
-      $("#consent_page").show();
+      $("#consent_page").hide();
       $("#captcha").hide();
       $("#instruction_page").hide();
       $("#new_trial_page").hide();
       $("#trial_page").hide();
       $("#test_page").hide();
       $("#final_page").hide();
+
+      initExp();
 
       $("#agree").click(function () {
           $("#captcha").show();
