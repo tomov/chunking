@@ -376,6 +376,13 @@ function redraw() {
     $("#left_state").html(adj_names[2]);
     $("#down_state").html(adj_names[3]);
 
+    if (stage == "train") {
+        trials_left = exp.test_trials.length + exp.train_trials.length - trial_idx;
+    } else {
+        trials_left = exp.test_trials.length - trial_idx;
+    }
+    $('#trials_left').text(trials_left.toString() + ' trials left');
+
     if (show_states) {
         $("#cur_state").text(cur_name + ' (' + cur.toString() + ')');
         $("#goal_state").text("Go to " + goal_name + ' (' + goal.toString() + ')');

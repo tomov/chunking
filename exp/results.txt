@@ -17,9 +17,15 @@ branch exp_subway10_noadj_1
         subway_10_noadj_batch1_BAD  <-- pilot 95%; disaster...
         subway_10_noadj_batch2  <-- 10 more
 
-    [Toyota] momchil subway 10 no_adj 2
+    [Toyota] momchil subway 10 no_adj 2                    (technically branch exp_subway10_2)
         subway_10_noadj_batch3  <-- 40 more
     
     [Toyota] momchil subway 10 no_adj 3
         subway_10_noadj_batch4  <-- 5 more
-    
+   
+branch 
+
+    exp.html: 116 trials (110 train, 6 test), adjacent shown, 1 test trial of each type, random s->g within chunk (no action chunking)
+
+    [Toyota] momchil subway 10 nocountdown 1
+        subway_10_nocountdown_1   <-- omg avg time is 120 minutes??
