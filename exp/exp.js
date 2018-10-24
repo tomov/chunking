@@ -1,7 +1,7 @@
 in_trial = false;
 
 show_adj = false;
-show_states = true;
+show_states = false;
 show_countdown = false;
 
 function initExp() {
