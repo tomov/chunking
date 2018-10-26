@@ -159,13 +159,15 @@
 
 
   <script type="text/javascript">
-      $("#consent_page").show();
+      $("#consent_page").hide();
       $("#captcha").hide();
       $("#instruction_page").hide();
       $("#new_trial_page").hide();
       $("#trial_page").hide();
       $("#test_page").hide();
       $("#final_page").hide();
+
+initExp();
 
       $("#agree").click(function () {
           $("#captcha").show();

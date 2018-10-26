@@ -3,30 +3,35 @@ branch exp_subway_10_1
     exp.html: 100 trials (80 train, 20 test), adjacent stations shown, no grouped test trials
 
     [Toyota] momchil-subway-10
-        subway10-batch1 <-- pilot
-        subway10-batch2 <-- 30 more
+        ARCHIVE/subway10-batch1 <-- pilot
+        ARCHIVE/subway10-batch2 <-- 30 more
 
     [Toyota] momchil subway 10 2
-        subway10-batch2 <-- 30 more
+        ARCHIVE/subway10-batch2 <-- 30 more
+
+    -> merged in subway_10
 
 branch exp_subway10_noadj_1
 
     exp_noadj.html: 110 trials (80 train, 30 test), no adjacent stations, grouped test trials
 
     [Toyota] momchil subway 10 no_adj
-        subway_10_noadj_batch1_BAD  <-- pilot 95%; disaster...
-        subway_10_noadj_batch2  <-- 10 more
+        ARCHIVE/subway_10_noadj_batch1_BAD  <-- pilot 95%; disaster...
+        ARCHIVE/subway_10_noadj_batch2  <-- 10 more
 
     [Toyota] momchil subway 10 no_adj 2                    (technically branch exp_subway10_2)
-        subway_10_noadj_batch3  <-- 40 more
+        ARCHIVE/subway_10_noadj_batch3  <-- 40 more
     
     [Toyota] momchil subway 10 no_adj 3
-        subway_10_noadj_batch4  <-- 5 more
+        ARCHIVE/subway_10_noadj_batch4  <-- 5 more
+
+    -> merged in subway_10_noadj
    
 branch 
 
     exp.html: 116 trials (110 train, 6 test), adjacent shown, 1 test trial of each type, random s->g within chunk (no action chunking)
 
     [Toyota] momchil subway 10 nocountdown 1
-        subway_10_nocountdown_1   <-- (first 7 HITs) omg avg time is 120 minutes?? WTF...
-        subway_10_nocountdown_2   <-- intructions encourage speed; trials left info; workers 90% approval, at least 100 HITs
+        ARCHIVE/subway_10_nocountdown_1   <-- (first 7 HITs) omg avg time is 120 minutes?? WTF...
+        ARCHIVE/subway_10_nocountdown_2   <-- intructions encourage speed; trials left info; workers 90% approval, at least 100 HITs
+    -> merged in subway_10_randsg
