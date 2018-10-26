@@ -27,7 +27,7 @@ branch exp_subway10_noadj_1
 
     -> merged in subway_10_noadj
    
-branch 
+branch exp_subway10_randsg
 
     exp.html: 116 trials (110 train, 6 test), adjacent shown, 1 test trial of each type, random s->g within chunk (no action chunking)
 
