@@ -1,7 +1,7 @@
 in_trial = false;
 
 show_adj = false;
-show_states = false;
+show_states = true;
 show_countdown = false;
 
 function initExp() {
@@ -142,15 +142,17 @@ function genTrials(desc, grouped) {
     for (var i = 0; i < desc.length; i++) {
         for (var j = 0; j < desc[i].n; j++) {
             var task = {};
-            task.s = desc[i].s[Math.floor(Math.random() * desc[i].s.length)];
-            task.g = desc[i].g[Math.floor(Math.random() * desc[i].g.length)];
-            task.j = j;
-            while (task.s <= 0) {
-                task.s = Math.floor(Math.random() * exp.N) + 1;
-            }
-            while (task.g <= 0 || task.g == task.s) {
-                task.g = Math.floor(Math.random() * exp.N) + 1;
-            }
+            do {
+                task.s = desc[i].s[Math.floor(Math.random() * desc[i].s.length)];
+                task.g = desc[i].g[Math.floor(Math.random() * desc[i].g.length)];
+                task.j = j;
+                if (task.s <= 0) {
+                    task.s = Math.floor(Math.random() * exp.N) + 1;
+                }
+                if (task.g <= 0) {
+                    task.g = Math.floor(Math.random() * exp.N) + 1;
+                }
+            } while (task.s == task.g);
             trials.push(task);
         }
     }

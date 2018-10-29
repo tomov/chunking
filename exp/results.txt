@@ -27,7 +27,7 @@ branch exp_subway10_noadj_1
 
     -> merged in subway_10_noadj
    
-branch exp_subway10_randsg
+branch exp_subway10_randsg FUCK -- WRONG!!!!! if g == s !!!!!! 1/3 of trials are fucked...
 
     exp.html: 116 trials (110 train, 6 test), adjacent shown, 1 test trial of each type, random s->g within chunk (no action chunking)
 
