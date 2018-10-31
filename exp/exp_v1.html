@@ -9,7 +9,9 @@
 </head>
 
 
-<body onkeydown="checkKeyPressed(event)">
+<body>
+
+  <script type="text/javascript"> document.body.addEventListener('keydown', checkKeyPressed); </script>
 
   <div  id = "captcha" data-type="image" class="g-recaptcha" data-sitekey="6Lcv-WkUAAAAAEdcoHLA76IUW4_6tUkw1e-L5nUy" data-callback="correctCaptcha" style="position:absolute; top:650px;left:600px;"></div>
 
@@ -152,9 +154,9 @@
 
 
   <script type="text/javascript">
-      $("#consent_page").show();
+      $("#consent_page").hide();
       $("#captcha").hide();
-      $("#instruction_page").hide();
+      $("#instruction_page").show();
       $("#new_trial_page").hide();
       $("#trial_page").hide();
       $("#test_page").hide();

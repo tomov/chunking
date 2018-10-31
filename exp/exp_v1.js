@@ -294,6 +294,8 @@ function checkKeyPressed(e) {
             }
         }
     }
+
+    return true;
 }
 
 

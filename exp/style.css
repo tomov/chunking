@@ -1,10 +1,10 @@
 html, body {
-    height: 100%;
+    height: 99%;
 }
 
 .trial_page {
     background-color: black;
     text-align: center;
     color: white;
-    min-height: 100%;
+    min-height: 99%;
 }
