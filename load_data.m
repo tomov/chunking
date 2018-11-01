@@ -1,6 +1,6 @@
 function [data, Ts] = load_data
 
-    dirname = 'exp/results'; 
+    dirname = 'exp/results/subway10_repro'; 
     %bad_dirname = 'exp/results/bad';
 
     expected_number_of_rows = 83;
@@ -82,6 +82,7 @@ function [data, Ts] = load_data
             path = str2num(T.path{i});
             assert(length(path) == T.length(i));
             group = strip(T.group{i});
+            RT_tot = T.RT_tot(i);
             switch group
                 case 'A'
                     group = 1;
@@ -107,6 +108,8 @@ function [data, Ts] = load_data
             data(subj, phase).len(j) = length(path);
             data(subj, phase).group(j) = group;
             data(subj, phase).id = id;
+            data(subj, phase).RTs{j} = RTs;
+            data(subj, phase).RT_tot(j) = RT_tot;
 
             j = j + 1;
         end
@@ -125,7 +128,7 @@ function [data, Ts] = load_data
         end
         %}
 
-        fprintf('         max RT = %.2f s\n', max_RT / 1000);
+        fprintf('         max RT = %.2f s, total RT = %.2f min\n', max_RT / 1000, sum(T.RT_tot) / 1000 / 60);
 
         if ismember('timestamp', T.Properties.VariableNames)
             dur = T.timestamp(end) - T.timestamp(1);

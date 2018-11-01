@@ -11,6 +11,7 @@ group = [];
 dir = []; % direction = 2nd state on path
 ord = []; % ordinal of trial type within phase (e.g. "first 1->6", "second 1->6", etc)
 subj_group = [];
+subj_len = [];
 s_id = [];
 for subj = 1:size(data,1)
     phase = 2;
@@ -27,6 +28,7 @@ for subj = 1:size(data,1)
         s_id = [s_id; subj];
     end
     subj_group = [subj_group; data(subj,1).group(1)];
+    subj_len = [subj_len; mean(data(subj, 1).len)];
 end
 
 
@@ -92,3 +94,13 @@ for t = 1:6 % length(start)
 end
 
 
+
+%{
+% do chunkers have shorter paths?
+%
+chunkers = s_id(ord == 1 & s == 6 & dir == 5);
+nonchunkers = s_id(ord == 1 & s == 6 & dir == 7);
+cl = subj_len(chunkers);
+nl = subj_len(nonchunkers);
+[h, p, ci, stats] = ttest2(cl, nl);
+%}
