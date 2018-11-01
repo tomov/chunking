@@ -2,11 +2,12 @@
 
 clear all;
 
-%{
+
 h.alpha = 1.5;
 
+%{
 % load data
-D = init_Ds_from_data('exp/results/subway10');
+D = init_Ds_from_data('exp/results');
 for i = 1:length(D)
     [samples, post] = sample(D(i), h, 1000);
     for j = 1:length(samples)
@@ -15,10 +16,12 @@ for i = 1:length(D)
     end
 end
 
-save demo5.mat;
+save demo5_1.mat;
+
 %}
 
-load demo5.mat;
+
+load demo5_1.mat;
 
 %{
 % hack sanity check -- make them all like D(1)
@@ -79,14 +82,15 @@ end
 % compute stats
 % TODO dedupe w/ analyze_data.m
 
-start = [6 7 1 2];
-goal = [1 2 6 7];
+start = [6 7 3 1 2 8];
+goal = [1 2 8 6 7 3];
 nexts = [
 5 7;
 8 6;
+2 4;
 2 10;
-1 3
-];
+1 3;
+9 7];
 
 figure;
 
@@ -109,16 +113,18 @@ for t = 1:length(start)
     n = length(D);
     p = 2 * binopdf((n - d) / 2, n, 0.5);
 
-    subplot(2,2,t);
+    subplot(2,3,t);
     bar(1:2, [c1 c2]);
     xticklabels({num2str(m(1)), num2str(m(2))});
     title(sprintf('%d -> %d: p = %.3f (d = %d, n = %d)', start(t), goal(t), p, d, n));
     %ylim([4 5]);
 
+    %{
     if t == 1
         ylabel('state chunking')
     elseif t == 3
         ylabel('action chunking / S-A')
     end
+    %}
 end
 

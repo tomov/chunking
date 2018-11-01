@@ -1,11 +1,11 @@
 function [data, Ts] = load_data
 
-    %dirname = 'exp/results'; 
+    dirname = 'exp/results'; 
     %bad_dirname = 'exp/results/bad';
 
-    expected_number_of_rows = 110;
+    expected_number_of_rows = 83;
     %dirname = 'exp/results/subway10'; % expected # rows = 100
-    dirname = 'exp/results/subway10_noadj'; % expected # rows = 110
+    %dirname = 'exp/results/subway10_noadj'; % expected # rows = 110
     %dirname = 'exp/results/subway_10_randsg_WRONG'; % expected # rows = 116
 
     %dirname = 'exp/results/ARCHIVE/subway_10_noadj_batch2'; % expected # rows = 110
@@ -40,6 +40,7 @@ function [data, Ts] = load_data
         skip_subj = false;
 
         % TODO dedupe with init_D_from_csv.m
+        max_RT = 0;
         phase = 1;
         j = 1; % idx within phase
         for i = 1:size(T,1)
@@ -76,6 +77,8 @@ function [data, Ts] = load_data
             if isempty(g)
                 g = 0;
             end
+            RTs = str2num(T.RTs{i});
+            max_RT = max(max_RT, max(RTs));
             path = str2num(T.path{i});
             assert(length(path) == T.length(i));
             group = strip(T.group{i});
@@ -121,6 +124,13 @@ function [data, Ts] = load_data
             end
         end
         %}
+
+        fprintf('         max RT = %.2f s\n', max_RT / 1000);
+
+        if ismember('timestamp', T.Properties.VariableNames)
+            dur = T.timestamp(end) - T.timestamp(1);
+            fprintf('             duration = %.2f mins\n', dur / 60);
+        end
 
         if ~skip_subj
             subj = subj + 1;

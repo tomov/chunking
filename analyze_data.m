@@ -54,15 +54,15 @@ ylabel('path length');
 % show test choices
 %
 
-start = [6 7 1 2 8 3];
-goal = [1 2 6 7 3 8];
+start = [6 7 3 1 2 8];
+goal = [1 2 8 6 7 3];
 nexts = [
 5 7;
 8 6;
+2 4;
 2 10;
 1 3;
-9 7;
-2 4];
+9 7];
 
 figure;
 
@@ -82,11 +82,13 @@ for t = 1:6 % length(start)
     title(sprintf('%d -> %d: p = %.3f (d = %d, n = %d)', start(t), goal(t), p, d, n));
     %ylim([4 5]);
 
+    %{
     if t == 1
         ylabel('state chunking')
     elseif t == 3
         ylabel('action chunking / S-A')
     end
+    %}
 end
 
 

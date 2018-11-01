@@ -3,13 +3,18 @@ branch exp_subway_10_1 (exp_v1.html and exp_v1.js in master)
     exp.html: 100 trials (80 train, 20 test), adjacent stations shown, no grouped test trials
 
     [Toyota] momchil-subway-10
-        ARCHIVE/subway10-batch1 <-- pilot
-        ARCHIVE/subway10-batch2 <-- 30 more
+        ARCHIVE/subway10_batch1 <-- pilot
+        ARCHIVE/subway10_batch2 <-- 30 more
 
     [Toyota] momchil subway 10 2
-        ARCHIVE/subway10-batch2 <-- 30 more
+        ARCHIVE/subway10_batch3 <-- 30 more
 
     -> merged in subway_10
+
+    [Toyota] momchil subway 10 3
+        ARCHIVE/subway10_batch4 <-- 78 more, with exp_v1.html and exp_v1.js pimped up (b92bd7c1a2eab12807e06ff7103afd56ebfcd2ec)
+
+    -> merged in subway10_repro
 
 branch exp_subway10_noadj_1
 
