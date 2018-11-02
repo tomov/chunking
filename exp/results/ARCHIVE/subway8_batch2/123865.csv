@@ -1,0 +1,2 @@
+group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot, timestamp, datetime
+A,123865,train,4,5,4 5,2,1 6904 5014,39 38 32,11919,1541165974.726,Fri Nov 02 2018 08:39:34 GMT-0500 (Central Daylight Time)

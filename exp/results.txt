@@ -14,9 +14,21 @@ branch exp_subway_10_1 (exp_v1.html and exp_v1.js in master)
     [Toyota] momchil subway 10 3
         ARCHIVE/subway10_batch4 <-- 78 more, with exp_v1.html and exp_v1.js pimped up (b92bd7c1a2eab12807e06ff7103afd56ebfcd2ec)
 
-    -> merged in subway10_repro
+    -> good ones in subway10_repro
+
+exp_v1_1 in master (subway 8):
 
     [Toyota] momchil subway 8 1 (c1f3effbb599)
+        ARCHIVE/subway8_batch1 <-- 30 
+
+    -> good ones in subway8
+
+exp_v1_2 in master (subway 8 with random start, goal pairs):
+
+    [Toyota] momchil subway 8 2 (f08d18e4badf3610e)
+        ARCHIVE/subway8_batch2 <-- 30 with ra
+
+    -> good ones in subway8_randsg
 
 branch exp_subway10_noadj_1
 

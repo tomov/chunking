@@ -3,7 +3,9 @@ function [data, Ts] = load_data
     dirname = 'exp/results'; 
     bad_dirname = 'exp/results/bad';
 
-    expected_number_of_rows = 83;
+    expected_number_of_rows = 103;
+    %dirname = 'exp/results/subway8_randsg';  % expected = 103
+    %dirname = 'exp/results/subway8';  % expected = 83
     %dirname = 'exp/results/subway10_repro';  % expected = 83
     %dirname = 'exp/results/subway10'; % expected # rows = 100
     %dirname = 'exp/results/subway10_noadj'; % expected # rows = 110
@@ -14,6 +16,7 @@ function [data, Ts] = load_data
 
     files = dir(dirname);
     subj = 1;
+    durs = [];
     for idx = 1:length(files)
         if ~endsWith(files(idx).name, 'csv')
             continue;
@@ -133,6 +136,7 @@ function [data, Ts] = load_data
 
         if ismember('timestamp', T.Properties.VariableNames)
             dur = T.timestamp(end) - T.timestamp(1);
+            durs = [durs, dur];
             fprintf('             duration = %.2f mins\n', dur / 60);
         end
 
@@ -144,5 +148,8 @@ function [data, Ts] = load_data
             end
         end
     end
+
+    durs = durs / 60;
+    fprintf('avg duration = %.2f +- %.2f mins\n', mean(durs), std(durs)/sqrt(length(durs)));
 
     save('data.mat', 'data', 'Ts');
