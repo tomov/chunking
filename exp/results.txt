@@ -16,6 +16,8 @@ branch exp_subway_10_1 (exp_v1.html and exp_v1.js in master)
 
     -> merged in subway10_repro
 
+    [Toyota] momchil subway 8 1 (c1f3effbb599)
+
 branch exp_subway10_noadj_1
 
     exp_noadj.html: 110 trials (80 train, 30 test), no adjacent stations, grouped test trials

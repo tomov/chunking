@@ -56,6 +56,7 @@ ylabel('path length');
 % show test choices
 %
 
+% for subway 10
 start = [6 7 3 1 2 8];
 goal = [1 2 8 6 7 3];
 nexts = [
@@ -66,9 +67,18 @@ nexts = [
 1 3;
 9 7];
 
+% for subway 8
+start = [5 3 6];
+goal = [1 7 2];
+nexts = [
+4 6;
+2 4;
+7 5
+];
+
 figure;
 
-for t = 1:6 % length(start)
+for t = 1:length(start)
     which = s == start(t) & ord == 1;
     move = dir(which);
     m = nexts(t,:);
