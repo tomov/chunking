@@ -76,6 +76,15 @@ nexts = [
 7 5
 ];
 
+% for subway 8 reversed
+start = [1 7 2];
+goal = [5 3 6];
+nexts = [
+2 8;
+8 6;
+1 3
+];
+
 figure;
 
 for t = 1:length(start)

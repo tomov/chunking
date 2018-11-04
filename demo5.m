@@ -2,26 +2,25 @@
 
 clear all;
 
-
+%{
 h.alpha = 1.5;
 
-%{
 % load data
-D = init_Ds_from_data('exp/results');
+D = init_Ds_from_data('exp/results/subway8_randsg');
 for i = 1:length(D)
-    [samples, post] = sample(D(i), h, 1000);
+    i
+    [samples, post] = sample(D(i), h, 10);
     for j = 1:length(samples)
         H(i,j) = samples(j);
         P(i,j) = post(j);
     end
 end
 
-save demo5_1.mat;
+save demo5_2.mat;
 
 %}
 
-
-load demo5_1.mat;
+load demo5_2.mat;
 
 %{
 % hack sanity check -- make them all like D(1)
@@ -82,6 +81,7 @@ end
 % compute stats
 % TODO dedupe w/ analyze_data.m
 
+% for subway 10
 start = [6 7 3 1 2 8];
 goal = [1 2 8 6 7 3];
 nexts = [
@@ -91,6 +91,15 @@ nexts = [
 2 10;
 1 3;
 9 7];
+
+% for subway 8
+start = [5 3 6];
+goal = [1 7 2];
+nexts = [
+4 6;
+2 4;
+7 5
+];
 
 figure;
 
