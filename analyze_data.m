@@ -68,18 +68,12 @@ nexts = [
 9 7];
 
 % for subway 8
-start = [5 3 6];
-goal = [1 7 2];
+start = [5 3 6 1 7 2];
+goal = [1 7 2 5 3 6];
 nexts = [
 4 6;
 2 4;
-7 5
-];
-
-% for subway 8 reversed
-start = [1 7 2];
-goal = [5 3 6];
-nexts = [
+7 5;
 2 8;
 8 6;
 1 3

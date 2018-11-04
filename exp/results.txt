@@ -26,9 +26,12 @@ exp_v1_1 in master (subway 8):
 exp_v1_2 in master (subway 8 with random start, goal pairs):
 
     [Toyota] momchil subway 8 2 (f08d18e4badf3610e)
-        ARCHIVE/subway8_batch2 <-- 30 with ra
+        ARCHIVE/subway8_batch2 <-- 30 with random start,goal pairs
 
-    -> good ones in subway8_randsg
+    [Toyota] momchil subway 8 3 (f08d18e4badf3610e)
+        ARCHIVE/subway8_batch3 <-- 30 with reversed test trials 
+
+    -> good ones merged in subway8_randsg
 
 branch exp_subway10_noadj_1
 
