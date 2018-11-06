@@ -1,0 +1,34 @@
+\begin{thebibliography}{1}
+
+\bibitem{Solway2014}
+Alec Solway, Carlos Diuk, Natalia C{\'o}rdova, Debbie Yee, Andrew~G. Barto,
+  Yael Niv, and Matthew~M. Botvinick.
+\newblock Optimal behavioral hierarchy.
+\newblock {\em PLOS Computational Biology}, 10(8):1--10, 08 2014.
+
+\bibitem{Schapiro2013}
+Anna~C. Schapiro, Timothy~T. Rogers, Natalia~I. Cordova, Nicholas~B.
+  Turk-Browne, and Matthew~M. Botvinick.
+\newblock Neural representations of events arise from temporal community
+  structure.
+\newblock {\em Nature Neuroscience}, 16(4):486--492, Apr 2013.
+
+\bibitem{balaguer2016neural}
+Jan Balaguer, Hugo Spiers, Demis Hassabis, and Christopher Summerfield.
+\newblock Neural mechanisms of hierarchical planning in a virtual subway
+  network.
+\newblock {\em Neuron}, 90(4):893--903, 2016.
+
+\bibitem{fernandez2013multi}
+Juan~A Fern{\'a}ndez and Javier Gonz{\'a}lez.
+\newblock {\em Multi-hierarchical representation of large-scale space:
+  Applications to mobile robots}, volume~24.
+\newblock Springer Science \& Business Media, 2013.
+
+\bibitem{miller1956magic}
+George~A Miller.
+\newblock The magic number seven plus or minus two: Some limits on our capacity
+  for processing information.
+\newblock {\em Psychological review}, 63:91--97, 1956.
+
+\end{thebibliography}

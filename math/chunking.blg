@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2017)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: chunking.aux
+The style file: unsrt.bst
+Database file #1: chunking.bib.bib
+You've used 5 entries,
+            1791 wiz_defined-function locations,
+            487 strings with 4648 characters,
+and the built_in function-call counts, 1201 in all, are:
+= -- 98
+> -- 66
+< -- 1
++ -- 24
+- -- 19
+* -- 101
+:= -- 204
+add.period$ -- 15
+call.type$ -- 5
+change.case$ -- 4
+chr.to.int$ -- 0
+cite$ -- 5
+duplicate$ -- 46
+empty$ -- 110
+format.name$ -- 19
+if$ -- 255
+int.to.chr$ -- 0
+int.to.str$ -- 5
+missing$ -- 6
+newline$ -- 28
+num.names$ -- 5
+pop$ -- 10
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 16
+stack$ -- 0
+substring$ -- 77
+swap$ -- 6
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 11
+width$ -- 6
+write$ -- 57
