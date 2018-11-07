@@ -68,6 +68,7 @@ nexts = [
 9 7];
 
 % for subway 8
+%{
 start = [5 3 6 1 7 2];
 goal = [1 7 2 5 3 6];
 nexts = [
@@ -78,6 +79,7 @@ nexts = [
 8 6;
 1 3
 ];
+%}
 
 figure;
 
