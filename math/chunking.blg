@@ -3,44 +3,44 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: chunking.aux
 The style file: unsrt.bst
 Database file #1: chunking.bib.bib
-You've used 5 entries,
+You've used 8 entries,
             1791 wiz_defined-function locations,
-            487 strings with 4648 characters,
-and the built_in function-call counts, 1201 in all, are:
-= -- 98
-> -- 66
+            509 strings with 5115 characters,
+and the built_in function-call counts, 1876 in all, are:
+= -- 166
+> -- 86
 < -- 1
-+ -- 24
-- -- 19
-* -- 101
-:= -- 204
-add.period$ -- 15
-call.type$ -- 5
-change.case$ -- 4
++ -- 32
+- -- 24
+* -- 153
+:= -- 309
+add.period$ -- 24
+call.type$ -- 8
+change.case$ -- 7
 chr.to.int$ -- 0
-cite$ -- 5
-duplicate$ -- 46
-empty$ -- 110
-format.name$ -- 19
-if$ -- 255
+cite$ -- 8
+duplicate$ -- 73
+empty$ -- 179
+format.name$ -- 24
+if$ -- 401
 int.to.chr$ -- 0
-int.to.str$ -- 5
-missing$ -- 6
-newline$ -- 28
-num.names$ -- 5
-pop$ -- 10
+int.to.str$ -- 8
+missing$ -- 9
+newline$ -- 43
+num.names$ -- 8
+pop$ -- 13
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 16
+skip$ -- 27
 stack$ -- 0
-substring$ -- 77
-swap$ -- 6
+substring$ -- 143
+swap$ -- 9
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 11
-width$ -- 6
-write$ -- 57
+while$ -- 20
+width$ -- 9
+write$ -- 90

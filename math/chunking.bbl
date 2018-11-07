@@ -31,4 +31,21 @@ George~A Miller.
   for processing information.
 \newblock {\em Psychological review}, 63:91--97, 1956.
 
+\bibitem{gershman2012tutorial}
+Samuel~J Gershman and David~M Blei.
+\newblock A tutorial on bayesian nonparametric models.
+\newblock {\em Journal of Mathematical Psychology}, 56(1):1--12, 2012.
+
+\bibitem{roberts2009examples}
+Gareth~O Roberts and Jeffrey~S Rosenthal.
+\newblock Examples of adaptive mcmc.
+\newblock {\em Journal of Computational and Graphical Statistics},
+  18(2):349--367, 2009.
+
+\bibitem{neal2000markov}
+Radford~M Neal.
+\newblock Markov chain sampling methods for dirichlet process mixture models.
+\newblock {\em Journal of computational and graphical statistics},
+  9(2):249--265, 2000.
+
 \end{thebibliography}
