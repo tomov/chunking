@@ -95,6 +95,11 @@ for t = 1:length(start)
 
     subplot(2,3,t);
     bar(1:2, [c1 c2]);
+    hold on;
+    y = binoinv([0.025 0.975], n, 0.5);
+    plot([0 3], [y(1) y(1)], '--', 'Color', [0.5 0.5 0.5]);
+    plot([0 3], [y(2) y(2)], '--', 'Color', [0.5 0.5 0.5]);
+    hold off;
     xticklabels({num2str(m(1)), num2str(m(2))});
     title(sprintf('%d -> %d: p = %.3f (d = %d, n = %d)', start(t), goal(t), p, d, n));
     %ylim([4 5]);
