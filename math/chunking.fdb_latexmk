@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex chunking"] 1541602112 "chunking.aux" "chunking.bbl" "chunking" 1541602190
+["bibtex chunking"] 1541602112 "chunking.aux" "chunking.bbl" "chunking" 1541602374
   "/usr/local/texlive/2017/texmf-dist/bibtex/bst/base/unsrt.bst" 1480098433 18030 1376b4b231b50c66211e47e42eda2875 ""
-  "chunking.aux" 1541602190 1846 ca231e4544a0322ff862dea0f338f9eb ""
+  "chunking.aux" 1541602374 1846 ca231e4544a0322ff862dea0f338f9eb ""
   "chunking.bib" 1541601862 63301 4336eddae246b66e9151894020e28e18 ""
   (generated)
   "chunking.blg"
   "chunking.bbl"
-["pdflatex"] 1541602189 "chunking.tex" "chunking.pdf" "chunking" 1541602190
+["pdflatex"] 1541602373 "chunking.tex" "chunking.pdf" "chunking" 1541602374
   "/usr/local/texlive/2017/texmf-dist/fonts/map/fontname/texfonts.map" 1480098670 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2017/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1480098698 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2017/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1480098698 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -90,12 +90,12 @@
   "/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1495593472 2350277 a699055bee05bf8a40b0504752487295 ""
   "/usr/local/texlive/2017/texmf-var/web2c/pdftex/pdflatex.fmt" 1495593487 4129592 0e6cfee100d68e6d96b92c0258f2ff73 ""
   "/usr/local/texlive/2017/texmf.cnf" 1495593465 577 2b71d4d888f9e5560b2e99985915a9fa ""
-  "chunking.aux" 1541602190 1846 ca231e4544a0322ff862dea0f338f9eb ""
+  "chunking.aux" 1541602374 1846 ca231e4544a0322ff862dea0f338f9eb ""
   "chunking.bbl" 1541602112 1865 a166885ec1f7b4fd07efca64ef42da21 "bibtex chunking"
-  "chunking.out" 1541602190 318 6954f8be5ca97b2fd09979f493cff8ba ""
-  "chunking.tex" 1541602181 67564 b607e42bdffd608c41f20c3a640525bc ""
+  "chunking.out" 1541602374 318 6954f8be5ca97b2fd09979f493cff8ba ""
+  "chunking.tex" 1541602372 67577 1d30ee0f794f01e9bf6fbb7ad36c66cb ""
   (generated)
-  "chunking.log"
   "chunking.out"
   "chunking.aux"
+  "chunking.log"
   "chunking.pdf"

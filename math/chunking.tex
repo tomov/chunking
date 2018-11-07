@@ -86,7 +86,7 @@ These can be formalized into a generative model for "good" hierarchies:
     Pr[(i,j) \in E \mid b_{c_i,c_j} = (i,j)] &= 1    && \text{bridge edges} 
 \end{align*}
 
-Where $n_k = |\{ i | c_i=k \}|$ is the size of chunk $k$ and CRP is the Chinese restaurant process, a nonparametric prior for clusterings \cite{gershman2012tutorial}. 
+Where $n_k = |\{ i : c_i=k \}|$ is the size of chunk $k$ and CRP is the Chinese restaurant process, a nonparametric prior for clusterings \cite{gershman2012tutorial}. 
 
 Hierarchy discovery can then be framed as inverting the generative model (in similar spirit to how k-means clustering can be understood as inference over a Gaussian Mixture model). The posterior probability of $H$ is:
 
@@ -106,9 +106,9 @@ Informally, the hierarchy discovery algorithm might account for tasks by chunkin
 Defining $tasks = \{task_t\}$ and $task_t = (s_t,g_t)$, we can augment the generative model as:
 
 \begin{align*}
-    p" &\sim Beta(1,1)		&& \text{cross-chunk task penalty} \\
+    p'' &\sim Beta(1,1)		&& \text{cross-chunk task penalty} \\
     Pr[s_t = i] &= \frac{1}{N}		&& \text{starting states} \\
-    Pr[g_t = j \mid s_t = i] &\propto \begin{cases} 1 \,\,\text{ if } c_i = c_j  \\ p" \,\,\text{ otherwise} \end{cases} 		&& \text{goal states} 
+    Pr[g_t = j \mid s_t = i] &\propto \begin{cases} 1 \,\,\text{ if } c_i = c_j  \\ p'' \,\,\text{ otherwise} \end{cases} 		&& \text{goal states} 
 \end{align*}
 
 Where $N = |V|$ is the total number of states. We denote the observable data as $D = (tasks, G)$. The posterior then becomes:
@@ -116,7 +116,7 @@ Where $N = |V|$ is the total number of states. We denote the observable data as 
 \begin{align}
     P(H|D) &\propto P(D|H) P(H) \\ 
     &= P(tasks|G,H) P(G|H) P(H) \\
-    &= \left[ \prod_t P(g_t|s_t,G,H) P(s_t|G,H) \right] P(G|H) P(H)
+    &= \left[ \prod_t P(g_t|s_t,p'',G,H) P(s_t|G,H) \right] P(p'') P(G|H) P(H)
 \end{align}
 
 Where the last two terms are the same as in Eq. \ref{eq:post}.
