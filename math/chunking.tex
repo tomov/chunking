@@ -103,7 +103,7 @@ Like prevous authors \cite{Solway2014, balaguer2016neural}, we assume the agent 
 
 Informally, the hierarchy discovery algorithm might account for tasks by chunking together states that frequently co-occur in the same task, since hierarchical planning is optimal within chunks. 
 
-Defining $tasks = \{task_t\}$ and $task_t = (s_t,g_t)$, we can augment the generative model as:
+Defining $tasks = \{task_t\}$ and $task_t = (s_t,g_t)$, we can extend the generative model with:
 
 \begin{align*}
     p'' &\sim Beta(1,1)		&& \text{cross-chunk task penalty} \\
