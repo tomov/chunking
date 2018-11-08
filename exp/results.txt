@@ -41,6 +41,13 @@ exp_v1_3 in master (subway 9)
 
     -> good ones in subway9
 
+exp_v2.html in master (subway 6)
+
+    [Toyota] momchil subway 6 1 (8a93c35a1fe230f7eee8d68)
+        ARCHIVE/subway6_batch1
+
+    -> good ones in subway6
+
 branch exp_subway10_noadj_1
 
     exp_noadj.html: 110 trials (80 train, 30 test), no adjacent stations, grouped test trials
