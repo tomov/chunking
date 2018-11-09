@@ -1,4 +1,4 @@
-function [data, Ts] = load_data
+function [data, Ts, f_chunk, RT_all, RT_new] = load_data
 
     dirname = 'exp/results'; 
     %bad_dirname = 'exp/results/bad';
@@ -19,6 +19,9 @@ function [data, Ts] = load_data
     files = dir(dirname);
     subj = 1;
     durs = [];
+    f_chunk = [];
+    RT_all = [];
+    RT_new = [];
     for idx = 1:length(files)
         if ~endsWith(files(idx).name, 'csv')
             continue;
@@ -46,6 +49,8 @@ function [data, Ts] = load_data
         skip_subj = false;
 
         % TODO dedupe with init_D_from_csv.m
+        RT_chunk = [];
+        RT_nonchunk = [];
         max_RT = 0;
         phase = 1;
         j = 1; % idx within phase
@@ -117,6 +122,12 @@ function [data, Ts] = load_data
             data(subj, phase).RTs{j} = RTs;
             data(subj, phase).RT_tot(j) = RT_tot;
 
+            if (s == 1 && g == 3) || (s == 4 && g == 6) || (s == 9 && g == 7)
+                RT_chunk = [RT_chunk RT_tot];
+            else
+                RT_nonchunk = [RT_nonchunk RT_tot];
+            end
+
             j = j + 1;
         end
 
@@ -134,7 +145,10 @@ function [data, Ts] = load_data
         end
         %}
 
-        fprintf('         max RT = %.2f s, total RT = %.2f min\n', max_RT / 1000, sum(T.RT_tot) / 1000 / 60);
+        fprintf('         max RT = %.2f s, total RT = %.2f min,  avg chunk RT = %.2f sec;   avg nonchunk RT = %.2f sec\n', max_RT / 1000, sum(T.RT_tot) / 1000 / 60, mean(RT_chunk) / 1000, mean(RT_nonchunk) / 1000);
+        f_chunk = [f_chunk mean(RT_nonchunk) / mean(RT_chunk)]; % factor by which chunking improves RTs
+        RT_all = [RT_all sum(RT_chunk) + sum(RT_nonchunk)]; % Total RT
+        RT_new = [RT_new 4 * sum(RT_nonchunk)]; % Total RT if nonchunk trials only
 
         if ismember('timestamp', T.Properties.VariableNames)
             dur = T.timestamp(end) - T.timestamp(1);
