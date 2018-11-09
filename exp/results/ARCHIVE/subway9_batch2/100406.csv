@@ -1,0 +1,2 @@
+group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot, timestamp, datetime
+A,100406,train,9,7,9 1 2 1 9 8 7,7,1549 4143 2352 2896 3136 1824 4768,37 37 39 39 40 40 32,20668,1541720017.445,Thu Nov 08 2018 15:33:37 GMT-0800 (Pacific Standard Time)

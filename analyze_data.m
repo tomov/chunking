@@ -56,7 +56,7 @@ ylabel('path length');
 % show test choices
 %
 
-% for subway 10
+% for subway 10 and 9
 start = [6 7 3 1 2 8];
 goal = [1 2 8 6 7 3];
 nexts = [
@@ -82,12 +82,14 @@ nexts = [
 %}
 
 % for subway 6
+%{
 start = [4 5 2];
 goal = [1 2 5];
 nexts = [
 3 5;
 6 4;
 1 3];
+%}
 
 figure;
 
