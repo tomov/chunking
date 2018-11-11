@@ -19,6 +19,16 @@ function logp = logprior(H, D, h)
 
     logp = logp + log(betapdf(H.p,1,1)) + log(betapdf(H.q,1,1)); % TODO const
 
+    % for each cluster
+    for k = 1:length(H.c)
+        % account for impact of gamma on posterior
+        % below probability is Pr that the particular value of gamma was
+        % drawn given that it was drawn from a normal dist w mu = 0, var =
+        % 100 ; Pr(gamma_k = x | rest of H) = normpdf(x; 0, 100)
+        logp = logp + log(normpdf(H.gamma(k), 0, 100));
+    end
+    
+
     % TODO bridges
 
 end

@@ -51,6 +51,14 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
 
         [q, accept] = mhsample(H.q, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
         H.q = q;
+        
+        % do sampling for gammas
+        % for proposal function, just use logprop_p (Gaussian random walk; maybe want a different
+        % random walk that takes larger jumps on each step, e.g. more like size = 1 instead of < 1)
+        % Use same target distribution (still proportional to the same
+        % posterior)
+        
+        % do sampling for mu's
 
         % TODO bridges
 

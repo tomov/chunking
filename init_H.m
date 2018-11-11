@@ -16,6 +16,9 @@ function H = init_H(D, h)
     end
     H.cnt = cnt;
 
+    H.gammas = normrnd(len(H.c), 0, 100) % sample each element of the vector from normal
+    % initialize H.mu for mu's that we don't know
+    H.mu(H.which_mus_are_not_known) = normrnd(H.gammas(which_mus_are_not_known), 1000)
     H.p = betarnd(1,1); % TODO const 
     H.q = betarnd(1,1); % TODO const 
 end

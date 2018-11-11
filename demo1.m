@@ -11,7 +11,7 @@ D(3) = init_D_from_txt('solway2.txt');
 D(4) = init_D_from_txt('schapiro.txt');
 D(5) = init_D_from_txt('lynn.txt');
 
-for i = 5:length(D)
+for i = 1:length(D)
     tic 
     [samples, post] = sample(D(i), h);
     for j = 1:length(samples)

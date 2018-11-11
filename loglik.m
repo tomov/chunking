@@ -22,5 +22,10 @@ function logp = loglik(H, D, h)
             % TODO bridges
         end
     end
+    
+    
+    for i = 1:D.G.N
+        logp = logp + log(normpdf( H.mu(i), H.gamma(H.c(H.mu(i))), 100 ))
+    end
 end
 
