@@ -40,15 +40,14 @@ exp_v1_3 in master (subway 9)
         ARCHIVE/subway9_batch1
         ARCHIVE/subway9_batch2
 
-    -> good merged ones in subway9
+    -> good ones merged in subway9
 
 exp_v1_3 in master (subway 9 control)
 
-    [Toyota] momchil subway 9 1 (f747bb99e4272959c437915)
-        ARCHIVE/subway9_batch1
-        ARCHIVE/subway9_batch2
+    [Toyota] momchil subway 9 2 (.............)
+        ARCHIVE/subway9_control_batch1
 
-    -> good merged ones in subway9
+    -> good ones merged in subway9_control
 
 exp_v2.html in master (subway 6)
 
