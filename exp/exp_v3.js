@@ -359,7 +359,7 @@ function redraw() {
     // nodes
     for (var i = 0; i < exp.N; i++) {
         ctx.beginPath();
-        ctx.rect(exp.x[i] * scale + xoffs - 0.25 * scale, exp.y[i] * scale + yoffs - 0.17 * scale, 0.5 * scale, 0.30 * scale);
+        ctx.rect(exp.x[i] * scale + xoffs - 0.25 * scale, exp.y[i] * scale + yoffs - 0.25 * scale, 0.5 * scale, 0.50 * scale);
         ctx.fillStyle = "black"; 
         ctx.fill();
         if (i == cur - 1) {
