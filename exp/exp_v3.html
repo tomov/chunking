@@ -130,12 +130,12 @@
   </div>
 
   <div id = "trial_page" class="trial_page" >
-      <canvas id="map" width="1600" height="1200" style="position: absolute; left: 10%; top: 10%; width: 80%;"> </canvas>
+      <canvas id="map" width="1600" height="1200" style="padding-top: 5%; height: 80%;"> Your browser doesn't support HTML canvas. </canvas>
 
       <p id="goal_state" style="position: absolute; left: 10%; top: 10%; text-align: left;">Goal</p>
 
       <h1 id="message" style="position: absolute; left: 0; top: 60%; width: 100%; text-align: center;">message</h1>
-      <h1 id="countdown" style="position: absolute; left: 0; top: 85%; width: 100%; text-align: center;">countdown</h1>
+      <h1 id="countdown" style="position: absolute; left: 0; top: 80%; width: 100%; text-align: center;">countdown</h1>
       <p id="tip" style="position: absolute; left: 0; top: 90%; width: 100%; text-align: center; color: grey;">Move using the <b>arrow keys</b> (up, down, left, right). Press <b>space</b> when you reach the goal.</p>
   </div>
 
@@ -154,16 +154,14 @@
 
 
   <script type="text/javascript">
-      $("#consent_page").hide();
+      $("#consent_page").show();
       $("#captcha").hide();
       $("#instruction_page").hide();
       $("#new_trial_page").hide();
       $("#trial_page").hide();
       $("#test_page").hide();
       $("#final_page").hide();
-
-      initExp();
-
+ 
 
       $("#agree").click(function () {
         $("#captcha").show();
