@@ -213,6 +213,7 @@ function nextTrial() {
                     $("#countdown").text("GO!");
                     stateColor("white");
                     in_trial = true;
+                    redraw();
                     last_keypress_time = (new Date()).getTime();
                     sleep(1000).then(() => {
                         $("#countdown").text("");
@@ -363,7 +364,7 @@ function redraw() {
         if (i == cur - 1) {
             ctx.lineWidth = 15;
         } else {
-            ctx.lineWidth = 1;
+            ctx.lineWidth = 2;
         }
         ctx.strokeStyle = white;
         ctx.stroke();
