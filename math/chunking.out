@@ -3,4 +3,8 @@
 \BOOKMARK [2][-]{subsection.2.1}{Preliminaries}{section.2}% 3
 \BOOKMARK [2][-]{subsection.2.2}{Model}{section.2}% 4
 \BOOKMARK [2][-]{subsection.2.3}{Tasks}{section.2}% 5
-\BOOKMARK [2][-]{subsection.2.4}{Inference}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.4}{Rewards}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.5}{Inference}{section.2}% 7
+\BOOKMARK [3][-]{subsubsection.2.5.1}{Offline}{subsection.2.5}% 8
+\BOOKMARK [3][-]{subsubsection.2.5.2}{Online}{subsection.2.5}% 9
+\BOOKMARK [2][-]{subsection.2.6}{Edge unveiling}{section.2}% 10

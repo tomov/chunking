@@ -3,44 +3,47 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: chunking.aux
 The style file: unsrt.bst
 Database file #1: chunking.bib.bib
-You've used 8 entries,
+Warning--empty journal in murphy2001active
+Warning--can't use both volume and number fields in tong2001active
+You've used 16 entries,
             1791 wiz_defined-function locations,
-            509 strings with 5115 characters,
-and the built_in function-call counts, 1876 in all, are:
-= -- 166
-> -- 86
-< -- 1
-+ -- 32
-- -- 24
-* -- 153
-:= -- 309
-add.period$ -- 24
-call.type$ -- 8
-change.case$ -- 7
+            555 strings with 6180 characters,
+and the built_in function-call counts, 3622 in all, are:
+= -- 332
+> -- 147
+< -- 4
++ -- 56
+- -- 40
+* -- 249
+:= -- 579
+add.period$ -- 50
+call.type$ -- 16
+change.case$ -- 14
 chr.to.int$ -- 0
-cite$ -- 8
-duplicate$ -- 73
-empty$ -- 179
-format.name$ -- 24
-if$ -- 401
+cite$ -- 18
+duplicate$ -- 164
+empty$ -- 356
+format.name$ -- 40
+if$ -- 803
 int.to.chr$ -- 0
-int.to.str$ -- 8
-missing$ -- 9
-newline$ -- 43
-num.names$ -- 8
-pop$ -- 13
+int.to.str$ -- 16
+missing$ -- 18
+newline$ -- 83
+num.names$ -- 16
+pop$ -- 41
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 27
+skip$ -- 69
 stack$ -- 0
-substring$ -- 143
-swap$ -- 9
-text.length$ -- 1
+substring$ -- 238
+swap$ -- 33
+text.length$ -- 4
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 0
-while$ -- 20
-width$ -- 9
-write$ -- 90
+warning$ -- 2
+while$ -- 38
+width$ -- 18
+write$ -- 177
+(There were 2 warnings)

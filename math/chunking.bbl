@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{Solway2014}
 Alec Solway, Carlos Diuk, Natalia C{\'o}rdova, Debbie Yee, Andrew~G. Barto,
@@ -36,6 +36,11 @@ Samuel~J Gershman and David~M Blei.
 \newblock A tutorial on bayesian nonparametric models.
 \newblock {\em Journal of Mathematical Psychology}, 56(1):1--12, 2012.
 
+\bibitem{sutton2018reinforcement}
+Richard~S Sutton and Andrew~G Barto.
+\newblock {\em Reinforcement learning: An introduction}.
+\newblock MIT press, 2018.
+
 \bibitem{roberts2009examples}
 Gareth~O Roberts and Jeffrey~S Rosenthal.
 \newblock Examples of adaptive mcmc.
@@ -47,5 +52,42 @@ Radford~M Neal.
 \newblock Markov chain sampling methods for dirichlet process mixture models.
 \newblock {\em Journal of computational and graphical statistics},
   9(2):249--265, 2000.
+
+\bibitem{robert2004casella}
+Christian~P Robert.
+\newblock Casella: Monte carlo statistical methods.
+\newblock {\em Springerverlag, New York}, 3, 2004.
+
+\bibitem{doucet2001introduction}
+Arnaud Doucet, Nando De~Freitas, and Neil Gordon.
+\newblock An introduction to sequential monte carlo methods.
+\newblock In {\em Sequential Monte Carlo methods in practice}, pages 3--14.
+  Springer, 2001.
+
+\bibitem{thaker2017online}
+Pratiksha Thaker, Joshua~B Tenenbaum, and Samuel~J Gershman.
+\newblock Online learning of symbolic concepts.
+\newblock {\em Journal of Mathematical Psychology}, 77:10--20, 2017.
+
+\bibitem{chopin2002sequential}
+Nicolas Chopin.
+\newblock A sequential particle filter method for static models.
+\newblock {\em Biometrika}, 89(3):539--552, 2002.
+
+\bibitem{murphy2001active}
+Kevin~P Murphy.
+\newblock Active learning of causal bayes net structure.
+\newblock 2001.
+
+\bibitem{tong2001active}
+Simon Tong and Daphne Koller.
+\newblock Active learning for structure in bayesian networks.
+\newblock In {\em International joint conference on artificial intelligence},
+  volume~17, pages 863--869. Citeseer, 2001.
+
+\bibitem{nair2006entropy}
+Chandra Nair, Balaji Prabhakar, and Devavrat Shah.
+\newblock On entropy for mixtures of discrete and continuous variables.
+\newblock {\em arXiv preprint cs/0607075}, 2006.
 
 \end{thebibliography}
