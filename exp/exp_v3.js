@@ -294,6 +294,7 @@ function checkKeyPressed(e) {
                 path.push(next);
                 stateColor("grey");
                 in_trial = false;
+                redraw();
                 logTrial();
                 sleep(1000).then(() => {
                     stateColor("white");
