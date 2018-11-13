@@ -74,6 +74,11 @@ Nicolas Chopin.
 \newblock A sequential particle filter method for static models.
 \newblock {\em Biometrika}, 89(3):539--552, 2002.
 
+\bibitem{cormen2009introduction}
+Thomas~H Cormen, Charles~E Leiserson, Ronald~L Rivest, and Clifford Stein.
+\newblock {\em Introduction to algorithms}.
+\newblock MIT press, 2009.
+
 \bibitem{murphy2001active}
 Kevin~P Murphy.
 \newblock Active learning of causal bayes net structure.

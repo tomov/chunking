@@ -167,7 +167,22 @@ The sum of the weights is then normalized to $\sum_m w^{(m)}_t = 1$. A draw from
 Since the initial samples might turn out to be a poor fit to the data $D$, we introduced a rejuvination step \cite{chopin2002sequential} that applies several iterations of Metropolis-within-Gibbs to each particle.
 
 
-\subsection{Edge unveiling}
+
+\subsection{Decision making}
+
+Here we describe the linking assumptions we use to make predictions about human choices based on $H$.
+
+\subsubsection{Hierarchical planning}
+
+The optimal algorithm to find the shortest path between a pair of low-level vertices $(s,g)$ in $G$ is breadth-first search (BFS) \cite{cormen2009introduction} whose time and memory complexity is $O(N)$ (assuming $O(1)$ vertex degrees, i.e. $|E| = O(N)$). We use a natural extension of BFS to hierarchical graphs \cite{fernandez2013multi} (hierarchical BFS or HBFS) that leverages $H$ to find paths more efficiently than BFS (approximately $O(\sqrt{N})$ time and memory). Intuitively, HBFS works by first finding a high-level path between the clusters of $s$ and $g$, $c_s$ and $c_g$, and then finding a low-level path within the cluster of $s$ between $s$ and the first bridge on the high-level path.
+
+In particular, HBFS first finds a high-level path $(k_1, ..., k_{m'})$ between $c_s$ and $c_g$ in the H graph $(V', E')$ (note that $k_1 = c_s$ and $k_{m'} = c_g$). Then it finds a low-level path $(v_1, ..., v_m)$ between $s$ and $i$ in $G[S]$, where $(i,j) = b_{k_1, k_2}$ is the first bridge on the high-level path, $S = \{v : c_v = c_s\}$ is the set of all low-level vertices in the same cluster as $s$, and $G[S]$ is the subgraph induced in $G$ by $S$. HBFS then returns $v_2$, the next vertex to move to from $s = v_1$.
+
+In an efficient hierarchy, the number of clusters will be $|V'| = O(\sqrt{N})$ and the size of each cluster $k$ will also be $n_k = O(\sqrt{N})$, resulting in $O(\sqrt{N})$ time and memory complexity for HBFS. Note that actually traversing the full low-level path from $s$ to $g$ in $G$ still takes $O(N)$ time; HBFS simply computes the next step, ensuring the agent can progress towards the goal without computing the full low-level path in advance. HBFS can straightforwardly extend to deeper hierarchies with $L > 2$, with the corresponding complexity becoming $O(\sqrt[L]{N}$).
+
+The pseudocode for HBFS is in [Box 1]. Note that we are not making any specific commitments to the cognitive plausibility of HBFS and that any other hierarchical planner would make similar predictions.
+
+\subsubsection{Edge unveiling}
 
 Drawing on the active learning framework from the causal inference literature \cite{murphy2001active, tong2001active}, we assume the agent will chose to learn about ("unveil") edges of $G$ in a way that provides maximal information about $H$. Maximizing information about $H$ is equivalent to minimizing uncertainty about $H$, which can be quantified as the entropy of $H$:
 

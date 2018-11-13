@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex chunking"] 1542061984 "chunking.aux" "chunking.bbl" "chunking" 1542062063
+["bibtex chunking"] 1542068284 "chunking.aux" "chunking.bbl" "chunking" 1542068906
   "/usr/local/texlive/2017/texmf-dist/bibtex/bst/base/unsrt.bst" 1480098433 18030 1376b4b231b50c66211e47e42eda2875 ""
-  "chunking.aux" 1542062063 2763 75a51eb6875816bc5aa6bfb8acec76aa ""
-  "chunking.bib" 1542061145 65472 e8e62613a3b7da49b318cfff74bfb6c0 ""
+  "chunking.aux" 1542068906 3086 049c5eb4c793190b4b6de5afb8dbc553 ""
+  "chunking.bib" 1542067333 65678 b5ffee70ab5456ba404ece0851533059 ""
   (generated)
   "chunking.bbl"
   "chunking.blg"
-["pdflatex"] 1542062063 "chunking.tex" "chunking.pdf" "chunking" 1542062063
+["pdflatex"] 1542068905 "chunking.tex" "chunking.pdf" "chunking" 1542068906
   "/usr/local/texlive/2017/texmf-dist/fonts/map/fontname/texfonts.map" 1480098670 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2017/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1480098698 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2017/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1480098698 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -39,8 +39,10 @@
   "/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1480098733 35752 024fb6c41858982481f6968b5fc26508 ""
   "/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb" 1480098733 32722 d7379af29a190c3f453aba36302ff5a9 ""
   "/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb" 1480098733 32362 179c33bbf43f19adbb3825bb4e36e57a ""
+  "/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb" 1480098733 32734 69e00a6b65cedb993666e42eedb3d48f ""
   "/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb" 1480098733 32726 0a1aea6fcd6468ee2cf64d891f5c43c8 ""
   "/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1480098733 32569 5e5ddc8df908dea60932f3c484a54c0d ""
+  "/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb" 1480098733 32587 1788b0c1c5b39540c96f5e42ccd6dae8 ""
   "/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb" 1480098733 32626 4f5c1b83753b1dd3a97d1b399a005b4b ""
   "/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb" 1480098733 37944 359e864bd06cde3b1cf57bb20757fb06 ""
   "/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1480098734 34694 ad62b13721ee8eda1dcc8993c8bd7041 ""
@@ -94,12 +96,12 @@
   "/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1495593472 2350277 a699055bee05bf8a40b0504752487295 ""
   "/usr/local/texlive/2017/texmf-var/web2c/pdftex/pdflatex.fmt" 1495593487 4129592 0e6cfee100d68e6d96b92c0258f2ff73 ""
   "/usr/local/texlive/2017/texmf.cnf" 1495593465 577 2b71d4d888f9e5560b2e99985915a9fa ""
-  "chunking.aux" 1542062063 2763 75a51eb6875816bc5aa6bfb8acec76aa ""
-  "chunking.bbl" 1542061984 3339 06f170b3f024334bb911e383ff4ef97c "bibtex chunking"
-  "chunking.out" 1542062063 569 1381d399173a9d80d3d6b508cb771b0b ""
-  "chunking.tex" 1542062058 72506 ebfbe782bdb415bd2583fd05ce7bb9b9 ""
+  "chunking.aux" 1542068906 3086 049c5eb4c793190b4b6de5afb8dbc553 ""
+  "chunking.bbl" 1542068284 3519 e15bd077627fc6f05398bf15ae3c02c2 "bibtex chunking"
+  "chunking.out" 1542068906 725 0e2883a8fd4b2fea5dcaa3e543e47640 ""
+  "chunking.tex" 1542068904 74697 5eafc1f1f74334ec0a9fb9a3c7cd6ee4 ""
   (generated)
-  "chunking.log"
   "chunking.out"
-  "chunking.aux"
   "chunking.pdf"
+  "chunking.aux"
+  "chunking.log"
