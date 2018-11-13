@@ -80,3 +80,13 @@ branch exp_subway10_randsg FUCK -- WRONG!!!!! if g == s !!!!!! 1/3 of trials are
         ARCHIVE/subway_10_nocountdown_1   <-- (first 7 HITs) omg avg time is 120 minutes?? WTF...
         ARCHIVE/subway_10_nocountdown_2   <-- intructions encourage speed; trials left info; workers 90% approval, at least 100 HITs
     -> merged in subway_10_randsg
+
+
+exp_v3.html in master (subway 12)
+
+    [Toyota] momchil subway 12 1 (4d740cca1dc8b94a5394adb9c6)
+        ARCHIVE/subway12_batch1
+
+    in subway12_crap <-- 8->5 instead of 5->8
+
+
