@@ -82,11 +82,19 @@ branch exp_subway10_randsg FUCK -- WRONG!!!!! if g == s !!!!!! 1/3 of trials are
     -> merged in subway_10_randsg
 
 
-exp_v3.html in master (subway 12)
+exp_v3.html in master (subway 12 but wrong training)
 
     [Toyota] momchil subway 12 1 (4d740cca1dc8b94a5394adb9c6)
         ARCHIVE/subway12_batch1
 
     in subway12_crap <-- 8->5 instead of 5->8
+
+
+exp_v3_1.html in master (subway 12)
+
+    [Toyota] momchil subway 12 2 (a66eb95b30651ac8ec52d5a)
+        ARCHIVE/subway12_batch2
+
+    in subway12
 
 
