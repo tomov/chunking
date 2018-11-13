@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex chunking"] 1542068284 "chunking.aux" "chunking.bbl" "chunking" 1542068906
+["bibtex chunking"] 1542068284 "chunking.aux" "chunking.bbl" "chunking" 1542069437
   "/usr/local/texlive/2017/texmf-dist/bibtex/bst/base/unsrt.bst" 1480098433 18030 1376b4b231b50c66211e47e42eda2875 ""
-  "chunking.aux" 1542068906 3086 049c5eb4c793190b4b6de5afb8dbc553 ""
-  "chunking.bib" 1542067333 65678 b5ffee70ab5456ba404ece0851533059 ""
+  "chunking.aux" 1542069436 3086 049c5eb4c793190b4b6de5afb8dbc553 ""
+  "chunking.bib" 1542069251 65678 b5ffee70ab5456ba404ece0851533059 ""
   (generated)
-  "chunking.bbl"
   "chunking.blg"
-["pdflatex"] 1542068905 "chunking.tex" "chunking.pdf" "chunking" 1542068906
+  "chunking.bbl"
+["pdflatex"] 1542069436 "chunking.tex" "chunking.pdf" "chunking" 1542069437
   "/usr/local/texlive/2017/texmf-dist/fonts/map/fontname/texfonts.map" 1480098670 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2017/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1480098698 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2017/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1480098698 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -96,12 +96,12 @@
   "/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1495593472 2350277 a699055bee05bf8a40b0504752487295 ""
   "/usr/local/texlive/2017/texmf-var/web2c/pdftex/pdflatex.fmt" 1495593487 4129592 0e6cfee100d68e6d96b92c0258f2ff73 ""
   "/usr/local/texlive/2017/texmf.cnf" 1495593465 577 2b71d4d888f9e5560b2e99985915a9fa ""
-  "chunking.aux" 1542068906 3086 049c5eb4c793190b4b6de5afb8dbc553 ""
-  "chunking.bbl" 1542068284 3519 e15bd077627fc6f05398bf15ae3c02c2 "bibtex chunking"
-  "chunking.out" 1542068906 725 0e2883a8fd4b2fea5dcaa3e543e47640 ""
-  "chunking.tex" 1542068904 74697 5eafc1f1f74334ec0a9fb9a3c7cd6ee4 ""
+  "chunking.aux" 1542069436 3086 049c5eb4c793190b4b6de5afb8dbc553 ""
+  "chunking.bbl" 1542069251 3519 e15bd077627fc6f05398bf15ae3c02c2 "bibtex chunking"
+  "chunking.out" 1542069436 725 0e2883a8fd4b2fea5dcaa3e543e47640 ""
+  "chunking.tex" 1542069361 74638 60538eafef7c34019ceef6f6e9b515eb ""
   (generated)
+  "chunking.aux"
   "chunking.out"
   "chunking.pdf"
-  "chunking.aux"
   "chunking.log"
