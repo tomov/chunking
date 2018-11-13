@@ -201,8 +201,8 @@ If the posterior is approximated by a set of samples $[H^{(1)}, ..., H^{(M)}]$ w
 We use $a_{i,j}$ to denote the action of unveiling edge $(i,j)$, i.e. observing whether $(i,j) \in E$. Since there is no way to know in advance what the outcome would be, the agent has to minimize the expected entropy over the two possible outcomes:
 
 \begin{align}
-    \mathbb{H}(H|D,a_{i,j}) &= \mathbb{H}(H|D \cup (i,j) \in E) Pr[(i,j) \in E | D]  \\
-                            &+ \mathbb{H}(H|D \cup (i,j) \notin E) Pr[(i,j) \notin E | D]
+    \mathbb{H}(H|D,a_{i,j}) &= \mathbb{H}(H|D, (i,j) \in E) Pr[(i,j) \in E | D]  \\
+                            &+ \mathbb{H}(H|D, (i,j) \notin E) Pr[(i,j) \notin E | D]
 \end{align}
 
 We can compute the probability of each outcome by marginalizing over $H$ and using the sampling approximation:
