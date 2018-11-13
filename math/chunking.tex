@@ -50,7 +50,7 @@ We assume a 2-layer hierarchy ($L = 2$). $G = (V,E)$ is the low-level ("flat") g
 We define $H = (V', E', c, b, p', p, q)$ as the hierarchy that is not directly observable, where:
 
 \begin{itemize}
-    \item $V'$ is the set of low-level vertices (high-level states, or clusters)
+    \item $V'$ is the set of high-level vertices (high-level states, or clusters)
     \item $E': \{V' \times V'\}$ is the set of high-level edges
     \item $c: V \rightarrow V'$ are the cluster assignments
     \item $b: E' \rightarrow E$ are the bridges
@@ -130,7 +130,7 @@ To model reward learning, we assume each state delivers stochastic rewards and t
 
 Informally, the hierarchicy discovery algorithm might account for rewards by clustering together states that deliver similar rewards. This is consistent with the tendency for humans to cluster based on perceptual features \cite{balaguer2016neural} and would be rational in an environment with autocorrelation in the reward structure.
 
-We can incorporate these intuitions into the generative model as:
+We can incorporate this into the generative model as:
 
 \begin{align*}
     \theta_k \sim \mathcal{N}(0, 100)  && \text{average cluster rewards} \\
@@ -198,21 +198,21 @@ If the posterior is approximated by a set of samples $[H^{(1)}, ..., H^{(M)}]$ w
     \mathbb{H}(H|D) \approx - \sum_m w^{(m)} \log P(H^{(m)}|D)
 \end{align}
 
-We use $a = (i,j)$ to denote the action of unveiling edge $(i,j)$, i.e. observing whether $(i,j) \in E$. Since there is no way to know in advance what the outcome would be, the agent has to minimize the expected entropy over the two possible outcomes:
+We use $a_{i,j}$ to denote the action of unveiling edge $(i,j)$, i.e. observing whether $(i,j) \in E$. Since there is no way to know in advance what the outcome would be, the agent has to minimize the expected entropy over the two possible outcomes:
 
 \begin{align}
-    \mathbb{H}(H|D,a) &= \mathbb{H}(H|D \cup (i,j) \in E) Pr[(i,j) \in E | D]  \\
+    \mathbb{H}(H|D,a_{i,j}) &= \mathbb{H}(H|D \cup (i,j) \in E) Pr[(i,j) \in E | D]  \\
                             &+ \mathbb{H}(H|D \cup (i,j) \notin E) Pr[(i,j) \notin E | D]
 \end{align}
 
-Where we can use the sampling approximation to compute the probability of each outcome by marginalizing over $H$:
+We can compute the probability of each outcome by marginalizing over $H$ and using the sampling approximation:
 
 \begin{align}
     Pr[(i,j) \in E | D] &=  \sum_H \int Pr[(i,j) \in E | H] P(H|D)  dH \\
                        &\approx \sum_m  Pr[(i,j) \in E | H] w^{(m)} 
 \end{align}
 
-Where $Pr[(i,j) \in E | H]$ is $p$ or $pq$, according to the generative model. $Pr[(i,j) \in E | H]$ is computed analogously.
+Where $Pr[(i,j) \in E | H]$ is $p$ or $pq$, according to the generative model. $Pr[(i,j) \notin E | H]$ is computed analogously.
 
 The agent then chooses the action that minimizes the expected entropy:
 
