@@ -195,8 +195,11 @@ Where the sum is over the discrete components of $H$ and the integral is over th
 If the posterior is approximated by a set of samples $[H^{(1)}, ..., H^{(M)}]$ with normalized importance weights $[w^{(1)}, ..., w^{(M)}]$, we can approximate the entropy as:
 
 \begin{align} 
-    \mathbb{H}(H|D) \approx - \sum_m w^{(m)} \log P(H^{(m)}|D)
+    \mathbb{H}(H|D) &\approx - \sum_m w^{(m)} \log P(H^{(m)}|D) \\
+                    &=  - \sum_m w^{(m)} \log( P(D|H^{(m)}) P(H^{(m)}) ) + const
 \end{align}
+
+The last transformation follows from Bayes' rule and from the fact that $P(D)$ is ... FUCK THIS IS WRONG, the term is NOT constant across different actions...
 
 We use $a_{i,j}$ to denote the action of unveiling edge $(i,j)$, i.e. observing whether $(i,j) \in E$. Since there is no way to know in advance what the outcome would be, the agent has to minimize the expected entropy over the two possible outcomes:
 
@@ -209,10 +212,10 @@ We can compute the probability of each outcome by marginalizing over $H$ and usi
 
 \begin{align}
     Pr[(i,j) \in E | D] &=  \sum_H \int Pr[(i,j) \in E | H] P(H|D)  dH \\
-                       &\approx \sum_m  Pr[(i,j) \in E | H] w^{(m)} 
+                       &\approx \sum_m  Pr[(i,j) \in E | H^{(m)}] w^{(m)} 
 \end{align}
 
-Where $Pr[(i,j) \in E | H]$ is $p$ or $pq$, according to the generative model. $Pr[(i,j) \notin E | H]$ is computed analogously.
+Where $Pr[(i,j) \in E | H]$ is $p$ or $pq$, according to the generative model. $Pr[(i,j) \notin E | D]$ is approximated analogously.
 
 The agent then chooses the action that minimizes the expected entropy:
 

@@ -91,6 +91,14 @@ nexts = [
 1 3];
 %}
 
+% for subway 12
+%
+start = [9 6];
+goal = [3 12];
+nexts = [
+10 8;
+7 5];
+
 figure;
 
 for t = 1:length(start)
