@@ -95,4 +95,9 @@ Chandra Nair, Balaji Prabhakar, and Devavrat Shah.
 \newblock On entropy for mixtures of discrete and continuous variables.
 \newblock {\em arXiv preprint cs/0607075}, 2006.
 
+\bibitem{steyvers2003inferring}
+Mark Steyvers, Joshua~B Tenenbaum, Eric-Jan Wagenmakers, and Ben Blum.
+\newblock Inferring causal networks from observations and interventions.
+\newblock {\em Cognitive science}, 27(3):453--489, 2003.
+
 \end{thebibliography}

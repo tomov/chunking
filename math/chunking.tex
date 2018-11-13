@@ -187,19 +187,18 @@ The pseudocode for HBFS is in [Box 1]. Note that we are not making any specific 
 Drawing on the active learning framework from the causal inference literature \cite{murphy2001active, tong2001active}, we assume the agent will chose to learn about ("unveil") edges of $G$ in a way that provides maximal information about $H$. Maximizing information about $H$ is equivalent to minimizing uncertainty about $H$, which can be quantified as the entropy of $H$:
 
 \begin{align}
-    \mathbb{H}(H|D) = - \sum_H \int P(H|D) \log P(H|D) dH
+    \mathbb{H}(H|D) = - \sum_{H_{disc}} \int P(H|D) \log P(H|D) d{H_{cont}}
 \end{align}
 
-Where the sum is over the discrete components of $H$ and the integral is over the continuous components of $H$. $D$ is the data observed so far. We use $\mathbb{H}$ to denote the entropy of a mixed random variable with discrete and continuous components \cite{nair2006entropy}. 
+Where $H_{disc} = (V', E', c, b)$ are the discrete components of $H$, $H_{cont} = (p', p, q)$ are the continuous components of $H$, and $D$ is the data observed so far. We use $\mathbb{H}$ to denote the entropy of a mixed random variable with discrete and continuous components \cite{nair2006entropy}. 
 
-If the posterior is approximated by a set of samples $[H^{(1)}, ..., H^{(M)}]$ with normalized importance weights $[w^{(1)}, ..., w^{(M)}]$, we can approximate the entropy as:
+Computing the entropy in this way is neither computationally feasible nor psychologically plausible. Following previous authors \cite{steyvers2003inferring}, we assume the agent has a subjective probability distribution over possible hierarchies $H$ which can be represented by a set of samples $[H^{(1)}, ..., H^{(M)}]$ with normalized weights $[w^{(1)}, ..., w^{(M)}]$ (i.e. $\sum_m w^{(m)} = 1$). Rather than integrating over all possible hierarchies and computing the posterior exactly, the agent can then approximate the entropy as:
 
 \begin{align} 
-    \mathbb{H}(H|D) &\approx - \sum_m w^{(m)} \log P(H^{(m)}|D) \\
-                    &=  - \sum_m w^{(m)} \log( P(D|H^{(m)}) P(H^{(m)}) ) + const
+    \mathbb{H}(H|D) &\approx - \sum_m w^{(m)} \log w^{(m)} \\
 \end{align}
 
-The last transformation follows from Bayes' rule and from the fact that $P(D)$ is ... FUCK THIS IS WRONG, the term is NOT constant across different actions...
+Note that while this is not a "proper" estimate of the entropy, it can serve as a basis for rational hypothesis testing.
 
 We use $a_{i,j}$ to denote the action of unveiling edge $(i,j)$, i.e. observing whether $(i,j) \in E$. Since there is no way to know in advance what the outcome would be, the agent has to minimize the expected entropy over the two possible outcomes:
 
@@ -211,7 +210,7 @@ We use $a_{i,j}$ to denote the action of unveiling edge $(i,j)$, i.e. observing 
 We can compute the probability of each outcome by marginalizing over $H$ and using the sampling approximation:
 
 \begin{align}
-    Pr[(i,j) \in E | D] &=  \sum_H \int Pr[(i,j) \in E | H] P(H|D)  dH \\
+    Pr[(i,j) \in E | D] &=  \sum_{H_{disc}} \int Pr[(i,j) \in E | H] P(H|D)  dH_{cont} \\
                        &\approx \sum_m  Pr[(i,j) \in E | H^{(m)}] w^{(m)} 
 \end{align}
 

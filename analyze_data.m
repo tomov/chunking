@@ -82,22 +82,22 @@ nexts = [
 %}
 
 % for subway 6
-%{
 start = [4 5 2];
 goal = [1 2 5];
 nexts = [
 3 5;
 6 4;
 1 3];
-%}
 
 % for subway 12
 %
-start = [9 6];
-goal = [3 12];
+%{
+start = [9 8];
+goal = [3 1];
 nexts = [
 10 8;
-7 5];
+7 9];
+%}
 
 figure;
 
