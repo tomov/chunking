@@ -4,6 +4,7 @@ function [data, Ts, f_chunk, RT_all, RT_new] = load_data
     bad_dirname = 'exp/results/bad';
 
     expected_number_of_rows = 81;
+    %dirname = 'exp/results/subway10_map';  % expected = 81 <---------- MONEY
     %dirname = 'exp/results/subway6';  % expected = 83
     %dirname = 'exp/results/subway9';  % expected = 81  <------------- MONEY!!
     %dirname = 'exp/results/subway9_control';  % expected = 81

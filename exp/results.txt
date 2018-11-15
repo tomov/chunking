@@ -101,5 +101,6 @@ exp_v3_2.html in master (subway 10 map, no countdown)
         
     [Toyota] momchil subway 10 map (dd4b471f6828464f5d286c2701fd)
         ARCHIVE/subway10_map_batch1
+        ARCHIVE/subway10_map_batch2
 
     in subway10_map
