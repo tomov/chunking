@@ -13,6 +13,12 @@ function D = init_D_from_txt(filename)
         D.G.E(i,j) = 1;
         D.G.E(j,i) = 1;
     end
+    
+    for i = 1:D.G.N
+        A = freadline(f, '%d');
+        r = A(1);
+        D.r(i) = r;
+    end
 
     D.tasks.s = [];
     D.tasks.g = [];
