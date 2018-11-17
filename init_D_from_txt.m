@@ -16,8 +16,8 @@ function D = init_D_from_txt(filename)
     
     for i = 1:D.G.N
         A = freadline(f, '%d');
-        r = A(1);
-        D.r(i) = r;
+        mu = A(1);
+        D.r{i} = normrnd(mu, 1, [1 10]);
     end
 
     D.tasks.s = [];
