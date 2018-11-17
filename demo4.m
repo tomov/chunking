@@ -4,8 +4,9 @@ clear all;
 rng default;
 
 h.alpha = 1.5;
-h.var_theta = 10;
-h.var_mu = 10;
+h.var_theta = 2;
+h.var_mu = 1;
+h.var_r = 1;
 
 D(1) = init_D_from_txt('hourglass_rewards.txt');
 for i = 1:length(D)
