@@ -1,7 +1,7 @@
 
 
 clear all;
-
+rng default;
 
 h.alpha = 1.5;
 h.var_theta = 10;

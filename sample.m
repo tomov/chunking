@@ -34,13 +34,13 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
     % Roberts & Rosenthal (2009)
     for n = 1:nsamples * lag + burnin
         
-        % save wtf.mat
+        %save wtf.mat
         
         for i = 1:D.G.N
             logp = @(c_i) logpost_c_i(c_i, i, H, D, h);
             proprnd = @(c_i_old) proprnd_c_i(c_i_old, i, H, D, h);
             logprop = @(c_i_new, c_i_old) logprop_c_i(c_i_new, c_i_old, i, H, D, h);
-
+            %save cs.mat
             [c_i, accept] = mhsample(H.c(i), 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
             H = update_c_i(c_i, i, H);
         end
@@ -188,19 +188,18 @@ end
 % proposals for mu, theta; random walk 
 %
 function p_new = proprnd_unbounded(p_old, H, D, h)
-    p_new = normrnd(p_old, 0.1); % TODO const TODO adaptive
+    p_new = normrnd(p_old, 1); % TODO const TODO adaptive
 end
 
 % account for truncating that keeps params within bounds 
 %
 function logp = logprop_p(p_new, p_old, H, D, h)
     Z = normcdf(1, p_old, 0.1) - normcdf(0, p_old, 0.1); % TODO consts TODO adaptive
-    logp = log(normpdf(p_new, p_old, 1)) - log(Z);
+    logp = log(normpdf(p_new, p_old, 0.1)) - log(Z);
     %save logprop.mat
 end
 
-% account for truncating that keeps params within bounds 
-%
+% 
 function logp = logprop_unbounded(p_new, p_old, H, D, h)
     logp = log(normpdf(p_new, p_old, 1));
     %save logprop.mat
