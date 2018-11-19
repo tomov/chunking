@@ -25,10 +25,12 @@ function logp = loglik(H, D, h)
     
     
     for i = 1:D.G.N
-        % Pr(r = x | rest of H)
-        logp = logp + 10*log(normpdf( D.r(i), H.mu(i), h.var_r ));
-        %fprintf("loglik");
-        %disp(logp);
+        for obs = 1:length(D.r{i})
+            % Pr(r = x | rest of H)
+            logp = logp + log(normpdf( D.r{i}(obs), H.mu(i), h.var_r ));
+            %fprintf("loglik");
+            %disp(logp);
+        end
     end
 end
 
