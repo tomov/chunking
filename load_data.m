@@ -32,7 +32,7 @@ function [data, Ts, f_chunk, RT_all, RT_new] = load_data
 
         filepath = fullfile(dirname, files(idx).name);
         try
-            T = readtable(filepath);
+            T = readtable(filepath, 'Delimiter', ',');
         catch
             fprintf('Error reading file %s\n', files(idx).name);
             if exist('bad_dirname', 'var')

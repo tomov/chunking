@@ -1,0 +1,3 @@
+group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot, timestamp, datetime
+A,109521,train,10,7,10 1 10 1 10 9 8 7,8,2795 2638 484 1330 471 617 1675 405 283 306 1081 698 1292 309 265 1280 3180,40 40 40 39 37 32 40 40 40 40 39 37 38 38 38 13 32,19109,1542164383.752,Tue Nov 13 2018 20:59:43 GMT-0600 (Central Standard Time)
+A,109521,train,4,6,4 5 6,3,12092 641 1483,38 37 32,14216,1542164401.01,Tue Nov 13 2018 21:00:01 GMT-0600 (Central Standard Time)

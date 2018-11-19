@@ -1,0 +1,9 @@
+group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot, timestamp, datetime
+A,181435,train,3,4,3 2 3 4,4,689 2946 2316 1529,37 39 38 32,7480,1541632773.605,Wed Nov 07 2018 15:19:33 GMT-0800 (Pacific Standard Time)
+A,181435,train,6,5,6 1 2 1 6 5,6,794 1569 1496 875 1058 1292,40 40 38 38 39 32,7084,1541632786.746,Wed Nov 07 2018 15:19:46 GMT-0800 (Pacific Standard Time)
+A,181435,train,6,5,6 5,2,482 1397,39 32,1879,1541632794.675,Wed Nov 07 2018 15:19:54 GMT-0800 (Pacific Standard Time)
+A,181435,train,3,4,3 4,2,389 875,38 32,1264,1541632802.006,Wed Nov 07 2018 15:20:02 GMT-0800 (Pacific Standard Time)
+A,181435,train,3,4,3 4,2,403 531,38 32,934,1541632808.993,Wed Nov 07 2018 15:20:08 GMT-0800 (Pacific Standard Time)
+A,181435,train,6,5,6 5,2,467 626,39 32,1093,1541632816.141,Wed Nov 07 2018 15:20:16 GMT-0800 (Pacific Standard Time)
+A,181435,train,3,4,3 4,2,367 507,38 32,874,1541632823.063,Wed Nov 07 2018 15:20:23 GMT-0800 (Pacific Standard Time)
+A,181435,train,6,5,6 5,2,544 733,39 32,1277,1541632830.398,Wed Nov 07 2018 15:20:30 GMT-0800 (Pacific Standard Time)
