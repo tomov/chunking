@@ -31,6 +31,10 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
 
     H = init_H(D, h);
 
+    % Adaptive sampling: l_i's (log of std dev for each latent variable)
+    ls_mu = zeros(1, D.G.N);
+    ls_theta = zeros(1, length(H.c));
+    
     % Roberts & Rosenthal (2009)
     for n = 1:nsamples * lag + burnin
         
@@ -51,7 +55,6 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
         proprnd = @(p_old) proprnd_p(p_old, H, D, h);
         logprop = @(p_new, p_old) logprop_p(p_new, p_old, H, D, h);
         
-        proprnd_thetamu = @(p_old) proprnd_unbounded(p_old, H, D, h);
         logprop_thetamu = @(p_new, p_old) logprop_unbounded(p_new, p_old, H, D, h);
 
         [p, accept] = mhsample(H.p, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop); % TODO adaptive
@@ -61,20 +64,37 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
         H.q = q;
         
         % do sampling for thetas
-        % for proposal function, just use logprop_p (Gaussian random walk; maybe want a different
-        % random walk that takes larger jumps on each step, e.g. more like size = 1 instead of < 1)
+        % for proposal function, just use logprop_p (Gaussian random walk;
+        % maybe want a different random walk that takes larger jumps on 
+        % each step, e.g. more like size = 1 instead of < 1).
         % Use same target distribution (still proportional to the same
         % posterior)
         for k = 1:length(H.c)
+            proprnd_thetak = @(p_old) proprnd_unbounded(p_old, H, D, h, ls_theta(1, k));
             logtheta = @(theta_k) logpost_theta(theta_k, k, H, D, h);
-            [theta_k, accept] = mhsample(H.theta(k), 1, 'logpdf', logtheta, 'proprnd', proprnd_thetamu, 'logproppdf', logprop_thetamu);
+            [theta_k, accept] = mhsample(H.theta(k), 1, 'logpdf', logtheta, 'proprnd', proprnd_thetak, 'logproppdf', logprop_thetamu);
             H.theta(k) = theta_k;
+            % Update l_i's to maintain acceptance rate of 0.44
+            d = min(0.01, sqrt(n));
+            if accept > 0.44
+                ls_theta(1,k) = ls_theta(1,k) + d;
+            else
+                ls_theta(1,k) = ls_theta(1,k) - d;
+            end
         end
         % do sampling for mu's
         for i = 1:D.G.N
+            proprnd_mui = @(p_old) proprnd_unbounded(p_old, H, D, h, ls_mu(1, k));
             logmu = @(mu_i) logpost_mu(mu_i, i, H, D, h);
-            [mu_i, accept] = mhsample(H.mu(i), 1, 'logpdf', logmu, 'proprnd', proprnd_thetamu, 'logproppdf', logprop_thetamu);
-            H.mu(i) = mu_i;
+            [mu_i, accept] = mhsample(H.mu(i), 1, 'logpdf', logmu, 'proprnd', proprnd_mui, 'logproppdf', logprop_thetamu);
+            H.mu(i) = mu_i; 
+            % Update l_i's to maintain acceptance rate of 0.44
+            d = min(0.01, sqrt(n));
+            if accept > 0.44
+                ls_mu(1,i) = ls_mu(1,i) + d;
+            else
+                ls_mu(1,i) = ls_mu(1,i) - d;
+            end
         end
         
         % TODO bridges
@@ -187,8 +207,8 @@ end
 
 % proposals for mu, theta; random walk 
 %
-function p_new = proprnd_unbounded(p_old, H, D, h)
-    p_new = normrnd(p_old, 1); % TODO const TODO adaptive
+function p_new = proprnd_unbounded(p_old, H, D, h, ls_s_k)
+    p_new = normrnd(p_old, exp(ls_s_k)); % TODO const
 end
 
 % account for truncating that keeps params within bounds 
