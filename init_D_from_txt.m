@@ -24,6 +24,18 @@ function D = init_D_from_txt(filename)
         D.tasks.g = [D.tasks.g g];
     end
 
+    % complete graph
+    A = freadline(f, '%d %d');
+    N = A(1); M = A(2);
+    D.G_complete.N = N;
+    D.G_complete.E = zeros(N, N); % TODO sparse?
+    for k = 1:M
+        A = freadline(f, '%d %d');
+        i = A(1); j = A(2);
+        D.G_complete.E(i,j) = 1;
+        D.G_complete.E(j,i) = 1;
+    end
+
     fclose(f);
 end
 
