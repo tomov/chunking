@@ -1,13 +1,14 @@
 function [data, Ts, f_chunk, RT_all, RT_new] = load_data
 
     dirname = 'exp/results'; 
-    bad_dirname = 'exp/results/bad';
+   % bad_dirname = 'exp/results/bad';
 
     expected_number_of_rows = 81;
     %dirname = 'exp/results/subway10_map';  % expected = 81 <---------- MONEY
     %dirname = 'exp/results/subway6';  % expected = 83
     %dirname = 'exp/results/subway9';  % expected = 81  <------------- MONEY!!
     %dirname = 'exp/results/subway9_control';  % expected = 81
+    %dirname = 'exp/results/ARCHIVE/subway9_control_batch1';  % expected = 81
     %dirname = 'exp/results/subway12';  % expected = 82
     %dirname = 'exp/results/subway8_randsg';  % expected = 103
     %dirname = 'exp/results/subway8';  % expected = 83

@@ -42,10 +42,11 @@ exp_v1_3 in master (subway 9)
 
     -> good ones merged in subway9
 
-exp_v1_3 in master (subway 9 control)
+exp_v1_4 in master (subway 9 control)
 
-    [Toyota] momchil subway 9 2 (.............)
+    [Toyota] momchil subway 9 2 (84d3a0d3476825f15f97fca12)
         ARCHIVE/subway9_control_batch1
+        ARCHIVE/subway9_control_batch2
 
     -> good ones merged in subway9_control
 
@@ -107,7 +108,18 @@ exp_v3_2.html in master (subway 10 map, no countdown)
 
 exp_v3_3.html in master (subway 9 map, no countdown)
         
-    [Toyota] momchil subway 9 map (9329c45da23a48ada7fc79d5)   <-- turkers cracked the code...
+    [Toyota] momchil subway 9 map (9329c45da23a48ada7fc79d5)
         ARCHIVE/subway9_map_batch1
 
-    in subway9_map
+    [Toyota] momchil subway 9 map control (3a97d50d905cba08cd1df0ed7d)     
+        ARCHIVE/subway9_map_batch2 
+
+    merged in subway9_map
+
+
+exp_v3_4.html in master (subway 9 map control, only 20 training trials)
+
+    [Toyota] momchil subway 9 map control (3a97d50d905cba08cd1df0ed7d)
+        ARCHIVE/subway9_map_control_batch1
+
+    merged in subway9_map_control_1
