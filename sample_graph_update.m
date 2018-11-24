@@ -1,6 +1,6 @@
 function [D, samples, post] = sample_graph_update(D, h, nwait_update, nsamples, nparticles, burnin, lag)
     if ~exist('nsamples', 'var')
-        nsamples = 100;
+        nsamples = 2;
     end
 
     if ~exist('burnin', 'var')
@@ -12,47 +12,42 @@ function [D, samples, post] = sample_graph_update(D, h, nwait_update, nsamples, 
     end
 
     if ~exist('nparticles', 'var')
-        nparticles = 1;
+        nparticles = 5;
     end
     
     if ~exist('nwait_update', 'var')
-        nwait_update = 5;
+        nwait_update = 2;
     end
     
     % initialize
     W = zeros(nparticles, 1);
     for i = 1:nparticles
         H(i) = init_H(D, h);
-%         [t1{i}, t2{i}, H(i)] = sample_Hm(D, H(i), h, 10000, 1, 1);
-        [samples, post, H(i)] = sample_Hm(D, H(i), h, 10000, 1, 1);
-%         assert(loglik(H(i), D, h) ~= 0);
+        [samples_t{i}, post_t{i}, H(i)] = sample_Hm(D, H(i), h, 10000, 1, 1);
         W(i) = exp(loglik(H(i), D, h));
     end
     
     W = W/sum(W);
 
-%     s =  size(D.updates);
-%     num_updates = s(1);
-%     for i = 1:num_updates
-%         new_edge = D.updates(i, :);
-%         D = update_D(D, new_edge);
-% %         if mod(i, nwait_update) == 0
-%         if (1 > 0)
-%             for j = 1:length(H)
-%                 [t1{i}, t2{i}, H(j)] = sample_Hm(D, H(j), h, nsamples, 1, 1);
-%             end
-%         else
-%             for j = 1:length(H)
-%                 W = update_weights(W, H, new_edge);
-%             end
-%         end  
-%         
-%     end
-%     
-%     % sample from H
-%     pd = makedist('Multinomial','probabilities', W);
-%     r = random(pd);
-%     samples = t1{r}; post = t2{r};
+    s =  size(D.updates);
+    num_updates = s(1);
+    for i = 1:num_updates
+        new_edge = D.updates(i, :);
+        D = update_D(D, new_edge);
+        if mod(i, nwait_update) == 0
+            for j = 1:length(H)
+                [samples_t{j}, post_t{j}, H(j)] = sample_Hm(D, H(j), h, nsamples, 1, 10);
+            end
+        else
+            W = update_weights(W, H, new_edge);
+        end  
+        
+    end
+    
+    % sample from H
+    pd = makedist('Multinomial','probabilities', W);
+    r = random(pd);
+    samples = samples_t{r}; post = post_t{r};
 end
 
 function [samples, post, H] = sample_Hm(D, H, h, nsamples, burnin, lag)
