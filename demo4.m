@@ -5,6 +5,7 @@ rng default;
 
 h.alpha = 1.5;
 h.var_theta = 2;
+h.theta_mean = 15;
 h.var_mu = 1;
 h.var_r = 1;
 
