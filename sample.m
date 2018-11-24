@@ -86,6 +86,7 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
         for i = 1:D.G.N
             proprnd_mui = @(p_old) proprnd_unbounded(p_old, H, D, h, ls_mu(1, k));
             logmu = @(mu_i) logpost_mu(mu_i, i, H, D, h);
+            %save debug.mat;
             [mu_i, accept] = mhsample(H.mu(i), 1, 'logpdf', logmu, 'proprnd', proprnd_mui, 'logproppdf', logprop_thetamu);
             H.mu(i) = mu_i; 
             % Update l_i's to maintain acceptance rate of 0.44
@@ -104,6 +105,7 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
     end
 
     samples = samples(burnin:lag:end);
+    post = post(burnin:lag:end);
 end
 
 

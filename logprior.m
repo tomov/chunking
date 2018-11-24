@@ -25,7 +25,7 @@ function logp = logprior(H, D, h)
         % below probability is Pr that the particular value of theta was
         % drawn given that it was drawn from a normal dist w mu = 0, var =
         % 100 ; Pr(theta_k = x | rest of H) = normpdf(x; 0, 100)
-        logp = logp + log(normpdf(H.theta(k), 0, h.var_theta));
+        logp = logp + log(normpdf(H.theta(k), h.theta_mean, h.var_theta));
     end
     
     for i = 1:D.G.N
