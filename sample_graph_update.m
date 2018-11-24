@@ -1,6 +1,6 @@
-function [samples, post] = sample_graph_update(D, h, num_updates, V_updates, E_updates, nsamples, nparticles, burnin, lag)
+function [D, samples, post] = sample_graph_update(D, h, nwait_update, nsamples, nparticles, burnin, lag)
     if ~exist('nsamples', 'var')
-        nsamples = 10000;
+        nsamples = 100;
     end
 
     if ~exist('burnin', 'var')
@@ -15,30 +15,44 @@ function [samples, post] = sample_graph_update(D, h, num_updates, V_updates, E_u
         nparticles = 1;
     end
     
-    nparticles = 1;
-    num_updates = 1;
-
-    for i = 1:nparticles
-        H(i) = init_H(D, h);
+    if ~exist('nwait_update', 'var')
+        nwait_update = 5;
     end
     
-    W = ones(nparticles, 1)*1/nparticles;
-
-    for i = 1:num_updates
-        assert(V_updates(i) + length(E_updates{i}) > 0);
-        D = update_D(D, V_updates(i), E_updates{i});
-%       TODO
-        if V_updates(i) > 0
-            % assign clusters to new vertices
-            H = update_H(D, H, num_vertices, h);
-        end
-        % sample
-        for j = 1:length(H)
-            [samples, post, H(j)] = sample_Hm(D, H(j), h, nsamples, burnin, lag);
-%             W = update_weights(W);
-        end
-
+    % initialize
+    W = zeros(nparticles, 1);
+    for i = 1:nparticles
+        H(i) = init_H(D, h);
+%         [t1{i}, t2{i}, H(i)] = sample_Hm(D, H(i), h, 10000, 1, 1);
+        [samples, post, H(i)] = sample_Hm(D, H(i), h, 10000, 1, 1);
+%         assert(loglik(H(i), D, h) ~= 0);
+        W(i) = exp(loglik(H(i), D, h));
     end
+    
+    W = W/sum(W);
+
+%     s =  size(D.updates);
+%     num_updates = s(1);
+%     for i = 1:num_updates
+%         new_edge = D.updates(i, :);
+%         D = update_D(D, new_edge);
+% %         if mod(i, nwait_update) == 0
+%         if (1 > 0)
+%             for j = 1:length(H)
+%                 [t1{i}, t2{i}, H(j)] = sample_Hm(D, H(j), h, nsamples, 1, 1);
+%             end
+%         else
+%             for j = 1:length(H)
+%                 W = update_weights(W, H, new_edge);
+%             end
+%         end  
+%         
+%     end
+%     
+%     % sample from H
+%     pd = makedist('Multinomial','probabilities', W);
+%     r = random(pd);
+%     samples = t1{r}; post = t2{r};
 end
 
 function [samples, post, H] = sample_Hm(D, H, h, nsamples, burnin, lag)
@@ -66,10 +80,11 @@ function [samples, post, H] = sample_Hm(D, H, h, nsamples, burnin, lag)
         H.q = q;
 
         % TODO bridges
-
         samples(n) = H;
         post(n) = logpost(H,D,h);
     end
+
+    samples = samples(burnin:lag:end);
 end
 
 % P(H|D) up to proportionality constant
@@ -155,43 +170,38 @@ function logp = logprop_p(p_new, p_old, H, D, h)
     logp = log(normpdf(p_new, p_old, 1)) - log(Z);
 end
 
-function D = update_D(D, num_vertices, new_edges)
-    % add vertices 
-    adds = num_vertices;
-    D.G.E = [D.G.E; zeros(adds, D.G.N)]
-    D.G.N = D.G.N + adds;
-    D.G.E = [D.G.E zeros(D.G.N, adds)]
-    
-    % add lines
-    adds = length(new_edges);
-    for k = 1:adds
-        edge = new_edges{k};
-        i = edge(1); j = edge(2);
-        assert(D.G.N >= i);
-        assert(D.G.N >= j);
-        assert(D.G.E(i,j) == 0);
-        assert(D.G.E(j,i) == 0);
-        D.G.E(i,j) = 1;
-        D.G.E(j,i) = 1;
-    end
+function D = update_D(D, new_edge)
+    i = new_edge(1); j = new_edge(2); exists = new_edge(3);
+
+    D.G.E(i,j) = exists;
+    D.G.E(j,i) = exists;
+    D.G.I(i,j) = 1;
+    D.G.I(j,i) = 1;
        
 end
 
-%TODO
-function H = update_H(D, H, num_vertices, h)
-    % Chinese restaurant process
-    for m = 1:length(H)
-        % assign clusters to new vertices
-        cnt = H(m).cnt;
-        for i = D.G.N-num_vertices:D.G.N
-            c_new = find(mnrnd(1, [cnt h.alpha] / sum([cnt h.alpha])));
-            H(m).c = [H(m).c c_new];
-            if c_new > length(cnt)
-                cnt = [cnt 1];
-            else
-                cnt(c_new) = cnt(c_new) + 1;
-            end
+function W = update_weights(W, H, new_edge)
+    assert(length(H) == length(W));
+    for i = 1:length(W)
+        W(i) = W(i) * exp(loglik_update(H(i), new_edge));
+    end
+    W = W/sum(W);
+end
+
+% assumes new_edge state is known
+function logp = loglik_update(H, new_edge)
+    i = new_edge(1); j = new_edge(2); exists = new_edge(3);
+    if H.c(i) == H.c(j)
+        if exists
+            logp = log(H.p);
+        else
+            logp = log(1 - H.p);
         end
-        H(m).cnt = cnt;
+    else
+        if exists
+            logp = log(H.p * H.q);
+        else
+            logp = log(1 - H.p * H.q);
+        end
     end
 end

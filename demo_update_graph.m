@@ -4,11 +4,9 @@ h.alpha = 1.5;
 
 D(1) = init_D_from_txt('hourglass.txt');
 
-[num_updates, V_updates, E_updates] = read_updates_from_txt('update_hourglass.txt');
-
 for i = 1:1
     tic 
-    [samples, post] = sample_graph_update(D(i), h, num_updates, V_updates, E_updates);
+    [D(i), samples, post] = sample_graph_update(D(i), h);
     for j = 1:length(samples)
         H(i,j) = samples(j);
         P(i,j) = post(j);
@@ -23,7 +21,7 @@ load demo_update_graph.mat;
 
 figure;
 
-k = 5;
+k = 1;
 for i = 1:length(D)
     post = P(i,:);
     [~,I] = maxk(post, k);
