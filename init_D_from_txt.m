@@ -17,7 +17,9 @@ function D = init_D_from_txt(filename)
     for i = 1:D.G.N
         A = freadline(f, '%d');
         mu = A(1);
-        D.r{i} = normrnd(mu, 1, [1 10]);
+        D.r{i} = normrnd(mu, 1, [1 10]); % 10 observations per node; observations
+                                         % are normally distributed around
+                                         % mu.
     end
 
     D.tasks.s = [];
