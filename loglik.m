@@ -27,6 +27,7 @@ function logp = loglik(H, D, h)
     for i = 1:D.G.N
         for obs = 1:length(D.r{i})
             % Pr(r = x | rest of H)
+            %save loglik.mat;
             logp = logp + log(normpdf( D.r{i}(obs), H.mu(i), h.var_r ));
             %fprintf("loglik");
             %disp(logp);
