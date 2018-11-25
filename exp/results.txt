@@ -123,3 +123,10 @@ exp_v3_4.html in master (subway 9 map control, only 20 training trials)
         ARCHIVE/subway9_map_control_batch1
 
     merged in subway9_map_control_1
+
+exp_v3_5.html in master (subway 9 map contro, 80 training trials)
+
+    [Toyota] momchil subway 9 map control overtrain (46de556697b9848480cacc21)
+        ARCHIVE/subway9_map_control_batch2
+
+    merged in subway9_map_control_2
