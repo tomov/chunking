@@ -1,6 +1,7 @@
 clear all;
 close all;
 
+%{
 init_all_plots;
 
 sem = @(x) std(x) / sqrt(length(x));
@@ -52,6 +53,7 @@ for i = 1:length(pl)
 end
 
 save('model_all_data.mat');
+%}
 
 load('model_all_data.mat');
 
