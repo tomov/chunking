@@ -7,6 +7,10 @@ for i = 1:length(pl)
 
     m = pl(i).m ./ pl(i).n;
     ci = pl(i).ci ./ pl(i).n;
+    clear se;
+    for j = 1:length(pl(i).m)
+        se(j) = std([ones(1,pl(i).m(j)) zeros(1,pl(i).n(j) - pl(i).m(j))]) / sqrt(pl(i).n(j));
+    end
   
     hold on;
     for j = 1:length(pl(i).m)
@@ -22,7 +26,8 @@ for i = 1:length(pl)
 
         text(j, 1, sprintf('p = %.3f\nN = %d', pl(i).p(j), pl(i).n(j)));
     end
-    errorbar(m, ci, 'linestyle', 'none', 'color', 'black');
+    errorbar(m, se, 'linestyle', 'none', 'color', 'black');
+    %errorbar(m, ci, 'linestyle', 'none', 'color', 'black');
     plot([-5 length(pl(i).m) + 5], [0.5 0.5], '--', 'color', [0.8 0.8 0.8]);
     hold off;
 

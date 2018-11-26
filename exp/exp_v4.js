@@ -201,7 +201,7 @@ function genFreeTrials() {
         if (i == 0 || Math.random() < exp.p_newr) {
             r = [];
             for (var j = 0; j < exp.nclust; j++) {
-                r.push(Math.floor(Math.random() * (exp.r_up - exp.r_lb) + exp.r_lb));
+                r.push(Math.floor(Math.random() * (exp.r_ub - exp.r_lb) + exp.r_lb));
             }
         }
         // gen trial
@@ -311,7 +311,7 @@ function nextTrial() {
     $("#new_trial_page").show();
 
     // countdown
-    sleep(2000).then(() => {
+    sleep(500).then(() => {
         $("#new_trial_page").hide();
         $("#trial_page").show();
 
@@ -471,14 +471,14 @@ function redraw() {
         if (type == 'forced') {
             if (i == goal - 1) {
                 ctx.fillStyle = "green";
-                ctx.font = "bold 25px Ariel";
+                ctx.font = "bold 50px Ariel";
             } else {
-                ctx.fillStyle = "white";
-                ctx.font = "25px Ariel";
+                ctx.fillStyle = "grey";
+                ctx.font = "50px Ariel";
             }
         } else {
             ctx.fillStyle = "white";
-            ctx.font = "25px Ariel";
+            ctx.font = "50px Ariel";
         }
         ctx.textAlign = "center";
         ctx.fillText(r[i].toString(), exp.x[i] * scale + xoffs, exp.y[i] * scale + yoffs);
