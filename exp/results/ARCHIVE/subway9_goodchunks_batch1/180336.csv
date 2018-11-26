@@ -1,0 +1,2 @@
+group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot, timestamp, datetime
+A,180336,train,1,9,1 2 1 2 1 9,6,2463 1334 600 1096 551 595 1125 2808 2296 576 8866 496 10431,39 39 37 38 38 40 39 37 38 40 38 37 32,33237,1543249185.905,Mon Nov 26 2018 21:49:45 GMT+0530 (India Standard Time)

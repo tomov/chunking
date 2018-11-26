@@ -17,11 +17,11 @@ pl(1).nexts = [5 5];
 
 
 
-pl(2).m = [NaN NaN NaN 3];
-pl(2).ci = [NaN NaN NaN 10];
-pl(2).n = [NaN NaN NaN 77];
-pl(2).p = [NaN NaN NaN 0.001];
-pl(2).fake = [0 0 0 1];
+pl(2).m = [NaN NaN NaN NaN];
+pl(2).ci = [NaN NaN NaN NaN];
+pl(2).n = [NaN NaN NaN NaN];
+pl(2).p = [NaN NaN NaN NaN];
+pl(2).fake = [0 0 0 0];
 pl(2).nrows = [81 21 81 81];
 pl(2).title = 'subway 9, full view';
 pl(2).ylabel = ['P(bad)'];
@@ -29,7 +29,7 @@ pl(2).xticklabels = {'bad chunks', 'no chunks (1)', 'no chunks (2)', 'good chunk
 pl(2).xticks = [1 2 3 4];
 pl(2).yticklabels = {'0 (good)', '0.5', '1 (bad)'};
 pl(2).yticks = [0 0.5 1];
-pl(2).dirnames = {'exp/results/subway9_map/', 'exp/results/subway9_map_control_1/', 'exp/results/subway9_map_control_2/', ''};
+pl(2).dirnames = {'exp/results/subway9_map/', 'exp/results/subway9_map_control_1/', 'exp/results/subway9_map_control_2/', 'exp/results/subway9_map_goodchunks/'};
 pl(2).starts = [6 6 6 6];
 pl(2).goals = [1 1 1 1];
 pl(2).nexts = [5 5 5 5];

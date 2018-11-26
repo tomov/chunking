@@ -138,3 +138,10 @@ exp_v3_6.html in master (subway 9 map good chunks)
 
     merged in subway9_map_goodchunks
 
+exp_v1_5.html in master (subway 9 good chunks)
+
+    [Toyota] momchil subway 9 good chunks (b519cc508a57a7f88a92b79ee5a)
+        ARCHIVE/subway9__goodchunks_batch1
+
+    merged in subway9_goodchunks
+
