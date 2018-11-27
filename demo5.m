@@ -9,7 +9,16 @@ h.theta_mean = 15;
 h.var_mu = 10;
 h.var_r = 5;
 
-D = init_D_from_txt_dynamic('hourglass_rewards_dynamic.txt');
+D = init_D_from_txt_dynamic('symmetric_rewards.txt');
+
+%predict(D, h, M, burnin, lag, tau, ids)
+[p, mu, H, w] = predict(D, h, 1000, 1, 1, 1, [2,7]); 
+% Get "START is not in the domain of the target or proposal distribution."
+% for larger nsamples.
+[~, I] = max(w);
+figure;
+plot_H(H(I), D);
+
 % for i = 1:length(D)
 %     tic 
 %     [samples, post] = sample(D(i), h, 1000);
@@ -41,9 +50,6 @@ D = init_D_from_txt_dynamic('hourglass_rewards_dynamic.txt');
 %         set(gca, 'ytick', []);
 %     end
 % end
-
-%predict(D, h, M, burnin, lag, tau, ids)
-[p, mu, H, w] = predict(D, h, 100, 10000, 100, 1, [1,4]); 
 
 %figure;
 %        subplot(length(D),5, (i-1)*5+j);
