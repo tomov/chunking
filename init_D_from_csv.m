@@ -5,7 +5,7 @@ function D = init_D_from_csv(filename)
     D.tasks.s = [];
     D.tasks.g = [];
 
-    T = readtable(filename);
+    T = readtable(filename, 'Delimiter', ',');
 
     D.name = [strip(T.group{1}), ' ', num2str(T.subj_id(1))];
 
