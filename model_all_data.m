@@ -3,7 +3,7 @@ close all;
 
 init_all_plots;
 
-h.alpha = 1.5;
+h.alpha = 5;
 
 sem = @(x) std(x) / sqrt(length(x));
 
@@ -23,7 +23,7 @@ for i = 1:length(pl)
         for k = 1:length(D)
             fprintf('      subject %d\n', k);
             tic
-            [samples, post] = sample(D(k), h, 10);
+            [samples, post] = sample(D(k), h, 100);
             for l = 1:length(samples)
                 H(k,l) = samples(l);
                 P(k,l) = post(l);
@@ -37,9 +37,9 @@ for i = 1:length(pl)
         g = pl(i).goals(j);
         clear move;
         for k = 1:length(D)
-            %[~,I] = maxk(P(k,:), 1);
-            I = length(P(k,:));
-            [path, hpath] = hbfs(s, g, H(k,I), D(k));
+            [~,I] = maxk(P(k,:), 1);
+            %I = length(P(k,:));
+            [path, hpath] = hbfs(s, g, H(k,I(1)), D(k));
             move(k) = path(2);
         end
 
@@ -57,8 +57,10 @@ for i = 1:length(pl)
     end
 end
 
-save('model_all_data_10samples_last.mat');
+save('model_all_data_100samples_MAP_5alpha.mat');
 
-load('model_all_data_10samples_last.mat');
+load('model_all_data_100samples_MAP_5alpha.mat');
+
+%load('model_all_data_10samples_MAP_5alpha.mat'); % <-- MONEY!
 
 plot_all_data;
