@@ -1,52 +1,64 @@
-% call analyze_data.m first
+clear;
+
+
+sem = @(x) std(x) / sqrt(length(x));
 
 % for subway 10
 %
-action_chunk_transitions = [
-1 2;
-2 3;
-4 5;
-5 6;
-10 9;
-9 8;
-8 7];
+action_chunk_transitions{1} = [1 2; 2 3; 4 5; 5 6; 10 9; 9 8; 8 7];
+state_chunk_transitions{1} = flip(action_chunk_transitions{1},2);
+bridges{1} = [3 4; 4 3; 1 10; 10 1; 7 6; 6 7];
+dirname{1} = 'exp/results/subway10_map/';
 
-bridges = [
-3 4;
-4 3;
-1 10;
-10 1;
-7 6;
-6 7];
-
-state_chunk_transitions = flip(action_chunk_transitions,2);
-
-% RT analysis
+% for subway 9 (bad chunks)
 %
+action_chunk_transitions{2} = [1 2; 2 3; 4 5; 5 6; 9 8; 8 7];
+state_chunk_transitions{2} = flip(action_chunk_transitions{2},2);
+bridges{2} = [3 4; 4 3; 1 9; 9 1; 7 6; 6 7];
+dirname{2} = 'exp/results/subway9_map/';
+
+% for subway 9 (good chunks)
+%
+action_chunk_transitions{3} = [1 9; 8 7; 7 6; 2 3; 3 4; 4 5];
+state_chunk_transitions{3} = flip(action_chunk_transitions{3},2);
+bridges{3} = [8 9; 9 8; 6 5; 5 6; 1 2; 2 1];
+dirname{3} = 'exp/results/subway9_map_goodchunks/';
+
 action_chunk_RTs = [];
 state_chunk_RTs = [];
 bridge_RTs = [];
-for subj = 1:size(data,1) % for each subject
-    phase = 1; % training phase
-    for i = 1:length(data(subj, phase).s) % for each trial
-        RTs = data(subj,phase).RTs{i};
-        path = data(subj,phase).path{i};
-        if length(RTs) == length(path) % we log all key presses but not all of them are moves... oops
-            for j = 2:length(path) - 1 % skip first RT; it's always slow
-                RT = RTs(j);
-                u = path(j);
-                v = path(j+1);
-                if any(ismember(bridges, [u v], 'rows'))
-                    bridge_RTs = [bridge_RTs RT];
-                elseif any(ismember(action_chunk_transitions, [u v], 'rows'))
-                    action_chunk_RTs = [action_chunk_RTs RT];
-                else
-                    assert(any(ismember(state_chunk_transitions, [u v], 'rows')));
-                    state_chunk_RTs = [state_chunk_RTs RT];
+
+% aggregate across datasets for more power
+%
+for f = 1:length(dirname)
+    fprintf('\n\n ---------------- Data dir %s -------------- \n\n', dirname{f});
+
+    [data, Ts] = load_data(dirname{f}, 81);
+
+    % RT analysis
+    %
+    for subj = 1:size(data,1) % for each subject
+        phase = 1; % training phase
+        for i = 1:length(data(subj, phase).s) % for each trial
+            RTs = data(subj,phase).RTs{i};
+            path = data(subj,phase).path{i};
+            if length(RTs) == length(path) % we log all key presses but not all of them are moves... oops
+                for j = 2:length(path) - 1 % skip first RT; it's always slow
+                    RT = RTs(j);
+                    u = path(j);
+                    v = path(j+1);
+                    if any(ismember(bridges{f}, [u v], 'rows'))
+                        bridge_RTs = [bridge_RTs RT];
+                    elseif any(ismember(action_chunk_transitions{f}, [u v], 'rows'))
+                        action_chunk_RTs = [action_chunk_RTs RT];
+                    else
+                        assert(any(ismember(state_chunk_transitions{f}, [u v], 'rows')));
+                        state_chunk_RTs = [state_chunk_RTs RT];
+                    end
                 end
+            else
+                fprintf('skipping subj %d trial %d\n', subj, i);
             end
-        else
-            fprintf('skipping subj %d trial %d\n', subj, i);
         end
     end
 end
