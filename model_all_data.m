@@ -23,7 +23,7 @@ for i = 1:length(pl)
         for k = 1:length(D)
             fprintf('      subject %d\n', k);
             tic
-            [samples, post] = sample(D(k), h, 100);
+            [samples, post] = sample(D(k), h, 1000);
             for l = 1:length(samples)
                 H(k,l) = samples(l);
                 P(k,l) = post(l);
@@ -57,9 +57,9 @@ for i = 1:length(pl)
     end
 end
 
-save('model_all_data_100samples_MAP_5alpha.mat');
+save('model_all_data_1000samples_MAP_5alpha.mat');
 
-load('model_all_data_100samples_MAP_5alpha.mat');
+load('model_all_data_1000samples_MAP_5alpha.mat');
 
 %load('model_all_data_10samples_MAP_5alpha.mat'); % <-- MONEY!
 

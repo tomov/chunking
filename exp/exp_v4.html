@@ -25,7 +25,7 @@
       </p>
       <p>Before you decide whether you want to take part, it is important for you to <br>read the following information carefully.</p>
       <p>The study provides information about the nature of learning and decision making</p>
-      <p>The study will take about <b>10 minutes on average</b>. You will <b>receive $2</b> for your participation.</p>
+      <p>The study will take about <b>15 minutes on average</b>. You will <b>receive $1.00</b> for your participation and up to <b>$3.00</b> in bonus.</p>
       <p>If you have any suggestions on how we can improve this or future HITs, <br> please do not hesitate to get in touch.</p>
       <br>
       <p>By clicking on the button below, you agree to the following:</p>
@@ -38,18 +38,21 @@
   </div>
 
 
+
   <div id="instruction_page" style="font-size: 22px; display:block;" align = "center" >
-      <h2>Subway Navigation</h2>
-      <p>Imagine you are a tourist and you have to navigate the subway network in an unfamiliar town.</p>
-      <p>On each trial, you will have to navigate from a starting station to a goal station, which will appear on the screen for 2 seconds:</p>
-      <p><img src="images/new_trial_map.png" height="300px" ></p>
-      <p>You can plan your trip during those 2 seconds. After that, your trip will begin.</p>
-      <p>During your trip, you will see a map of the subway system. The current station will be highlighted with a thick border. The goal station will be in green:</p>
-      <p><img src="images/trial_map.png" height="300px"></p>
-      <p>You can navigate between stations using the <b>arrow keys</b> (up, down, left, right).</p>
-      <p>Once you reach the goal station, press the <b>space key</b> to end the trial and start the next trial:</p>
-      <p><img src="images/success_map.png" height="300px"></p>
-      <p>There will be 81 trials in the experiment. All stations are named after cities.</p>
+      <h2>Gold mines</h2>
+      <p>Imagine you are a miner working in a network of gold mines connected by tunnels. Every mine yields a certain amount of gold (points) each day:</p>
+      <p><img src="images/mines_trial.png" height="300px" ></p>
+      <p>On each day, your job is to navigate from a starting mine to a target mine and collect the points from the target mine. You will repeat this 100 times.</p>
+      <p>On some days, you will be free to choose any mine you like. On those days, you should try to pick the mine that yields the most points:</p>
+      <p><img src="images/mines_free.png" height="300px" ></p>
+      <p>On other days, only one mine will be available. The points of that mine will be written in green and the other mines will be grayed out:</p>
+      <p><img src="images/mines_forced.png" height="300px" ></p>
+      <p>On those days, you should navigate to the available mine.</p>
+      <p>The points of each mine will be written on it. The current mine will be highlighted with a thick border.</p>
+      <p>You can navigate between mines using the <b>arrow keys</b> (up, down, left, right). Once you reach the target mine, press the <b>space key</b> to collect the points and start the next day:</p>
+      <p><img src="images/mines_points.png" height="300px" ></p>
+      </p>To encourage you to perform well, we will pick a random day and pay you a bonus equal to the number of points you got on that day in cents. So if you got 114 points, you will receive a $1.14 bonus. There is no way to know in advance which day will be chosen, so do your best every time.</p>
       <p>The experiment can only be performed on a computer. Please disable any ad-blockers before starting the experiment.</p>
       <button type="button" id="continue" style="font-size: 22px;">Continue</button>
 
@@ -100,7 +103,7 @@
 
       <h1 id="message" style="position: absolute; left: 0; top: 60%; width: 100%; text-align: center;">message</h1>
       <!-- <h1 id="countdown" style="position: absolute; left: 0; top: 80%; width: 100%; text-align: center;">countdown</h1> -->
-      <p id="tip" style="position: absolute; left: 0; top: 90%; width: 100%; text-align: center; color: grey;">Move using the <b>arrow keys</b> (up, down, left, right). Press <b>space</b> when you reach the goal.</p>
+      <p id="tip" style="position: absolute; left: 0; top: 90%; width: 100%; text-align: center; color: grey;">Move using the <b>arrow keys</b> (up, down, left, right). Press <b>space</b> to select a mine.</p>
   </div>
 
   <div id="test_page" style="font-size: 22px; display:block;" align = "center" >
@@ -113,7 +116,8 @@
   </div>
 
   <div id = "final_page">
-      <p>Congratulations! You have completed the experiment. Your completion code is <img src="images/code5.png" ></p>
+      <p>Congratulations! You have completed the experiment. Your completion code is <h3>goldMiNES</h3>
+      Your bonus is <b>$<span id='bonus'>NaN</span></b>! You will be paid within 24 hours.</p>
   </div>
 
 
