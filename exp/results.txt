@@ -145,3 +145,9 @@ exp_v1_5.html in master (subway 9 good chunks)
 
     merged in subway9_goodchunks
 
+exp_v4.html in master (mines 10 map)
+
+     [Toyota] momchil mines 10 (2bccb03aeebe96a5d28e334aeea)
+        ARCHIVE/mines10_map_batch1
+
+    merged in mines10_map
