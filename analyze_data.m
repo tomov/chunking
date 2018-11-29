@@ -13,9 +13,9 @@ ord = []; % ordinal of trial type within phase (e.g. "first 1->6", "second 1->6"
 subj_group = [];
 subj_len = [];
 s_id = [];
-for subj = 1:size(data,1)
-    phase = 2;
-    for i = 1:length(data(subj, phase).s)
+for subj = 1:size(data,1) % for each subject
+    phase = 2; % training
+    for i = 1:length(data(subj, phase).s) % for each trial 
         which = find(data(subj, phase).s == data(subj, phase).s(i) & data(subj, phase).g == data(subj, phase).g(i));
         clear o;
         o(which) = find(which);
@@ -144,3 +144,5 @@ cl = subj_len(chunkers);
 nl = subj_len(nonchunkers);
 [h, p, ci, stats] = ttest2(cl, nl);
 %}
+
+RT_analysis;

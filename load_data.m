@@ -2,7 +2,7 @@ function [data, Ts, f_chunk, RT_all, RT_new] = load_data(dirname, expected_numbe
 
     if ~exist('dirname', 'var')
         dirname = 'exp/results'; 
-        bad_dirname = 'exp/results/bad';
+     %   bad_dirname = 'exp/results/bad';
     end
 
     if ~exist('expected_number_of_rows', 'var')
