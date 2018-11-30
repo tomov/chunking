@@ -1,3 +1,5 @@
+% simulate experiment 1 from schapiro 2013
+
 clear all;
 
 rng default;
