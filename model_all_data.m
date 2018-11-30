@@ -1,6 +1,8 @@
 clear all;
 close all;
 
+rng default;
+
 init_all_plots;
 
 h.alpha = 5;

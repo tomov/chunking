@@ -1,4 +1,4 @@
-function plot_H(H, D)
+function h = plot_H(H, D)
     G = graph(D.G.E);
     h = plot(G);
 
