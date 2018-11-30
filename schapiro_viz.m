@@ -7,6 +7,7 @@ sem = @(x) std(x) / sqrt(length(x));
 N = 30; % participants
 h.alpha = 5;
 
+%{
 D = init_D_from_txt('schapiro.txt');
 
 for i = 1:10
@@ -19,19 +20,20 @@ for i = 1:10
 end
 
 save('schapiro_viz.mat');
+%}
 
 load('schapiro_viz.mat');
 
-r1 = 10;
+r1 = 6;
 r2 = 3;
 cx = cos([0:2]*2*pi/3 + pi/2) * r1;
 cy = sin([0:2]*2*pi/3 + pi/2) * r1;
 x(1:5) = cos([0:4]*2*pi/5 + pi/2) * r2 + cx(1);
-y(1:5) = sin([0:4]*2*pi/5 + pi/2) * r2 + cx(1);
+y(1:5) = sin([0:4]*2*pi/5 + pi/2) * r2 + cy(1);
 x(6:10) = cos([0:4]*2*pi/5 + pi/2) * r2 + cx(2);
-y(6:10) = sin([0:4]*2*pi/5 + pi/2) * r2 + cx(2);
+y(6:10) = sin([0:4]*2*pi/5 + pi/2) * r2 + cy(2);
 x(11:15) = cos([0:4]*2*pi/5 + pi/2) * r2 + cx(3);
-y(11:15) = sin([0:4]*2*pi/5 + pi/2) * r2 + cx(3);
+y(11:15) = sin([0:4]*2*pi/5 + pi/2) * r2 + cy(3);
 
 
 figure;
