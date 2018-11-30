@@ -1,5 +1,6 @@
 % simulate experiment 1 from solway 2013
 
+%{
 clear all;
 
 rng default;
@@ -45,11 +46,29 @@ end
 
 
 save('solway1.mat');
+%}
 
 load('solway1.mat');
 
+x = [-3 -1 -2 -3 -1 1 3 2 1 3];
+y = [-3 -3 -2 -1 -1 1 1 2 3 3];
+y = -y;
+
+figure;
+
 H.c = [1 1 1 1 1 2 2 2 2 2];
 h = plot_H(H, D);
+set(h, 'XData', x);
+set(h, 'YData', y);
 for i = 1:D.G.N
-    highlight(h, i, 'MarkerSize', sum(loc(:) == i));
+    highlight(h, i, 'NodeColor', [0.6 0.6 0.6], 'MarkerSize', 10 + sum(loc(:) == i));
 end
+set(gca, 'xtick', []);
+set(gca, 'ytick', []);
+
+hold on;
+D.G.E(:) = 0;
+h = plot_H(H, D);
+set(h, 'XData', x);
+set(h, 'YData', y);
+hold off;
