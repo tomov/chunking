@@ -58,12 +58,15 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
         [p, accept] = mhsample(H.p, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop); % TODO adaptive
         H.p = p;
 
+        logp = @(q) logpost_q(q, H, D, h);
         [q, accept] = mhsample(H.q, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
         H.q = q;
 
+        logp = @(tp) logpost_tp(tp, H, D, h);
         [tp, accept] = mhsample(H.tp, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
         H.tp = tp;
 
+        logp = @(hp) logpost_hp(hp, H, D, h);
         [hp, accept] = mhsample(H.hp, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
         H.hp = hp;
 
@@ -129,6 +132,27 @@ function logp = logpost_p(p, H, D, h)
     logp = logpost(H, D, h);
 end
 
+% P(H|D) for updates of q
+%
+function logp = logpost_q(q, H, D, h)
+    H.q = q;
+    logp = logpost(H, D, h);
+end
+
+% P(H|D) for updates of tp
+%
+function logp = logpost_tp(tp, H, D, h)
+    H.tp = tp;
+    logp = logpost(H, D, h);
+end
+
+% P(H|D) for updates of hp
+%
+function logp = logpost_hp(hp, H, D, h)
+    H.hp = hp;
+    logp = logpost(H, D, h);
+end
+
 % proposals for p; random walk 
 %
 function p_new = proprnd_p(p_old, H, D, h)
@@ -144,5 +168,5 @@ end
 %
 function logp = logprop_p(p_new, p_old, H, D, h)
     Z = normcdf(1, p_old, 0.1) - normcdf(0, p_old, 0.1); % TODO consts TODO adaptive
-    logp = log(normpdf(p_new, p_old, 1)) - log(Z);
+    logp = log(normpdf(p_new, p_old, 0.1)) - log(Z);
 end
