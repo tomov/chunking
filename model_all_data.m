@@ -37,8 +37,8 @@ for i = 1:length(pl)
         g = pl(i).goals(j);
         clear move;
         for k = 1:length(D)
-            [~,I] = maxk(P(k,:), 1);
-            %I = length(P(k,:));
+            [~,I] = maxk(P(k,:), 1); % MAP H
+            %I = length(P(k,:)); % last H
             [path, hpath] = hbfs(s, g, H(k,I(1)), D(k));
             move(k) = path(2);
         end
