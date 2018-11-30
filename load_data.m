@@ -103,6 +103,7 @@ function [data, Ts, f_chunk, RT_all, RT_new] = load_data(dirname, expected_numbe
             assert(length(path) == T.length(i));
             group = strip(T.group{i});
             RT_tot = T.RT_tot(i);
+            keys = str2num(T.keys{i});
             switch group
                 case 'A'
                     group = 1;
@@ -130,6 +131,7 @@ function [data, Ts, f_chunk, RT_all, RT_new] = load_data(dirname, expected_numbe
             data(subj, phase).id = id;
             data(subj, phase).RTs{j} = RTs;
             data(subj, phase).RT_tot(j) = RT_tot;
+            data(subj, phase).keys{j} = keys;
 
             if (s == 1 && g == 3) || (s == 4 && g == 6) || (s == 9 && g == 7)
                 RT_chunk = [RT_chunk RT_tot];
