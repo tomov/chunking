@@ -70,11 +70,12 @@ bridge_RTs = [];
 
 % aggregate across datasets for more power
 %
-for f = 1:length(dirname)
+for f = 1:3  %length(dirname)
     fprintf('\n\n ---------------- Data dir %s -------------- \n\n', dirname{f});
 
     [data, Ts] = load_data(dirname{f}, nrows{f});
 
+    % TODO this works only for the full map view; the others have weird shit like rotations
     ex_noflipped = readExp(html{f});
     ex_flipped = ex_noflipped;
     ex_flipped.adj(:,1) = ex_noflipped.adj(:,3);
@@ -188,17 +189,37 @@ for f = 1:length(dirname)
     end
 end
 
+%{
 [h, p, ci, stats] = ttest2(action_chunk_RTs, bridge_RTs);
 fprintf('bridges: %.3f +- %.3f ms\n', mean(bridge_RTs), sem(bridge_RTs));
-fprintf('action chunks: %.3f +- %.3f ms\n', mean(action_chunk_RTs), sem(action_chunk_RTs));
+fprintf('vs. action chunks: %.3f +- %.3f ms\n', mean(action_chunk_RTs), sem(action_chunk_RTs));
 fprintf('t(%d) = %.3f, p = %f\n', stats.df, stats.tstat, p);
 
 fprintf('\n\n');
 
 [h, p, ci, stats] = ttest2(state_chunk_RTs, bridge_RTs);
 fprintf('bridges: %.3f +- %.3f ms\n', mean(bridge_RTs), sem(bridge_RTs));
-fprintf('state chunks: %.3f +- %.3f ms\n', mean(state_chunk_RTs), sem(state_chunk_RTs));
+fprintf('vs. state chunks: %.3f +- %.3f ms\n', mean(state_chunk_RTs), sem(state_chunk_RTs));
 fprintf('t(%d) = %.3f, p = %f\n', stats.df, stats.tstat, p);
+
+fprintf('\n\n');
+
+[h, p, ci, stats] = ttest2(state_chunk_RTs, action_chunk_RTs);
+fprintf('action_chunks: %.3f +- %.3f ms\n', mean(action_chunk_RTs), sem(action_chunk_RTs));
+fprintf('vs. state chunks: %.3f +- %.3f ms\n', mean(state_chunk_RTs), sem(state_chunk_RTs));
+fprintf('t(%d) = %.3f, p = %f\n', stats.df, stats.tstat, p);
+%}
+
+RTs = [action_chunk_RTs state_chunk_RTs bridge_RTs];
+[group{1:length(action_chunk_RTs)}] = deal('action chunks');
+[group{length(action_chunk_RTs)+1:length(action_chunk_RTs)+length(state_chunk_RTs)}] = deal('state chunks');
+[group{length(action_chunk_RTs)+length(state_chunk_RTs)+1:length(RTs)}] = deal('bridges');
+[p, tbl, stats] = anova1(RTs, group);
+
+[c,~,~,names] = multcompare(stats);
+res = [{'group 1', 'group 2', 'lower CI', 'mean diff', 'upper CI', 'p-value'}; names(c(:,1)), names(c(:,2)), num2cell(c(:,3:6))];
+res
+
 
 figure;
 m = [mean(action_chunk_RTs) mean(state_chunk_RTs) mean(bridge_RTs)]; 
