@@ -1,10 +1,10 @@
+% Schapiro visualization
 clear all;
 
 rng default;
 
 sem = @(x) std(x) / sqrt(length(x));
 
-N = 30; % participants
 h.alpha = 5;
 
 %{
