@@ -1,0 +1,5 @@
+group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot, timestamp, datetime
+A,142415,train,1,9,1 2 1 9,4,401 141 167 125 107,39 37 37 37 32,941,1543603699.733,Fri Nov 30 2018 13:48:19 GMT-0500 (Eastern Standard Time)
+A,142415,train,1,9,1 9 8 9,4,411 249 34 646 126,37 38 32 40 32,1466,1543603704.208,Fri Nov 30 2018 13:48:24 GMT-0500 (Eastern Standard Time)
+A,142415,train,1,9,1 9,2,9413 112,37 32,9525,1543603716.744,Fri Nov 30 2018 13:48:36 GMT-0500 (Eastern Standard Time)
+A,142415,test,6,1,6 5,2,391,39,391,1543603720.152,Fri Nov 30 2018 13:48:40 GMT-0500 (Eastern Standard Time)
