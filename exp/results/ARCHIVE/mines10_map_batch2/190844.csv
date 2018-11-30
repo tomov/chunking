@@ -1,0 +1,5 @@
+group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot, reward, timestamp, datetime
+A,190844,train,4,-1,4,1,8786,32,8786,109,1543521780.282,Thu Nov 29 2018 14:03:00 GMT-0600 (Central Standard Time)
+A,190844,train,9,8,9 8,2,1703 2992,38 32,4695,36,1543521786.485,Thu Nov 29 2018 14:03:06 GMT-0600 (Central Standard Time)
+A,190844,train,5,-1,5,1,5151,32,5151,109,1543521793.144,Thu Nov 29 2018 14:03:13 GMT-0600 (Central Standard Time)
+A,190844,train,3,-1,3 4,2,2795 1649,38 32,4444,109,1543521799.092,Thu Nov 29 2018 14:03:19 GMT-0600 (Central Standard Time)

@@ -145,4 +145,3 @@ nl = subj_len(nonchunkers);
 [h, p, ci, stats] = ttest2(cl, nl);
 %}
 
-RT_analysis;
