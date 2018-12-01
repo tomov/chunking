@@ -1,7 +1,7 @@
 
 
 clear all;
-rng default;
+%rng default;
 
 h.alpha = 1.5;
 h.var_theta = 10;
@@ -18,7 +18,6 @@ D = init_D_from_txt_dynamic('symmetric_rewards.txt');
 [~, I] = max(w);
 figure;
 plot_H(H(I), D);
-
 % for i = 1:length(D)
 %     tic 
 %     [samples, post] = sample(D(i), h, 1000);
