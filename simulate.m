@@ -16,7 +16,7 @@ tally = 0;
 H_all = {};
 post_all = {};
 for i = 1:20
-    [p, mu, H, post] = predict(D, h, 500, 1, 1, 1, [2,7]); 
+    [p, mu, H, post] = predict(D, h, 5000, 1, 1, 1, [2,7]); 
     H_all{i} = H;
     post_all{i} = post;
     if p(1) > p(2)

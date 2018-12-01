@@ -32,6 +32,10 @@ function logp = logprior(H, D, h)
         logp = logp + log(normpdf(H.mu(i), H.theta(H.c(i)), h.var_mu));
     end
 
+    if isinf(logp)
+        logp = -1e100;
+    end
+    
     % TODO bridges
 
 end

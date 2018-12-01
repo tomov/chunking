@@ -33,5 +33,9 @@ function logp = loglik(H, D, h)
             %disp(logp);
         end
     end
+    
+    if isinf(logp)
+        logp = -1e100;
+    end
 end
 
