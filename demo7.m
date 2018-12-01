@@ -12,36 +12,13 @@ h.var_r = 5;
 D = init_D_from_txt_dynamic('static_rewards.txt');
 n_subjects = 8;
 
-% Dynamic rewards
-n_trials = 10;
+% Static rewards
 tally = 0;
 H_all = {};
 post_all = {};
-H_prev = [];
 for i = 1:n_subjects
-    for t = 1:n_trials
-        % Redraw rewards
-        if rand <= 0.2
-            new_rewards = rand([1 3])*30;
-            for j = 1:3
-                D.r{j} = [new_rewards(1)];
-            end
-            for j = 4:6
-                D.r{j} = [new_rewards(2)];
-            end
-            for j = 7:10
-                D.r{j} = [new_rewards(3)];
-            end
-        end
-        % Sample
-        [H, post] = sample(D, H_prev, h, 100, 1, 1);
-        % Store the hierarchies
-        H_all{i, t} = H;
-        post_all{i, t} = post;
-        disp(t);
-        H_prev = H(end);
-    end
     % Get most likely H (based on posterior probabilities)
+    [H, post] = sample(D, h, 500, 1, 1);
     [~, max_index] = max(post);
     H_max = H(max_index);
     % Use hierarchical BFS to predict the path taken given H
@@ -51,7 +28,10 @@ for i = 1:n_subjects
     if path(2) == 5
         tally = tally + 1;
     end
-    H_prev = [];
+    % Store the hierarchies
+    H_all{i} = H;
+    post_all{i} = post;
+    disp(i);
 end
 disp(tally)
 [~, I] = max(post);
