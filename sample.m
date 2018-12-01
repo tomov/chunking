@@ -57,7 +57,8 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
         samples(n) = H;
         post(n) = logpost(H,D,h);
     end
-
+    
+    post = post(burnin:lag:end);
     samples = samples(burnin:lag:end);
 end
 

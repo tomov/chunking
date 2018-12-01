@@ -1,6 +1,6 @@
 function [D, samples, post] = sample_graph_update(D, h, nwait_update, nsamples, nparticles, burnin, lag)
     if ~exist('nsamples', 'var')
-        nsamples = 2;
+        nsamples = 100;
     end
 
     if ~exist('burnin', 'var')
@@ -12,21 +12,27 @@ function [D, samples, post] = sample_graph_update(D, h, nwait_update, nsamples, 
     end
 
     if ~exist('nparticles', 'var')
-        nparticles = 5;
+        nparticles = 10;
     end
     
     if ~exist('nwait_update', 'var')
-        nwait_update = 2;
+        nwait_update = 1;
     end
     
     % initialize
     W = zeros(nparticles, 1);
-    for i = 1:nparticles
-        H(i) = init_H(D, h);
-        [samples_t{i}, post_t{i}, H(i)] = sample_Hm(D, H(i), h, 10000, 1, 1);
-        W(i) = exp(loglik(H(i), D, h));
-    end
     
+    if any(D.G.I(:))
+        [H, W] = sample(D, h, nparticles, 1000, 10);
+    else
+        for i = 1:nparticles
+            H(i) = init_H(D, h);
+    %         [samples_t{i}, post_t{i}, H(i)] = sample_Hm(D, H(i), h, 1000, 1, 1);
+            [~, ~, H(i)] = sample_Hm(D, H(i), h, 1000, 1, 1);
+            W(i) = exp(loglik(H(i), D, h));
+        end
+    end
+
     W = W/sum(W);
 
     s =  size(D.updates);
@@ -36,18 +42,18 @@ function [D, samples, post] = sample_graph_update(D, h, nwait_update, nsamples, 
         D = update_D(D, new_edge);
         if mod(i, nwait_update) == 0
             for j = 1:length(H)
-                [samples_t{j}, post_t{j}, H(j)] = sample_Hm(D, H(j), h, nsamples, 1, 10);
+%                 [samples_t{j}, post_t{j}, H(j)] = sample_Hm(D, H(j), h, nsamples, 1, 10);
+                [~, ~, H(j)] = sample_Hm(D, H(j), h, nsamples, 1, 10);
             end
-        else
-            W = update_weights(W, H, new_edge);
-        end  
-        
+        end
+        W = update_weights(W, H, new_edge);
     end
     
     % sample from H
     pd = makedist('Multinomial','probabilities', W);
     r = random(pd);
-    samples = samples_t{r}; post = post_t{r};
+%     samples = samples_t{r}; post = post_t{r};
+    samples = H(r); post = 1;
 end
 
 function [samples, post, H] = sample_Hm(D, H, h, nsamples, burnin, lag)
@@ -79,6 +85,7 @@ function [samples, post, H] = sample_Hm(D, H, h, nsamples, burnin, lag)
         post(n) = logpost(H,D,h);
     end
 
+    post = post(burnin:lag:end);
     samples = samples(burnin:lag:end);
 end
 
