@@ -23,7 +23,7 @@ for i = 1:n_subjects
     [path, hpath] = hbfs(6, 1, H_max, D);
     % If the simulated test subject went right (i.e. to node 3),
     % increment the tally.
-    if path(2) == 3
+    if path(2) == 5
         tally = tally + 1;
     end
     % Store the hierarchies
