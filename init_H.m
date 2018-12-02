@@ -14,6 +14,7 @@ function H = init_H(D, h)
             cnt(c_new) = cnt(c_new) + 1;
         end
     end
+    H.c = randperm(H.c); % IMPORTANT! make sure order numbering doesn't matter
 
     H.p = betarnd(1,1); % TODO const 
     H.q = betarnd(1,1); % TODO const 
