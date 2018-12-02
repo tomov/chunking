@@ -13,6 +13,7 @@ branch exp_subway_10_1 (exp_v1.html and exp_v1.js in master)
 
     [Toyota] momchil subway 10 3
         ARCHIVE/subway10_batch4 <-- 78 more, with exp_v1.html and exp_v1.js pimped up (b92bd7c1a2eab12807e06ff7103afd56ebfcd2ec)
+        ARCHIVE/subway10_batch5 <-- 10 more
 
     -> good ones in subway10_repro
 
@@ -129,6 +130,7 @@ exp_v3_5.html in master (subway 9 map control, 80 training trials)
 
     [Toyota] momchil subway 9 map control overtrain (46de556697b9848480cacc21)
         ARCHIVE/subway9_map_control_2_batch1
+        ARCHIVE/subway9_map_control_2_batch2
 
     merged in subway9_map_control_2
 
