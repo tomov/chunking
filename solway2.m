@@ -2,6 +2,7 @@
 
 clear all;
 
+%{
 rng default;
 
 sem = @(x) std(x) / sqrt(length(x));
@@ -18,9 +19,9 @@ D = init_D_from_txt('solway2.txt');
 for subj = 1:N % for each simulated subject
     fprintf('subject %d\n', subj);
 
-    [H, P] = sample(D, h, 100);
-    H_all{s} = H;
-    P_all{s} = P;
+    [H, P] = sample(D, h, 1000);
+    H_all{subj} = H;
+    P_all{subj} = P;
 
     [~,I] = max(P); % MAP H
     H = H(I);
@@ -41,15 +42,20 @@ for subj = 1:N % for each simulated subject
         spath = spath(2:end-1);
 
         loc(subj,i) = b(1); % first bridge node on path
-        corr(subj,i) = ismember(s, spath); % only count if on actual shortest path ("correct")
+        corr(subj,i) = ismember(b(1), spath); % only count if on actual shortest path ("correct")
         
         for j = 1:null_iters
             null{j}(subj,i) = datasample(spath, 1);
         end
     end
 
-    p(s) = mean(loc(s, corr(s,:)) == 10);
+    p(subj) = mean(loc(subj, corr(subj,:)) == 10);
 end
+
+save('solway2.mat');
+%}
+
+load('solway2.mat');
 
 
 for j = 1:null_iters
@@ -67,11 +73,14 @@ hold on;
 bar(m);
 hold on;
 errorbar(m, se);
-line([0 2], [mean(null_p) mean(null_p)], '--', 'color', [0.6 0.6 0.6]);
+line([0 2], [mean(null_p) mean(null_p)], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
 h = fill([0 2 2 0], [lcb lcb ucb ucb], [0.4 0.4 0.4]);
 set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 hold off;
 
 pos = find(m <= null_p);
 pos = pos(end);
+if isempty(pos) 
+    pos = 0;
+end
 fprintf('MC test (%d samples from null), p = %.4f\n', null_iters, pos / length(null_p));

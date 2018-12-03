@@ -9,7 +9,7 @@ sem = @(x) std(x) / sqrt(length(x));
 N = 78; % participants
 h.alpha = 5;
 
-nsteps = 1000;
+nsteps = 1500;
 
 D = init_D_from_txt('lynn.txt');
 

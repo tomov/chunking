@@ -15,7 +15,7 @@ D = init_D_from_txt('solway1.txt');
 for s = 1:N % for each simulated subject
     fprintf('subject %d\n', s);
 
-    [H, P] = sample(D, h, 100);
+    [H, P] = sample(D, h, 1000);
     H_all{s} = H;
     P_all{s} = P;
 
@@ -76,7 +76,7 @@ c1 = sum(loc(:) == 5 | loc(:) == 6); % count 1
 c2 = sum(loc(:) ~= 5 & loc(:) ~= 6); % count 2
 n = c1 + c2;
 p = 2 * binocdf(min(c1,c2), n, 2/10);
-y = binoinv([0.025 0.975], n, 2/10);
+y = binoinv([0.025 0.975], n, 2/10) / n;
 
 figure;
 m = c1/n;
@@ -84,7 +84,7 @@ se = std(loc(:) == 5 | loc(:) == 6) / sqrt(n);
 bar(m);
 hold on;
 errorbar(m, se);
-line([0 2], [2/10 2/10], '--', 'color', [0.6 0.6 0.6]);
+line([0 2], [2/10 2/10], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
 h = fill([0 2 2 0], [y(1) y(1) y(2) y(2)], [0.4 0.4 0.4]);
 set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 hold off;
