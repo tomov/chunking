@@ -1,4 +1,4 @@
-function [path, hpath, paths] = hbfs(s, g, H, D)
+function [path, hpath, paths, b] = hbfs(s, g, H, D)
 
     H = populate_H(H, D);
     hpath = bfs(H.c(s), H.c(g), H.E);

@@ -27,7 +27,7 @@ comm_trans = [
 for s = 1:N % for each simulated subject
     fprintf('subject %d\n', s);
 
-    [H, P] = sample(D, h, 10);
+    [H, P] = sample(D, h, 1000);
     H_all{s} = H;
     P_all{s} = P;
 
@@ -113,3 +113,9 @@ hold on;
 m = m(:); se = se(:); 
 errorbar(xs, m, se, 'linestyle', 'none');
 hold off;
+
+[h, p, ci, stats] = ttest2(comm_p, other_p);
+fprintf('random walks: t(%d) = %.2f, p = %.4f (two sample two-tailed t-test)', stats.df, stats.tstat, p);
+
+[h, p, ci, stats] = ttest2(comm_p_hamil, other_p_hamil);
+fprintf('hamiltonians: t(%d) = %.2f, p = %.4f (two sample two-tailed t-test)', stats.df, stats.tstat, p);
