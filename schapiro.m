@@ -27,7 +27,7 @@ comm_trans = [
 for s = 1:N % for each simulated subject
     fprintf('subject %d\n', s);
 
-    [H, P] = sample(D, h, 1000);
+    [H, P] = sample(D, h, 100);
     H_all{s} = H;
     P_all{s} = P;
 
