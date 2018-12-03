@@ -2,6 +2,7 @@
 
 clear all;
 
+%{
 rng default;
 
 sem = @(x) std(x) / sqrt(length(x));
@@ -46,6 +47,7 @@ end
 
 
 save('solway1.mat');
+%}
 
 load('solway1.mat');
 

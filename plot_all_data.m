@@ -42,4 +42,29 @@ for i = 1:length(pl)
     yticklabels(pl(i).yticklabels);
     ylim([-0.1 1.1]);
     ylabel(pl(i).ylabel);
+
+    % stats
+    %
+    fprintf('\n ---- %s -----\n\n', pl(i).title);
+
+    for j = 1:length(pl(i).m)
+        fprintf('m = %.3f +- %.3f, binomial two-sided n = %d, p = %d\n', m(j), se(j), pl(i).n(j), pl(i).p(j));
+    end
+    [tbl, chi2stat, pval] = chi2(pl(i).m, pl(i).n);
+    tbl
+    N = sum(pl(i).n);
+    df = (2 - 1) * (length(pl(i).m) - 1);
+    fprintf('test of independence (crosstab) for all: chi2(%d, %d) = %.3f, p = %.4f\n', df, N, chi2stat, pval);
+
+    for j = 1:length(pl(i).m)
+        for k = j+1:length(pl(i).m)
+            fprintf('   for %s vs. %s:\n', pl(i).xticklabels{j}, pl(i).xticklabels{k});
+            [tbl, chi2stat, pval] = chi2(pl(i).m([j k]), pl(i).n([j k]));
+            N = sum(pl(i).n([j k]));
+            df = (2 - 1) * (2 - 1);
+            fprintf('              chi2(%d, %d) = %.3f, p = %.4f\n', df, N, chi2stat, pval);
+        end
+    end
+
 end
+

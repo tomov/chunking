@@ -5,7 +5,7 @@ clear all;
 rng default;
 
 sem = @(x) std(x) / sqrt(length(x));
-
+%{
 N = 30; % participants
 h.alpha = 5;
 nwalks = 18; % how many random walks or hamiltonians for each subject (based on paper)
@@ -96,7 +96,7 @@ for s = 1:N % for each simulated subject
 end
 
 save('schapiro.mat');
-
+%}
 
 load('schapiro.mat');
 
