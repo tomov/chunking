@@ -4,6 +4,7 @@ clear all;
 
 rng default;
 
+%{
 sem = @(x) std(x) / sqrt(length(x));
 
 N = 78; % participants
@@ -19,12 +20,16 @@ for i = 4:-1:1 % important -- backwards
 end
 A(logical(eye(size(A)))) = 0; % never self-transition
 
+load('lynn.mat');
+
 for subj = 1:N % for each simulated subject
     fprintf('subject %d\n', subj);
 
     [H, P] = sample(D, h, 1000);
     H_all{subj} = H;
     P_all{subj} = P;
+    %H = H_all{subj};
+    %P = P_all{subj};
 
     [~,I] = max(P); % MAP H
     H = H(I);
@@ -54,6 +59,7 @@ end
 
 
 save('lynn.mat');
+%}
 
 load('lynn.mat');
 
@@ -69,7 +75,7 @@ se2 = sem(p_long);
 figure;
 bar([m1 m2]);
 hold on;
-errorbar([m1 m2], [se1 se2]);
+errorbar([m1 m2], [se1 se2], 'linestyle', 'none');
 hold off;
 
 [h, p, ci, stats] = ttest(p_short);
