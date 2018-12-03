@@ -33,6 +33,7 @@ for s = 1:N % for each simulated subject
 
     [~,I] = max(P); % MAP H
     H = H(I);
+    map_H{s} = H;
 
     paths = random_walks(D, nwalks, D.G.N-1); % random walks
     i = randsample(length(hamils), nwalks);

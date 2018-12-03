@@ -28,18 +28,18 @@ nexts = [
 8 19;
 20 9];
 
-load('solway4.mat');
+%load('solway4.mat');
 
 
 clear move;
 for subj = 1:N % for each simulated subject
     fprintf('subject %d\n', subj);
 
-    %[H, P] = sample(D, h, 1000);
-    %H_all{subj} = H;
-    %P_all{subj} = P;
-    H = H_all{subj};
-    P = P_all{subj};
+    [H, P] = sample(D, h, 10000);
+    H_all{subj} = H;
+    P_all{subj} = P;
+    %H = H_all{subj};
+    %P = P_all{subj};
 
     [~,I] = max(P); % MAP H
     H = H(I);
@@ -51,9 +51,9 @@ for subj = 1:N % for each simulated subject
     end
 end
 
-save('solway4.mat');
+save('solway4_10000.mat');
 
-load('solway4.mat');
+%load('solway4.mat');
 
 c1 = 0;
 c2 = 0;

@@ -21,6 +21,7 @@ for s = 1:N % for each simulated subject
 
     [~,I] = max(P); % MAP H
     H = H(I);
+    map_H{s} = H;
 
     H = populate_H(H, D); % fill up bridges
 
