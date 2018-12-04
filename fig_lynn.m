@@ -13,6 +13,17 @@ subplot(2,3,1);
 plot_lynn_graph(H, D);
 title('Experimental Design', 'fontsize', fontsize);
 
+hold on;
+h = zeros(4,1);
+
+h(1) = plot(NaN, NaN, 'o', 'color', [0.1 0.1 0.1], 'markerfacecolor', [255 255 255]/255);
+h(2) = plot(NaN, NaN, 'o', 'color', [0.1 0.1 0.1], 'markerfacecolor', [29 117 0]/255);
+h(3) = plot(NaN, NaN, 'o', 'color', [0.1 0.1 0.1], 'markerfacecolor', [0 118 186]/255);
+h(4) = plot(NaN, NaN, 'o', 'color', [0.1 0.1 0.1], 'markerfacecolor', [181 23 0]/255);
+
+hold off;
+legend(h, {'0 (current node)', '1 (no violation)', '2 (short violation)', '3,4 (long violation)'}, 'Position', [0.05 0.81 0.05 0.1]);
+
 
 
 % B: Data
