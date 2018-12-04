@@ -6,7 +6,7 @@ fontsize = 13;
 axisfontsize = 10;
 lettersize = 20;
 
-ii = 1;
+ii = 3;
 jj = 1;
 
 % A: graph
@@ -155,6 +155,7 @@ for s = 1:12
     labelnode(h, 1:D.G.N, '');
     set(gca, 'xtick', []);
     set(gca, 'ytick', []);
+    set(gca, 'xlim', [-2 4]);
     h.MarkerSize = 6;
 
     if s == 3
