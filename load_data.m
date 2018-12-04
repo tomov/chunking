@@ -2,7 +2,8 @@ function [data, Ts, f_chunk, RT_all, RT_new] = load_data(dirname, expected_numbe
 
     if ~exist('dirname', 'var')
         %dirname = 'exp/results'; 
-        dirname = 'exp/results/mines10_map';
+        %dirname = 'exp/results/mines10_map';
+        dirname = 'mines10_map';
         %bad_dirname = 'exp/results/bad';
     end
 
