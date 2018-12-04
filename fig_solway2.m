@@ -24,7 +24,7 @@ sizes = (100 - 74) * ones(1,19) / 18;
 sizes(10) = 74;
 sizes = sizes * 0.15;
 
-subplot(2,3,2);
+ax = subplot(2,3,2);
 h = plot_solway2_graph(H, D);
 for i = 1:D.G.N
     highlight(h, i, 'NodeColor', [0.6 0.6 0.6], 'MarkerSize', 12 + sizes(i));
@@ -35,6 +35,31 @@ plot_solway2_graph(H, D);
 hold off;
 
 title('Data', 'fontsize', fontsize);
+
+
+axes('Position', [ax.Position(1) ax.Position(2) 0.07 0.12]);
+box on;
+
+for j = 1:null_iters
+    null_p(j) = mean(null{j}(corr(:)) == 10);
+end
+null_p = sort(null_p);
+lcb = null_p(length(null_p) * 0.025);
+ucb = null_p(length(null_p) * 0.975);
+
+m = 0.74;
+
+bar(m);
+hold on;
+line([0 2], [mean(null_p) mean(null_p)], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
+h = fill([0 2 2 0], [lcb lcb ucb ucb], [0.4 0.4 0.4]);
+set(h, 'facealpha', 0.5, 'edgecolor', 'none');
+set(gca, 'xlim', [0 2]);
+set(gca, 'ylim', [0 1]);
+set(gca, 'ytick', [0 0.5 1]);
+xticklabels({'P(choose bottleneck)'});
+hold off;
+
 
 
 % C: Model
@@ -52,6 +77,7 @@ plot_solway2_graph(H, D);
 hold off;
 
 title('Model', 'fontsize', fontsize);
+
 
 axes('Position', [ax.Position(1) ax.Position(2) 0.07 0.12]);
 box on;
@@ -73,7 +99,9 @@ line([0 2], [mean(null_p) mean(null_p)], 'linestyle', '--', 'color', [0.6 0.6 0.
 h = fill([0 2 2 0], [lcb lcb ucb ucb], [0.4 0.4 0.4]);
 set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 set(gca, 'xlim', [0 2]);
-set(gca, 'ylim', [0 0.9]);
+set(gca, 'ylim', [0 1]);
+set(gca, 'ytick', [0 0.5 1]);
+xticklabels({'P(choose bottleneck)'});
 hold off;
 
 

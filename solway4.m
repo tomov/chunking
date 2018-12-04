@@ -8,7 +8,7 @@ sem = @(x) std(x) / sqrt(length(x));
 
 N = 35; % participants
 h.alpha = 2;
-
+nsamples = 10000;
 
 D = init_D_from_txt('solway4.txt');
 
@@ -35,7 +35,7 @@ clear move;
 for subj = 1:N % for each simulated subject
     fprintf('subject %d\n', subj);
 
-    [H, P] = sample(D, h, 10000);
+    [H, P] = sample(D, h, nsamples);
     H_all{subj} = H;
     P_all{subj} = P;
     %H = H_all{subj};
@@ -51,7 +51,8 @@ for subj = 1:N % for each simulated subject
     end
 end
 
-save('solway4_alpha=2_10000.mat');
+filename = sprintf('solway4_alpha=%d_nsamples=%d.mat', h.alpha, nsamples);
+save(filename);
 
 %load('solway4.mat');
 %load('solway4_1000.mat');

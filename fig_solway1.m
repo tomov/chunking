@@ -20,7 +20,7 @@ title('Experimental Design', 'fontsize', fontsize);
 
 sizes = [3 3 3 2 10 12 3 1 2 1] * 2;
 
-subplot(2,3,2);
+ax = subplot(2,3,2);
 h = plot_solway1_graph(H, D);
 for i = 1:D.G.N
     highlight(h, i, 'NodeColor', [0.6 0.6 0.6], 'MarkerSize', 12 + sizes(i));
@@ -31,6 +31,29 @@ plot_solway1_graph(H, D);
 hold off;
 
 title('Data', 'fontsize', fontsize);
+
+
+axes('Position', [ax.Position(1) ax.Position(2) 0.07 0.12]);
+box on;
+
+c1 = floor(length(loc(:)) * (4.4 / 5.4));
+c2 = length(loc(:)) - c1;
+n = c1 + c2;
+p = 1 - binocdf(c1, n, 2/10);
+ci = binoinv([0.025 0.975], n, 2/10) / n;
+
+m = c1/n;
+bar(m);
+hold on;
+line([0 2], [2/10 2/10], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
+h = fill([0 2 2 0], [ci(1) ci(1) ci(2) ci(2)], [0.4 0.4 0.4]);
+set(h, 'facealpha', 0.5, 'edgecolor', 'none');
+set(gca, 'xlim', [0 2]);
+set(gca, 'ylim', [0 1]);
+set(gca, 'ytick', [0 0.5 1]);
+xticklabels({'P(choose bottlenecks)'});
+
+hold off;
 
 
 % C: Model
@@ -67,10 +90,13 @@ line([0 2], [2/10 2/10], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
 h = fill([0 2 2 0], [ci(1) ci(1) ci(2) ci(2)], [0.4 0.4 0.4]);
 set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 set(gca, 'xlim', [0 2]);
-set(gca, 'ylim', [0 0.9]);
-xticklabels({'P(bottleneck)'});
+set(gca, 'ylim', [0 1]);
+set(gca, 'ytick', [0 0.5 1]);
+xticklabels({'P(choose bottlenecks)'});
 
 hold off;
+
+
 
 % D: Hierarchies
 
