@@ -5,9 +5,9 @@ clear all;
 rng default;
 
 sem = @(x) std(x) / sqrt(length(x));
-%{
+
 N = 30; % participants
-h.alpha = 5;
+h.alpha = 2;
 nwalks = 18; % how many random walks or hamiltonians for each subject (based on paper)
 
 D = init_D_from_txt('schapiro.txt');
@@ -27,7 +27,7 @@ comm_trans = [
 for s = 1:N % for each simulated subject
     fprintf('subject %d\n', s);
 
-    [H, P] = sample(D, h, 1000);
+    [H, P] = sample(D, h, 100);
     H_all{s} = H;
     P_all{s} = P;
 
@@ -95,10 +95,9 @@ for s = 1:N % for each simulated subject
     other_p_hamil(s) = other_press_hamil / (other_press_hamil + other_nopress_hamil);
 end
 
-save('schapiro.mat');
-%}
+save('schapiro_alpha=2_nsamples=100.mat');
 
-load('schapiro.mat');
+%load('schapiro.mat');
 
 figure;
 
