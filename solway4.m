@@ -35,7 +35,7 @@ clear move;
 for subj = 1:N % for each simulated subject
     fprintf('subject %d\n', subj);
 
-    [H, P] = sample(D, h, 1000);
+    [H, P] = sample(D, h, 10000);
     H_all{subj} = H;
     P_all{subj} = P;
     %H = H_all{subj};
@@ -51,7 +51,7 @@ for subj = 1:N % for each simulated subject
     end
 end
 
-save('solway4_alpha=2_1000.mat');
+save('solway4_alpha=2_10000.mat');
 
 %load('solway4.mat');
 %load('solway4_1000.mat');
