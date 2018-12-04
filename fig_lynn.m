@@ -41,7 +41,7 @@ se2 = 6;
 
 bar([m1 m2]);
 hold on;
-errorbar([m1 m2], [se1 se2], 'linestyle', 'none');
+errorbar([m1 m2], [se1 se2], 'linestyle', 'none', 'color', 'black');
 hold off;
 
 %set(gca, 'xlim', [0 2]);
@@ -69,7 +69,7 @@ se2 = sem(p_long);
 
 bar([m1 m2]);
 hold on;
-errorbar([m1 m2], [se1 se2], 'linestyle', 'none');
+errorbar([m1 m2], [se1 se2], 'linestyle', 'none', 'color', 'black');
 hold off;
 
 %set(gca, 'xlim', [0 2]);
