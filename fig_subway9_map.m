@@ -6,21 +6,51 @@ fontsize = 13;
 axisfontsize = 10;
 lettersize = 20;
 
-ii = 4;
-jj = 1:2;
+ii = 2;
+jj = 1:4;
 
 % A: graph
 %
-subplot(2,5,1);
+subplot(3,4,1);
 
-load('model_all_data_1000samples_MAP_5alpha.mat');
+load('model_all_data_10samples_MAP_5alpha.mat');
 
 H = pl(ii).H{jj(1)}(1,1);
 D = pl(ii).D{jj(1)}(1,1);
 [h, xs, ys] = plot_subway9_graph(H, D);
 labelnode(h, 1:D.G.N, 1:D.G.N);
+set(gca, 'xlim', [-2 4]);
 
 
+
+h = subplot(3,4,2);
+pos = get(h, 'position');
+pos(1) = pos(1) * 1.0;
+pos(2) = pos(2) * 1.0;
+pos(3) = pos(3) * 1.0;
+pos(4) = pos(4) * 1.0;
+subplot(3,4, 2, 'position', pos);
+
+PICpng = imread('subway9_map_crop.png');
+[rows columns numberOfColorChannels] = size(PICpng);
+imshow(PICpng, 'InitialMagnification', 'fit');  
+
+
+title('Experimental Design', 'fontsize', fontsize);
+
+
+h = subplot(3,2,2);
+pos = get(h, 'position');
+pos(1) = pos(1) * 1.0;
+pos(2) = pos(2) * 1.0;
+pos(3) = pos(3) * 1.0;
+pos(4) = pos(4) * 1.0;
+subplot(3,2, 2, 'position', pos);
+PICpng = imread('subway9_map_trials.png');
+[rows columns numberOfColorChannels] = size(PICpng);
+imshow(PICpng, 'InitialMagnification', 'fit');  
+
+title('Experimental Design', 'fontsize', fontsize);
 
 
 
@@ -28,7 +58,7 @@ labelnode(h, 1:D.G.N, 1:D.G.N);
 %
 
 
-subplot(2,5,4);
+subplot(3,2,3);
 
 load('analyze_all_data.mat');
 
@@ -76,9 +106,9 @@ title('Data', 'fontsize', fontsize);
 
 % C: Model
 
-load('model_all_data_1000samples_MAP_5alpha.mat');
+load('model_all_data_10samples_MAP_5alpha.mat');
 
-subplot(2,5,5);
+subplot(3,2,4);
 
 i = ii;
 m = pl(i).m ./ pl(i).n;
@@ -122,9 +152,9 @@ title('Model', 'fontsize', fontsize);
 
 % D: Hierarchies
 
-j = [1 1 1 1 1 1 2 2 2 2 2 2];
+j = [1 1 1 2 2 2 3 3 3 2 2 2];
 for s = 1:12
-    subplot(4,6, 12 + s);
+    subplot(6,6, 6*4 + s);
 
     H = pl(i).H{j(s)}(s,:);
     D = pl(i).D{j(s)}(s);
@@ -148,33 +178,25 @@ for s = 1:12
     if s == 1
         ylabel('bad');
     end
+    if s == 4
+        ylabel('control 1');
+    end
     if s == 7
-        ylabel('control');
+        ylabel('control 2');
+    end
+    if s == 10
+        ylabel('good');
     end
 end
 
-% A: design; it's here b/c otherwise it disappears...
-
-h = subplot(2,5,2);
-pos = get(h, 'position');
-pos(1) = pos(1) * 0.9;
-pos(2) = pos(2) * 0.6;
-pos(3) = pos(3) * 2.4;
-pos(4) = pos(4) * 2.4;
-subplot(2,5, 2, 'position', pos);
-PICpng = imread('subway9_trials.png');
-[rows columns numberOfColorChannels] = size(PICpng);
-imshow(PICpng, 'InitialMagnification', 'fit');  
-
-title('Experimental Design', 'fontsize', fontsize);
 
 
 ax1 = axes('Position',[0 0 1 1],'Visible','off');
 axes(ax1);
-text(0.10, 0.96, 'A', 'FontSize', lettersize, 'FontWeight', 'bold');
-text(0.59, 0.96, 'B', 'FontSize', lettersize, 'FontWeight', 'bold');
-text(0.75, 0.96, 'C', 'FontSize', lettersize, 'FontWeight', 'bold');
-text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
+text(0.09, 0.96, 'A', 'FontSize', lettersize, 'FontWeight', 'bold');
+text(0.09, 0.67, 'B', 'FontSize', lettersize, 'FontWeight', 'bold');
+text(0.53, 0.67, 'C', 'FontSize', lettersize, 'FontWeight', 'bold');
+text(0.09, 0.35, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 
 
 
@@ -182,7 +204,7 @@ text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-print('subway9.pdf', '-dpdf');
+print('subway9_map.pdf', '-dpdf');
 
 
 

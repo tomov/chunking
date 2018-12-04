@@ -152,7 +152,7 @@ text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-print('subway10.pdf', '-dpdf');
+print('subway10_map.pdf', '-dpdf');
 
 
 
