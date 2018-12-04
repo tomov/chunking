@@ -8,7 +8,7 @@ sem = @(x) std(x) / sqrt(length(x));
 
 N = 40; % participants
 h.alpha = 2;
-nsamples = 1000;
+nsamples = 100;
 
 D = init_D_from_txt('solway1.txt');
 
@@ -16,7 +16,7 @@ D = init_D_from_txt('solway1.txt');
 for s = 1:N % for each simulated subject
     fprintf('subject %d\n', s);
 
-    [H, P] = sample(D, h, 1000);
+    [H, P] = sample(D, h, nsamples);
     H_all{s} = H;
     P_all{s} = P;
 
@@ -78,7 +78,7 @@ hold off;
 c1 = sum(loc(:) == 5 | loc(:) == 6); % count 1
 c2 = sum(loc(:) ~= 5 & loc(:) ~= 6); % count 2
 n = c1 + c2;
-p = 2 * binocdf(min(c1,c2), n, 2/10);
+p = 1 - binocdf(c1, n, 2/10);
 y = binoinv([0.025 0.975], n, 2/10) / n;
 
 figure;
@@ -93,4 +93,4 @@ set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 hold off;
 
 
-fprintf('two-sided binomial test n = %d, p = %.4f\n', n, p);
+fprintf('right-tailed binomial test n = %d, p = %.4f\n', n, p);

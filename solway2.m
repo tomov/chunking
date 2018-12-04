@@ -2,26 +2,27 @@
 
 clear all;
 
-%{
 rng default;
 
 sem = @(x) std(x) / sqrt(length(x));
 
 N = 10; % participants
-h.alpha = 5;
+h.alpha = 2;
+nsamples = 1000;
 
 ntasks = 50; 
 null_iters = 1000;
 
 D = init_D_from_txt('solway2.txt');
 
-
 for subj = 1:N % for each simulated subject
     fprintf('subject %d\n', subj);
 
-    [H, P] = sample(D, h, 1000);
+    [H, P] = sample(D, h, nsamples);
     H_all{subj} = H;
     P_all{subj} = P;
+    %H = H_all{subj};
+    %P = P_all{subj};
 
     [~,I] = max(P); % MAP H
     H = H(I);
@@ -53,10 +54,10 @@ for subj = 1:N % for each simulated subject
     p(subj) = mean(loc(subj, corr(subj,:)) == 10);
 end
 
-save('solway2.mat');
-%}
+filename = sprintf('solway2_alpha=%d_nsamples=%d.mat', h.alpha, nsamples);
+save(filename);
 
-load('solway2.mat');
+%load('solway2.mat');
 
 
 for j = 1:null_iters
@@ -79,9 +80,11 @@ h = fill([0 2 2 0], [lcb lcb ucb ucb], [0.4 0.4 0.4]);
 set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 hold off;
 
+
+
 pos = find(m <= null_p);
-pos = pos(end);
 if isempty(pos) 
     pos = 0;
 end
+pos = pos(end);
 fprintf('MC test (%d samples from null), p = %.4f\n', null_iters, pos / length(null_p));
