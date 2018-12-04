@@ -49,7 +49,16 @@ for i = 1:length(pl)
         c1 = sum(move == pl(i).nexts(j)); % count 1
         c2 = sum(move ~= pl(i).nexts(j)); % count 2
         n = sum(which);
-        p = 2 * binocdf(min(c1,c2), n, 0.5);
+        switch pl(i).tests(j)
+            case 1 % right-tailed
+                p = 1 - binocdf(c1, n, 0.5);
+            case 2 % left-tailed
+                p = binocdf(c1, n, 0.5);
+            case 3 % two-tailed
+                p = 2 * binocdf(min(c1,c2), n, 0.5);
+            otherwise
+                assert(false);
+        end
 
         y = binoinv([0.025 0.975], n, 0.5);
         pl(i).ci(j) = (y(2) - y(1)) / 2;

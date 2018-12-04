@@ -6,7 +6,7 @@ fontsize = 13;
 axisfontsize = 10;
 lettersize = 20;
 
-ii = 3;
+ii = 5;
 jj = 1;
 
 % A: graph
@@ -15,8 +15,8 @@ subplot(2,5,1);
 
 load('model_all_data_10samples_MAP_5alpha.mat');
 
-H = pl(ii).H{jj}(1,1);
-D = pl(ii).D{jj}(1,1);
+H = pl(1).H{jj}(1,1);
+D = pl(1).D{jj}(1,1);
 [h, xs, ys] = plot_subway10_graph(H, D);
 labelnode(h, 1:D.G.N, 1:D.G.N);
 
@@ -96,16 +96,19 @@ title('Data', 'fontsize', fontsize);
 
 % C: Model
 
-load('model_all_data_10samples_MAP_5alpha.mat');
+%load('model_all_data_10samples_MAP_5alpha.mat');
 
 subplot(2,5,5);
 
 i = ii;
-m = pl(i).m ./ pl(i).n;
-ci = pl(i).ci ./ pl(i).n;
-for j = 1:length(pl(i).m)
-    se(j) = std([ones(1,pl(i).m(j)) zeros(1,pl(i).n(j) - pl(i).m(j))]) / sqrt(pl(i).n(j));
-end
+
+m = 0.8; % TODO what is the fraction of simulations that go to state 5?
+se = 0.04; % TODO what is the standard error of the mean for it?
+%m = pl(i).m ./ pl(i).n;
+%ci = pl(i).ci ./ pl(i).n;
+%for j = 1:length(pl(i).m)
+%    se(j) = std([ones(1,pl(i).m(j)) zeros(1,pl(i).n(j) - pl(i).m(j))]) / sqrt(pl(i).n(j));
+%end
 
 hold on;
 j = jj;
