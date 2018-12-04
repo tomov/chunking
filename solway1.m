@@ -2,13 +2,13 @@
 
 clear all;
 
-%{
 rng default;
 
 sem = @(x) std(x) / sqrt(length(x));
 
 N = 40; % participants
-h.alpha = 5;
+h.alpha = 2;
+nsamples = 1000;
 
 D = init_D_from_txt('solway1.txt');
 
@@ -46,10 +46,10 @@ for s = 1:N % for each simulated subject
 end
 
 
-save('solway1.mat');
-%}
+filename = sprintf('solway1_alpha=%d_nsamples=%d.mat', h.alpha, nsamples);
+save(filename);
 
-load('solway1.mat');
+%load('solway1.mat');
 
 x = [-3 -1 -2 -3 -1 1 3 2 1 3];
 y = [-3 -3 -2 -1 -1 1 1 2 3 3];

@@ -1,4 +1,6 @@
+clear all;
 load('schapiro_alpha=2.mat');
+%load('schapiro_alpha=2_nsamples=20.mat');
 
 figure('pos', [100 100 1000 600] * 3/4);
 fontsize = 13;
