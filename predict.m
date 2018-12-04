@@ -9,17 +9,22 @@ function [p, mu, H, post] = predict(D, h, M, burnin, lag, tau, ids)
 
     % Take m samples of H
     % w is probabilities (normalized weights)
-    [H, post] = sample(D, h, M, burnin, lag);
+    [H, post] = sample(D, [], h, M, burnin, lag);
     %w = exp(w)/sum(exp(w));
     
     
     % Expected value of mu_1 given observed reward 
     % (equal to sum over m of theta_c1 in each sample of H)
-    [~, max_index] = max(post);
-    H_max = H(max_index);
+    %[~, max_index] = max(post);
+    %H_max = H(max_index);
     mu = zeros(D.G.N);
     for i = 1:D.G.N
-        mu(i) =  H_max.theta(H_max.c(i));
+        mu(i) = 0;
+        for m = 1:M
+            mu(i) = mu(i) + H(m).theta(H(m).c(i));
+        end
+        mu(i) = mu(i)/M;
+        %mu(i) =  H_max.theta(H_max.c(i));
     end 
     
     % Expected value of mu_2 given observed reward 

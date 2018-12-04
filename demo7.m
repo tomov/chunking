@@ -10,7 +10,7 @@ h.var_r = 5;
 
 % Read data
 D = init_D_from_txt_dynamic('static_rewards.txt');
-n_subjects = 8;
+n_subjects = 95;
 
 % Static rewards
 tally = 0;
@@ -18,7 +18,7 @@ H_all = {};
 post_all = {};
 for i = 1:n_subjects
     % Get most likely H (based on posterior probabilities)
-    [H, post] = sample(D, h, 500, 1, 1);
+    [H, post] = sample(D, [], h, 1000, 1, 1);
     [~, max_index] = max(post);
     H_max = H(max_index);
     % Use hierarchical BFS to predict the path taken given H
@@ -31,7 +31,7 @@ for i = 1:n_subjects
     % Store the hierarchies
     H_all{i} = H;
     post_all{i} = post;
-    disp(i);
+    disp(tally/i);
 end
 disp(tally)
 [~, I] = max(post);

@@ -10,15 +10,16 @@ h.var_r = 5;
 
 % Read data
 D = init_D_from_txt_dynamic('static_rewards.txt');
-n_subjects = 8;
+n_subjects = 6;
 
 % Dynamic rewards
-n_trials = 10;
+n_trials = 100;
 tally = 0;
 H_all = {};
 post_all = {};
 H_prev = [];
 for i = 1:n_subjects
+    disp(i);
     for t = 1:n_trials
         % Redraw rewards
         if rand <= 0.2
@@ -34,7 +35,7 @@ for i = 1:n_subjects
             end
         end
         % Sample
-        [H, post] = sample(D, H_prev, h, 100, 1, 1);
+        [H, post] = sample(D, H_prev, h, 10, 1, 1);
         % Store the hierarchies
         H_all{i, t} = H;
         post_all{i, t} = post;
@@ -52,6 +53,7 @@ for i = 1:n_subjects
         tally = tally + 1;
     end
     H_prev = [];
+    disp(tally/i);
 end
 disp(tally)
 [~, I] = max(post);

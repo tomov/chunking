@@ -23,6 +23,22 @@ function logp = loglik(H, D, h)
         end
     end
     
+     % find chunk transitive closures
+    c = unique(H.c);
+    A = D.G.E;
+    for i = 1:length(c)
+        n = H.c == c(i);
+        A(n,n) = closure(D.G.E(n,n));
+    end
+
+    % penalize disconnected chunks
+     for i = 1:D.G.N
+        for j = 1:i-1
+            if H.c(i) == H.c(j) && ~A(i, j)
+                logp = logp - 100; % TODO const...
+            end
+         end
+     end
     
     for i = 1:D.G.N
         for obs = 1:length(D.r{i})
@@ -39,3 +55,8 @@ function logp = loglik(H, D, h)
     end
 end
 
+function A = closure(E)
+    % compute the transitive closure of the graph G
+    %
+    A = (eye(size(E)) + E) ^ size(E,1) > 0;
+end
