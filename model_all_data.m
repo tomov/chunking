@@ -6,6 +6,8 @@ rng default;
 init_all_plots;
 
 h.alpha = 5;
+nsamples = 100;
+filename = sprintf('model_all_data_%dsamples_MAP_%dalpha.mat', nsamples, h.alpha);
 
 sem = @(x) std(x) / sqrt(length(x));
 
@@ -25,7 +27,7 @@ for i = 1:length(pl)
         for k = 1:length(D)
             fprintf('      subject %d\n', k);
             tic
-            [samples, post] = sample(D(k), h, 1000);
+            [samples, post] = sample(D(k), h, nsamples);
             for l = 1:length(samples)
                 H(k,l) = samples(l);
                 P(k,l) = post(l);
@@ -49,7 +51,16 @@ for i = 1:length(pl)
         c1 = sum(move == pl(i).nexts(j)); % count 1
         c2 = sum(move ~= pl(i).nexts(j)); % count 2
         n = length(move);
-        p = 2 * binocdf(min(c1,c2), n, 0.5);
+        switch pl(i).tests(j)
+            case 1 % right-tailed
+                p = 1 - binocdf(c1, n, 0.5);
+            case 2 % left-tailed
+                p = binocdf(c1, n, 0.5);
+            case 3 % two-tailed
+                p = 2 * binocdf(min(c1,c2), n, 0.5);
+            otherwise
+                assert(false);
+        end
 
         y = binoinv([0.025 0.975], n, 0.5);
         pl(i).ci(j) = (y(2) - y(1)) / 2;
@@ -59,10 +70,7 @@ for i = 1:length(pl)
     end
 end
 
-save('model_all_data_1000samples_MAP_5alpha.mat');
+save(filename);
 
-load('model_all_data_1000samples_MAP_5alpha.mat');
-
-%load('model_all_data_10samples_MAP_5alpha.mat'); % <-- MONEY!
 
 plot_all_data;

@@ -48,7 +48,17 @@ for i = 1:length(pl)
     fprintf('\n ---- %s -----\n\n', pl(i).title);
 
     for j = 1:length(pl(i).m)
-        fprintf('m = %.3f +- %.3f, binomial two-sided n = %d, p = %d\n', m(j), se(j), pl(i).n(j), pl(i).p(j));
+        switch pl(i).tests(j)
+            case 1 % right-tailed
+                type = 'right-tailed';
+            case 2 % left-tailed
+                type = 'left-tailed';
+            case 3 % two-tailed
+                type = 'two-tailed';
+            otherwise
+                assert(false);
+        end
+        fprintf('m = %.3f +- %.3f, binomial %s, c = %d, n = %d, p = %e\n', m(j), se(j), type, pl(i).m(j), pl(i).n(j), pl(i).p(j));
     end
     [tbl, chi2stat, pval] = chi2(pl(i).m, pl(i).n);
     tbl

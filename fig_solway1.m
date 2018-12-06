@@ -135,4 +135,4 @@ print('solway1.pdf', '-dpdf');
 
 % stats
 %
-fprintf('right-tailed binomial test n = %d, p = %.4f\n', n, p);
+fprintf('right-tailed binomial test %f, n = %d, p = %e\n', c1/n, n, p);

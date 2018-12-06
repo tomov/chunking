@@ -6,6 +6,8 @@ fontsize = 13;
 axisfontsize = 10;
 lettersize = 20;
 
+modelfile = 'model_all_data_100samples_MAP_5alpha.mat';
+
 ii = 3;
 jj = 1;
 
@@ -13,7 +15,7 @@ jj = 1;
 %
 subplot(2,5,1);
 
-load('model_all_data_10samples_MAP_5alpha.mat');
+load(modelfile);
 
 H = pl(ii).H{jj}(1,1);
 D = pl(ii).D{jj}(1,1);
@@ -106,7 +108,7 @@ title('Data', 'fontsize', fontsize);
 
 % C: Model
 
-load('model_all_data_10samples_MAP_5alpha.mat');
+load(modelfile);
 
 subplot(2,5,5);
 

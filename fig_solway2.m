@@ -150,4 +150,4 @@ if isempty(pos)
     pos = 0;
 end
 pos = pos(end);
-fprintf('MC test (%d samples from null), p = %.4f\n', null_iters, pos / length(null_p));
+fprintf('%f; MC test (%d samples from null), p = %e\n', m, null_iters, pos / length(null_p));

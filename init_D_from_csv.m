@@ -8,6 +8,7 @@ function D = init_D_from_csv(filename)
     T = readtable(filename, 'Delimiter', ',');
 
     D.name = [strip(T.group{1}), ' ', num2str(T.subj_id(1))];
+    %D.name = num2str(T.subj_id(1));
 
     phase = 'training_1';
     for i = 1:size(T,1)

@@ -108,12 +108,12 @@ n = 0;
 
 synth = [];
 for t = 1:size(tasks,1)
-    c1 = c1 + sum(move(:,t) == nexts(t,1)); % count 1
+    c1 = c1 + sum(move(:,t) == nexts(t,1)); % count 1 -- we care about that one
     c2 = c2 + sum(move(:,t) == nexts(t,2)); % count 2
     synth = [synth ones(1,c1) zeros(1,c2)];
 end
 n = c1 + c2;
-p = 2 * binocdf(min(c1,c2), n, 0.5);
+p = 1 - binocdf(c1, n, 0.5);
 y = binoinv([0.025 0.975], n, 0.5) / n;
 
 m = c1/n;
@@ -171,4 +171,4 @@ print('solway4.pdf', '-dpdf');
 
 % stats
 %
-fprintf('two-sided binomial test n = %d, p = %.4f\n', n, p);
+fprintf('%f; right-tailed binomial test n = %d, p = %e\n', m, n, p);

@@ -11,7 +11,7 @@ jj = 1;
 
 % A: graph
 %
-subplot(2,5,1);
+subplot(2,6,1);
 
 load('model_all_data_10samples_MAP_5alpha.mat');
 
@@ -23,44 +23,57 @@ labelnode(h, 1:D.G.N, 1:D.G.N);
 
 
 
-h = subplot(2,5,2);
+h = subplot(2,6,2);
 pos = get(h, 'position');
 pos(1) = pos(1) * 1.0;
 pos(2) = pos(2) * 1.0;
 pos(3) = pos(3) * 1.0;
 pos(4) = pos(4) * 1.0;
-subplot(2,5, 2, 'position', pos);
+subplot(2,6, 2, 'position', pos);
 
 PICpng = imread('mines10_free_crop.png');
 [rows columns numberOfColorChannels] = size(PICpng);
 imshow(PICpng, 'InitialMagnification', 'fit');  
 
 
-title('Experimental Design', 'fontsize', fontsize);
 
 
 
 
-
-h = subplot(2,5,3);
+h = subplot(2,6,3);
 pos = get(h, 'position');
 pos(1) = pos(1) * 1.0;
 pos(2) = pos(2) * 1.0;
 pos(3) = pos(3) * 1.0;
 pos(4) = pos(4) * 1.0;
-subplot(2,5, 3, 'position', pos);
+subplot(2,6, 3, 'position', pos);
 
 PICpng = imread('mines10_forced_crop.png');
 [rows columns numberOfColorChannels] = size(PICpng);
 imshow(PICpng, 'InitialMagnification', 'fit');  
 
+title('Experimental Design', 'fontsize', fontsize);
+
+
+
+h = subplot(2,6,4);
+pos = get(h, 'position');
+pos(1) = pos(1) * 1.0;
+pos(2) = pos(2) * 1.0;
+pos(3) = pos(3) * 1.0;
+pos(4) = pos(4) * 1.0;
+subplot(2,6, 4, 'position', pos);
+
+PICpng = imread('mines10_trials.png');
+[rows columns numberOfColorChannels] = size(PICpng);
+imshow(PICpng, 'InitialMagnification', 'fit');  
 
 
 % B: Data
 %
 
 
-subplot(2,5,4);
+subplot(2,6,5);
 
 load('analyze_all_data.mat');
 
@@ -77,8 +90,8 @@ h = bar(j, m(j));
 errorbar(m(j), se(j), 'linestyle', 'none', 'color', 'black');
 %errorbar(m, ci, 'linestyle', 'none', 'color', 'black');
 line([0 2], [0.5 0.5], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
-h = fill([0 2 2 0], [0.5 - ci(j) 0.5 - ci(j) 0.5 + ci(j) 0.5 + ci(j)], [0.4 0.4 0.4]);
-set(h, 'facealpha', 0.5, 'edgecolor', 'none');
+%h = fill([0 2 2 0], [0.5 - ci(j) 0.5 - ci(j) 0.5 + ci(j) 0.5 + ci(j)], [0.4 0.4 0.4]);
+%set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 set(gca, 'xlim', [0 2]);
 set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
@@ -98,7 +111,7 @@ title('Data', 'fontsize', fontsize);
 
 %load('model_all_data_10samples_MAP_5alpha.mat');
 
-subplot(2,5,5);
+subplot(2,6,6);
 
 i = ii;
 
@@ -116,8 +129,8 @@ h = bar(j, m(j));
 errorbar(m(j), se(j), 'linestyle', 'none', 'color', 'black');
 %errorbar(m, ci, 'linestyle', 'none', 'color', 'black');
 line([0 2], [0.5 0.5], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
-h = fill([0 2 2 0], [0.5 - ci(j) 0.5 - ci(j) 0.5 + ci(j) 0.5 + ci(j)], [0.4 0.4 0.4]);
-set(h, 'facealpha', 0.5, 'edgecolor', 'none');
+%h = fill([0 2 2 0], [0.5 - ci(j) 0.5 - ci(j) 0.5 + ci(j) 0.5 + ci(j)], [0.4 0.4 0.4]);
+%set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 set(gca, 'xlim', [0 2]);
 set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
@@ -132,6 +145,8 @@ title('Model', 'fontsize', fontsize);
 
 % D: Hierarchies
 
+%{
+TODO
 for s = 1:12
     subplot(4,6, 12 + s);
 
@@ -155,6 +170,7 @@ for s = 1:12
         title('Example hierarchies', 'fontsize', fontsize);
     end
 end
+%}
 
 
 ax1 = axes('Position',[0 0 1 1],'Visible','off');

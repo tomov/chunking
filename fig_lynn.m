@@ -119,10 +119,10 @@ print('lynn.pdf', '-dpdf');
 % stats
 %
 [h, p, ci, stats] = ttest(p_short);
-fprintf('short violations: t(%d) = %.2f, p = %.4f (one sample two-tailed t-test against 0)\n', stats.df, stats.tstat, p);
+fprintf('short violations: t(%d) = %.2f, p = %e (one sample two-tailed t-test against 0)\n', stats.df, stats.tstat, p);
 
 [h, p, ci, stats] = ttest(p_long);
-fprintf('long violations: t(%d) = %.2f, p = %.4f (one sample two-tailed t-test against 0)\n', stats.df, stats.tstat, p);
+fprintf('long violations: t(%d) = %.2f, p = %e (one sample two-tailed t-test against 0)\n', stats.df, stats.tstat, p);
 
-[h, p, ci, stats] = ttest2(p_short, p_long);
-fprintf('short vs. long violations: t(%d) = %.2f, p = %.4f (two sample two-tailed t-test against 0)\n', stats.df, stats.tstat, p);
+[h, p, ci, stats] = ttest2(p_long, p_short);
+fprintf('long vs. short violations: t(%d) = %.2f, p = %e (two sample two-tailed t-test)\n', stats.df, stats.tstat, p);
