@@ -1,6 +1,6 @@
 function [D, samples, post] = sample_graph_update(D, h, nwait_update, nsamples, nparticles, burnin, lag)
     if ~exist('nsamples', 'var')
-        nsamples = 100;
+        nsamples = 10;
     end
 
     if ~exist('burnin', 'var')
@@ -12,7 +12,7 @@ function [D, samples, post] = sample_graph_update(D, h, nwait_update, nsamples, 
     end
 
     if ~exist('nparticles', 'var')
-        nparticles = 10;
+        nparticles = 20;
     end
     
     if ~exist('nwait_update', 'var')
@@ -50,10 +50,19 @@ function [D, samples, post] = sample_graph_update(D, h, nwait_update, nsamples, 
     end
     
     % sample from H
-    pd = makedist('Multinomial','probabilities', W);
-    r = random(pd);
+%     pd = makedist('Multinomial','probabilities', W);
+%     r = random(pd);
 %     samples = samples_t{r}; post = post_t{r};
-    samples = H(r); post = 1;
+%     samples = H(r); post = 1;
+    post = zeros(size(H));
+    len = size(H);
+    len = len(2);
+    for i = 1:len
+        post(i) = logpost(H(i),D,h);
+    end
+    [~, I] = max(post);
+    post = 1;
+    samples = H(I);
 end
 
 function [samples, post, H] = sample_Hm(D, H, h, nsamples, burnin, lag)
