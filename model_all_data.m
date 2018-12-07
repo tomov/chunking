@@ -6,7 +6,7 @@ rng default;
 init_all_plots;
 
 h.alpha = 5;
-nsamples = 100;
+nsamples = 20;
 filename = sprintf('model_all_data_%dsamples_MAP_%dalpha.mat', nsamples, h.alpha);
 
 sem = @(x) std(x) / sqrt(length(x));
