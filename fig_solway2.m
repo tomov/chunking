@@ -1,6 +1,7 @@
 clear all;
 %load('solway2.mat');
 load('solway2_alpha=5_nsamples=1000.mat');
+%load('solway2_alpha=2_nsamples=100.mat');
 
 figure('pos', [100 100 1000 600] * 3/4);
 fontsize = 13;
@@ -52,8 +53,8 @@ m = 0.74;
 bar(m);
 hold on;
 line([0 2], [mean(null_p) mean(null_p)], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
-h = fill([0 2 2 0], [lcb lcb ucb ucb], [0.4 0.4 0.4]);
-set(h, 'facealpha', 0.5, 'edgecolor', 'none');
+%h = fill([0 2 2 0], [lcb lcb ucb ucb], [0.4 0.4 0.4]);
+%set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 set(gca, 'xlim', [0 2]);
 set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
@@ -96,8 +97,8 @@ bar(m);
 hold on;
 errorbar(m, se);
 line([0 2], [mean(null_p) mean(null_p)], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
-h = fill([0 2 2 0], [lcb lcb ucb ucb], [0.4 0.4 0.4]);
-set(h, 'facealpha', 0.5, 'edgecolor', 'none');
+%h = fill([0 2 2 0], [lcb lcb ucb ucb], [0.4 0.4 0.4]);
+%set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 set(gca, 'xlim', [0 2]);
 set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
@@ -140,7 +141,7 @@ text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-print('solway2.pdf', '-dpdf');
+print('figures/solway2.pdf', '-dpdf');
 
 
 % stats

@@ -5,7 +5,7 @@ rng default;
 
 init_all_plots;
 
-h.alpha = 5;
+h.alpha = 2;
 nsamples = 20;
 filename = sprintf('model_all_data_%dsamples_MAP_%dalpha.mat', nsamples, h.alpha);
 

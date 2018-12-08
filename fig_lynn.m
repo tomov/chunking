@@ -1,5 +1,5 @@
 clear all;
-load('lynn.mat');
+load('lynn_alpha=2_nsamples=1000.mat');
 
 figure('pos', [100 100 1000 600] * 3/4);
 fontsize = 13;
@@ -113,7 +113,7 @@ text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-print('lynn.pdf', '-dpdf');
+print('figures/lynn.pdf', '-dpdf');
 
 
 % stats

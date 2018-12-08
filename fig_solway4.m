@@ -86,8 +86,8 @@ m = c1/n;
 bar(m);
 hold on;
 line([0 2], [0.5 0.5], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
-h = fill([0 2 2 0], [y(1) y(1) y(2) y(2)], [0.4 0.4 0.4]);
-set(h, 'facealpha', 0.5, 'edgecolor', 'none');
+%h = fill([0 2 2 0], [y(1) y(1) y(2) y(2)], [0.4 0.4 0.4]);
+%set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 
 set(gca, 'xlim', [0 2]);
 set(gca, 'ylim', [0 1]);
@@ -122,8 +122,8 @@ bar(m);
 hold on;
 errorbar(m, se);
 line([0 2], [0.5 0.5], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
-h = fill([0 2 2 0], [y(1) y(1) y(2) y(2)], [0.4 0.4 0.4]);
-set(h, 'facealpha', 0.5, 'edgecolor', 'none');
+%h = fill([0 2 2 0], [y(1) y(1) y(2) y(2)], [0.4 0.4 0.4]);
+%set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 
 set(gca, 'xlim', [0 2]);
 set(gca, 'ylim', [0 1]);
@@ -167,7 +167,7 @@ text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-print('solway4.pdf', '-dpdf');
+print('figures/solway4.pdf', '-dpdf');
 
 % stats
 %

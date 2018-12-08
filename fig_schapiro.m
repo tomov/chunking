@@ -1,5 +1,5 @@
 clear all;
-load('schapiro_alpha=2.mat'); % nsamples = 1000
+%load('schapiro_alpha=2.mat'); % nsamples = 1000
 %load('schapiro_alpha=2_nsamples=20.mat');
 load('schapiro_alpha=2_nsamples=100.mat');
 
@@ -147,7 +147,7 @@ text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-print('schapiro.pdf', '-dpdf');
+print('figures/schapiro.pdf', '-dpdf');
 
 
 % stats

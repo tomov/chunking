@@ -46,8 +46,8 @@ m = c1/n;
 bar(m);
 hold on;
 line([0 2], [2/10 2/10], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
-h = fill([0 2 2 0], [ci(1) ci(1) ci(2) ci(2)], [0.4 0.4 0.4]);
-set(h, 'facealpha', 0.5, 'edgecolor', 'none');
+%h = fill([0 2 2 0], [ci(1) ci(1) ci(2) ci(2)], [0.4 0.4 0.4]);
+%set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 set(gca, 'xlim', [0 2]);
 set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
@@ -63,7 +63,7 @@ h = plot_solway1_graph(H, D);
 for i = 1:D.G.N
     f = sum(loc(:) == i);
     f = f / length(loc(:)) * sum(sizes);
-    highlight(h, i, 'NodeColor', [0.6 0.6 0.6], 'MarkerSize', 10 + f);
+    highlight(h, i, 'NodeColor', [0.6 0.6 0.6], 'MarkerSize', 12 + f);
 end
 
 hold on;
@@ -87,8 +87,8 @@ bar(m);
 hold on;
 errorbar(m, se, 'color', 'black');
 line([0 2], [2/10 2/10], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
-h = fill([0 2 2 0], [ci(1) ci(1) ci(2) ci(2)], [0.4 0.4 0.4]);
-set(h, 'facealpha', 0.5, 'edgecolor', 'none');
+%h = fill([0 2 2 0], [ci(1) ci(1) ci(2) ci(2)], [0.4 0.4 0.4]);
+%set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 set(gca, 'xlim', [0 2]);
 set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
@@ -131,7 +131,7 @@ text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-print('solway1.pdf', '-dpdf');
+print('figures/solway1.pdf', '-dpdf');
 
 % stats
 %
