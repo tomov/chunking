@@ -6,12 +6,15 @@ fontsize = 13;
 axisfontsize = 10;
 lettersize = 20;
 
+modelfile = 'exp6_samyu_2alpha_1000samples.mat';
+
 % A: graph
 %
 subplot(2,3,1);
 
 % TODO load from model output file 
 D = init_D_from_txt('mines.txt');
+%D = init_D_from_txt('mines_samyu.txt');
 h.alpha = 5;
 H = init_H(D,h);
 [h, xs, ys] = plot_mines_graph(H, D);
@@ -26,6 +29,9 @@ labelnode(h, 1:D.G.N, 1:D.G.N);
 
 
 subplot(2,3,2);
+
+%load(modelfile);
+
 
 
 % TODO from data file 
@@ -44,7 +50,7 @@ set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
 set(gca, 'xtick', [1]);
 %text(0.7, 0.9, sprintf('p = %.3f', p));
-xticklabels({'P(left)'});
+xticklabels({'P(state 3)'});
 ylabel('fraction of participants');
 
 hold off;
@@ -77,7 +83,7 @@ set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
 set(gca, 'xtick', [1]);
 %text(0.7, 0.9, sprintf('p = %.3f', p));
-xticklabels({'P(left)'});
+xticklabels({'P(state 3)'});
 
 hold off;
 
