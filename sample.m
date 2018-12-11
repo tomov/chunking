@@ -70,6 +70,24 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
         [hp, accept] = mhsample(H.hp, 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
         H.hp = hp;
 
+		logprop_thetamu = @(p_new, p_old) logprop_unbounded(p_new, p_old, H, D, h);
+
+		% thetas
+        for k = 1:length(H.c)
+            proprnd_thetak = @(p_old) proprnd_unbounded(p_old, H, D, h);
+            logtheta = @(theta_k) logpost_theta(theta_k, k, H, D, h);
+            [theta_k, accept] = mhsample(H.theta(k), 1, 'logpdf', logtheta, 'proprnd', proprnd_thetak, 'logproppdf', logprop_thetamu);
+            H.theta(k) = theta_k;
+        end
+        % do sampling for mu's
+        for i = 1:D.G.N
+            proprnd_mui = @(p_old) proprnd_unbounded(p_old, H, D, h);
+            logmu = @(mu_i) logpost_mu(mu_i, i, H, D, h);
+            %save debug.mat;
+            [mu_i, accept] = mhsample(H.mu(i), 1, 'logpdf', logmu, 'proprnd', proprnd_mui, 'logproppdf', logprop_thetamu);
+            H.mu(i) = mu_i; 
+        end
+
         % TODO bridges
 
         samples(n) = H;
@@ -169,4 +187,34 @@ end
 function logp = logprop_p(p_new, p_old, H, D, h)
     Z = normcdf(1, p_old, 0.1) - normcdf(0, p_old, 0.1); % TODO consts TODO adaptive
     logp = log(normpdf(p_new, p_old, 0.1)) - log(Z);
+end
+
+
+    
+% P(H|D) for updates of theta
+%
+function logtheta = logpost_theta(theta_k, k, H, D, h)
+    H.theta(k) = theta_k;
+    logtheta = logpost(H, D, h);
+end
+
+% P(H|D) for updates of mu
+%
+function logmu = logpost_mu(mu_i, i, H, D, h)
+    H.mu(i) = mu_i;
+    logmu = logpost(H, D, h);
+end
+
+
+% proposals for mu, theta; random walk 
+%
+function p_new = proprnd_unbounded(p_old, H, D, h)
+   % p_new = normrnd(p_old, exp(ls_s_k)); % TODO adaptive 
+    p_new = normrnd(p_old, 1); % TODO const
+end
+
+% unbounded proposal f'n
+% 
+function logp = logprop_unbounded(p_new, p_old, H, D, h)
+    logp = log(normpdf(p_new, p_old, 1));
 end

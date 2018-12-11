@@ -81,5 +81,19 @@ function logp = loglik(H, D, h)
         P(H.c ~= H.c(s)) = H.tp;
         logp = logp + log(P(g)) - log(sum(P));
     end
+
+
+
+    % rewards
+    for i = 1:D.G.N
+        for obs = 1:length(D.r{i})
+            % Pr(r = x | rest of H)
+            logp = logp + log(normpdf( D.r{i}(obs), H.mu(i), h.std_r ));
+        end
+    end
+    
+    if isinf(logp)
+        logp = -1e100;
+    end
 end
 
