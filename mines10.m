@@ -1,4 +1,4 @@
-% simulate experiment 5
+% simulate experiment 6
 %
 
 clear all;
@@ -6,10 +6,10 @@ rng default;
 
 sem = @(x) std(x) / sqrt(length(x));
 
-N = 32; % participants
+N = 95; % participants
 h = init_hyperparams();
-nsamples = 100;
-D = init_D_from_txt('mines.txt');
+nsamples = 1000;
+D = init_D_from_txt('mines10.txt');
 
 
 choices = [];
@@ -24,11 +24,9 @@ for s = 1:N % for each simulated subject
     H = H(I);
     map_H{s} = H;
 
-    for i = 1:D.G.N
-        pred(i) = H.theta(H.c(i));
-    end
+    [path, hpath] = hbfs(6, 1, H, D);
 
-    if pred(3) > pred(7)
+    if path(2) == 5
         choices = [choices 1];
         disp('yay!');
     else
@@ -49,5 +47,5 @@ fprintf('right-tailed binomial test m = %.3f, n = %d, p = %.4f\n', m, n, p);
 
 
 
-filename = sprintf('mines_alpha=%d_nsamples=%d.mat', h.alpha, nsamples);
+filename = sprintf('mines10_alpha=%d_nsamples=%d.mat', h.alpha, nsamples);
 save(filename);
