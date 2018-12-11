@@ -1,19 +1,18 @@
 
 
 clear all;
-
+rng default;
 
 h.alpha = 1.5;
+h.var_theta = 2;
+h.theta_mean = 15;
+h.var_mu = 1;
+h.var_r = 1;
 
-D(1) = init_D_from_txt('hourglass.txt');
-D(2) = init_D_from_txt('solway1.txt');
-D(3) = init_D_from_txt('solway2.txt');
-D(4) = init_D_from_txt('schapiro.txt');
-D(5) = init_D_from_txt('lynn.txt');
-
-for i = 5:length(D)
+D(1) = init_D_from_txt('hourglass_rewards.txt');
+for i = 1:length(D)
     tic 
-    [samples, post] = sample(D(i), h);
+    [samples, post] = sample(D(i), h, 1000);
     for j = 1:length(samples)
         H(i,j) = samples(j);
         P(i,j) = post(j);
@@ -21,9 +20,9 @@ for i = 5:length(D)
     toc
 end
 
-save demo1.mat
+save demo4.mat
 
-load demo1.mat;
+% load demo1.mat;
 
 figure;
 

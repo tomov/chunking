@@ -16,6 +16,13 @@ function H = init_H(D, h)
     end
     H.cnt = cnt;
 
+    H.theta = normrnd(h.theta_mean, h.var_theta, [1, length(H.c)]); % sample each element of the vector from normal
+    % initialize H.mu for mu's that we don't know
+    H.mu = [];
+    for i = 1:D.G.N
+        H.mu(i) = normrnd(H.theta(H.c(i)), h.var_mu);
+    end
+   % H.r((1:D.G.N)) = normrnd(H.mu(H.c((1:D.G.N))), 0);
     H.p = betarnd(1,1); % TODO const 
     H.q = betarnd(1,1); % TODO const 
 end

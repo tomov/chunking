@@ -1,4 +1,4 @@
-function D = init_D_from_txt(filename)
+function D = init_D_from_txt_dynamic(filename)
     f = fopen(filename, 'r');
 
     D.name = fgets(f);
@@ -14,12 +14,17 @@ function D = init_D_from_txt(filename)
         D.G.E(j,i) = 1;
     end
     
+    A = freadline(f, '%d');
+    O = A(1);
+    
     for i = 1:D.G.N
-        A = freadline(f, '%d');
-        mu = A(1);
-        D.r{i} = normrnd(mu, 1, [1 10]); % 10 observations per node; observations
-                                         % are normally distributed around
-                                         % mu.
+        D.r{i} = [];
+    end
+    
+    for o = 1:O
+        A = freadline(f, '%d %d');
+        i = A(1);
+        D.r{i} = [D.r{i} A(2)];
     end
 
     D.tasks.s = [];
