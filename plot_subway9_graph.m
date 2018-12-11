@@ -1,8 +1,12 @@
-function [h, x, y] = plot_subway9_graph(H, D)
+function [h, x, y] = plot_subway9_graph(H, D, c)
 
 x = [1 2 2 2 2 1 0 0 0 ];
 y = [3 3 2 1 0 0 0 1.5 3];
-H.c = [1 1 1 2 2 2 3 3 3];
+if ~exist('c', 'var')
+    H.c = [1 1 1 2 2 2 3 3 3];
+else
+    H.c = c;
+end
 
 
 h = plot_H(H, D);

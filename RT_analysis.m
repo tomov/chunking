@@ -226,6 +226,9 @@ m = [mean(action_chunk_RTs) mean(state_chunk_RTs) mean(bridge_RTs)];
 se = [sem(action_chunk_RTs) sem(state_chunk_RTs) sem(bridge_RTs)]; 
 bar(m);
 hold on;
-errorbar(m, se, 'linestyle', 'none');
+errorbar(m, se, 'linestyle', 'none', 'color', 'black');
 ylabel('RT (ms)');
 xticklabels({'action chunks', 'state chunks', 'bridges'});
+
+save('RT_analysis.mat');
+

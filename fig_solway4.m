@@ -120,7 +120,7 @@ m = c1/n;
 se = sem(synth);
 bar(m);
 hold on;
-errorbar(m, se);
+errorbar(m, se, 'color', 'black');
 line([0 2], [0.5 0.5], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
 %h = fill([0 2 2 0], [y(1) y(1) y(2) y(2)], [0.4 0.4 0.4]);
 %set(h, 'facealpha', 0.5, 'edgecolor', 'none');

@@ -72,7 +72,7 @@ for i = 1:length(pl)
             [tbl, chi2stat, pval] = chi2(pl(i).m([j k]), pl(i).n([j k]));
             N = sum(pl(i).n([j k]));
             df = (2 - 1) * (2 - 1);
-            fprintf('              chi2(%d, %d) = %.3f, p = %.4f\n', df, N, chi2stat, pval);
+            fprintf('              chi2(%d, %d) = %.3f, p = %e\n', df, N, chi2stat, pval);
         end
     end
 

@@ -9,28 +9,41 @@ lettersize = 20;
 ii = 2;
 jj = 1:4;
 
+modelfile = 'model_all_data_20samples_MAP_2alpha.mat';
+
 % A: graph
 %
-subplot(3,4,1);
+subplot(3,6,1);
 
-load('model_all_data_10samples_MAP_5alpha.mat');
+%load('model_all_data_10samples_MAP_5alpha.mat');
+load(modelfile);
 
 H = pl(ii).H{jj(1)}(1,1);
 D = pl(ii).D{jj(1)}(1,1);
 [h, xs, ys] = plot_subway9_graph(H, D);
 labelnode(h, 1:D.G.N, 1:D.G.N);
 set(gca, 'xlim', [-2 4]);
+xlabel('bad');
 
 
 
-h = subplot(3,4,2);
+subplot(3,6,2);
+
+c = [1 2 2 2 2 3 3 3 1];
+[h, xs, ys] = plot_subway9_graph(H, D, c);
+labelnode(h, 1:D.G.N, 1:D.G.N);
+set(gca, 'xlim', [-2 4]);
+xlabel('good');
+
+
+
+h = subplot(3,6,3);
 pos = get(h, 'position');
 pos(1) = pos(1) * 1.0;
 pos(2) = pos(2) * 1.0;
 pos(3) = pos(3) * 1.0;
 pos(4) = pos(4) * 1.0;
-subplot(3,4, 2, 'position', pos);
-
+subplot(3,6, 3, 'position', pos);
 PICpng = imread('subway9_map_crop.png');
 [rows columns numberOfColorChannels] = size(PICpng);
 imshow(PICpng, 'InitialMagnification', 'fit');  
@@ -50,7 +63,6 @@ PICpng = imread('subway9_map_trials.png');
 [rows columns numberOfColorChannels] = size(PICpng);
 imshow(PICpng, 'InitialMagnification', 'fit');  
 
-title('Experimental Design', 'fontsize', fontsize);
 
 
 
@@ -83,7 +95,7 @@ for j = jj
     end
 
     %text(j, 1, sprintf('p = %.3f\nN = %d', pl(i).p(j), pl(i).n(j)));
-    text(j - 0.3, 0.9 - j * 0.1, sprintf('p = %.3f', pl(i).p(j)));
+    %text(j - 0.3, 0.9 - j * 0.1, sprintf('p = %.3f', pl(i).p(j)));
 end
 errorbar(m(jj), se(jj), 'linestyle', 'none', 'color', 'black');
 %errorbar(m, ci, 'linestyle', 'none', 'color', 'black');
@@ -106,7 +118,7 @@ title('Data', 'fontsize', fontsize);
 
 % C: Model
 
-load('model_all_data_10samples_MAP_5alpha.mat');
+load(modelfile);
 
 subplot(3,2,4);
 
@@ -131,7 +143,7 @@ for j = jj
     end
 
     %text(j, 1, sprintf('p = %.3f\nN = %d', pl(i).p(j), pl(i).n(j)));
-    text(j - 0.3, 0.9 - j * 0.1, sprintf('p = %.3f', pl(i).p(j)));
+    %text(j - 0.3, 0.9 - j * 0.1, sprintf('p = %.3f', pl(i).p(j)));
 end
 errorbar(m(jj), se(jj), 'linestyle', 'none', 'color', 'black');
 %errorbar(m, ci, 'linestyle', 'none', 'color', 'black');
@@ -204,7 +216,7 @@ text(0.09, 0.35, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-print('subway9_map.pdf', '-dpdf');
+print('figures/subway9_map.pdf', '-dpdf');
 
 
 

@@ -95,7 +95,7 @@ se = sem(p);
 
 bar(m);
 hold on;
-errorbar(m, se);
+errorbar(m, se, 'color', 'black');
 line([0 2], [mean(null_p) mean(null_p)], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
 %h = fill([0 2 2 0], [lcb lcb ucb ucb], [0.4 0.4 0.4]);
 %set(h, 'facealpha', 0.5, 'edgecolor', 'none');

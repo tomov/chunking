@@ -6,7 +6,8 @@ fontsize = 13;
 axisfontsize = 10;
 lettersize = 20;
 
-modelfile = 'model_all_data_100samples_MAP_5alpha.mat';
+%modelfile = 'trash/model_all_data_100samples_MAP_5alpha.mat';
+modelfile = 'model_all_data_40samples_MAP_2alpha.mat';
 
 ii = 3;
 jj = 1;
@@ -89,13 +90,13 @@ h = bar(j, m(j));
 errorbar(m(j), se(j), 'linestyle', 'none', 'color', 'black');
 %errorbar(m, ci, 'linestyle', 'none', 'color', 'black');
 line([0 2], [0.5 0.5], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
-h = fill([0 2 2 0], [0.5 - ci(j) 0.5 - ci(j) 0.5 + ci(j) 0.5 + ci(j)], [0.4 0.4 0.4]);
-set(h, 'facealpha', 0.5, 'edgecolor', 'none');
+%h = fill([0 2 2 0], [0.5 - ci(j) 0.5 - ci(j) 0.5 + ci(j) 0.5 + ci(j)], [0.4 0.4 0.4]);
+%set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 set(gca, 'xlim', [0 2]);
 set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
 set(gca, 'xtick', [1]);
-text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
+%text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
 xticklabels({'P(fewer boundaries)'});
 ylabel('fraction of participants');
 
@@ -125,13 +126,13 @@ h = bar(j, m(j));
 errorbar(m(j), se(j), 'linestyle', 'none', 'color', 'black');
 %errorbar(m, ci, 'linestyle', 'none', 'color', 'black');
 line([0 2], [0.5 0.5], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
-h = fill([0 2 2 0], [0.5 - ci(j) 0.5 - ci(j) 0.5 + ci(j) 0.5 + ci(j)], [0.4 0.4 0.4]);
-set(h, 'facealpha', 0.5, 'edgecolor', 'none');
+%h = fill([0 2 2 0], [0.5 - ci(j) 0.5 - ci(j) 0.5 + ci(j) 0.5 + ci(j)], [0.4 0.4 0.4]);
+%set(h, 'facealpha', 0.5, 'edgecolor', 'none');
 set(gca, 'xlim', [0 2]);
 set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
 set(gca, 'xtick', [1]);
-text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
+%text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
 xticklabels({'P(fewer boundaries)'});
 hold off;
 
@@ -178,7 +179,7 @@ text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-print('subway10.pdf', '-dpdf');
+print('figures/subway10.pdf', '-dpdf');
 
 
 

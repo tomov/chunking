@@ -43,7 +43,7 @@ set(gca, 'xlim', [0 2]);
 set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
 set(gca, 'xtick', [1]);
-text(0.7, 0.9, sprintf('p = %.3f', p));
+%text(0.7, 0.9, sprintf('p = %.3f', p));
 xticklabels({'P(left)'});
 ylabel('fraction of participants');
 
@@ -76,7 +76,7 @@ set(gca, 'xlim', [0 2]);
 set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
 set(gca, 'xtick', [1]);
-text(0.7, 0.9, sprintf('p = %.3f', p));
+%text(0.7, 0.9, sprintf('p = %.3f', p));
 xticklabels({'P(left)'});
 
 hold off;
@@ -127,6 +127,6 @@ text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-print('mines.pdf', '-dpdf');
+print('figures/mines.pdf', '-dpdf');
 
 

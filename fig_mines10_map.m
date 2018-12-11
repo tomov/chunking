@@ -35,6 +35,7 @@ PICpng = imread('mines10_free_crop.png');
 [rows columns numberOfColorChannels] = size(PICpng);
 imshow(PICpng, 'InitialMagnification', 'fit');  
 
+xlabel('free choice');
 
 
 
@@ -51,6 +52,7 @@ subplot(2,6, 3, 'position', pos);
 PICpng = imread('mines10_forced_crop.png');
 [rows columns numberOfColorChannels] = size(PICpng);
 imshow(PICpng, 'InitialMagnification', 'fit');  
+xlabel('forced choice');
 
 title('Experimental Design', 'fontsize', fontsize);
 
@@ -96,7 +98,7 @@ set(gca, 'xlim', [0 2]);
 set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
 set(gca, 'xtick', [1]);
-text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
+%text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
 xticklabels({'P(fewer boundaries)'});
 ylabel('fraction of participants');
 
@@ -135,7 +137,7 @@ set(gca, 'xlim', [0 2]);
 set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
 set(gca, 'xtick', [1]);
-text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
+%text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
 xticklabels({'P(fewer boundaries)'});
 hold off;
 
@@ -176,8 +178,8 @@ end
 ax1 = axes('Position',[0 0 1 1],'Visible','off');
 axes(ax1);
 text(0.10, 0.96, 'A', 'FontSize', lettersize, 'FontWeight', 'bold');
-text(0.59, 0.96, 'B', 'FontSize', lettersize, 'FontWeight', 'bold');
-text(0.75, 0.96, 'C', 'FontSize', lettersize, 'FontWeight', 'bold');
+text(0.64, 0.96, 'B', 'FontSize', lettersize, 'FontWeight', 'bold');
+text(0.80, 0.96, 'C', 'FontSize', lettersize, 'FontWeight', 'bold');
 text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 
 
@@ -185,7 +187,7 @@ text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-print('mines10_map.pdf', '-dpdf');
+print('figures/mines10_map.pdf', '-dpdf');
 
 
 
