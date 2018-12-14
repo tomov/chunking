@@ -1,3 +1,5 @@
+% figure for experiment 6
+%
 clear all;
 
 
@@ -6,6 +8,8 @@ fontsize = 13;
 axisfontsize = 10;
 lettersize = 20;
 
+modelfile = 'mines10_alpha=2_nsamples=1000.mat';
+
 ii = 5;
 jj = 1;
 
@@ -13,10 +17,7 @@ jj = 1;
 %
 subplot(2,6,1);
 
-load('model_all_data_10samples_MAP_5alpha.mat');
-
-H = pl(1).H{jj}(1,1);
-D = pl(1).D{jj}(1,1);
+load(modelfile);
 [h, xs, ys] = plot_subway10_graph(H, D);
 labelnode(h, 1:D.G.N, 1:D.G.N);
 
@@ -111,24 +112,14 @@ title('Data', 'fontsize', fontsize);
 
 % C: Model
 
-%load('model_all_data_10samples_MAP_5alpha.mat');
+load(modelfile);
 
 subplot(2,6,6);
 
-i = ii;
-
-m = 0.8; % TODO what is the fraction of simulations that go to state 5?
-se = 0.04; % TODO what is the standard error of the mean for it?
-%m = pl(i).m ./ pl(i).n;
-%ci = pl(i).ci ./ pl(i).n;
-%for j = 1:length(pl(i).m)
-%    se(j) = std([ones(1,pl(i).m(j)) zeros(1,pl(i).n(j) - pl(i).m(j))]) / sqrt(pl(i).n(j));
-%end
 
 hold on;
-j = jj;
-h = bar(j, m(j));
-errorbar(m(j), se(j), 'linestyle', 'none', 'color', 'black');
+h = bar(m);
+errorbar(m, se, 'linestyle', 'none', 'color', 'black');
 %errorbar(m, ci, 'linestyle', 'none', 'color', 'black');
 line([0 2], [0.5 0.5], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
 %h = fill([0 2 2 0], [0.5 - ci(j) 0.5 - ci(j) 0.5 + ci(j) 0.5 + ci(j)], [0.4 0.4 0.4]);
@@ -141,20 +132,19 @@ set(gca, 'xtick', [1]);
 xticklabels({'P(fewer boundaries)'});
 hold off;
 
+fprintf('right-tailed binomial test m = %.3f, n = %d, p = %e\n', m, n, p);
 
 title('Model', 'fontsize', fontsize);
 
 
 % D: Hierarchies
 
-%{
-TODO
 for s = 1:12
     subplot(4,6, 12 + s);
 
-    H = pl(i).H{j}(s,:);
-    D = pl(i).D{j}(s);
-    P = pl(i).P{j}(s,:);
+    H = H_all{s};
+    D = D;
+    P = P_all{s};
     [~,I] = max(P); % MAP H
     H = H(I);
     map_H{s} = H;
@@ -172,7 +162,6 @@ for s = 1:12
         title('Example hierarchies', 'fontsize', fontsize);
     end
 end
-%}
 
 
 ax1 = axes('Position',[0 0 1 1],'Visible','off');

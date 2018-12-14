@@ -6,17 +6,13 @@ fontsize = 13;
 axisfontsize = 10;
 lettersize = 20;
 
-modelfile = 'exp6_samyu_2alpha_1000samples.mat';
+modelfile = 'mines_alpha=2_nsamples=1000.mat';
 
 % A: graph
 %
 subplot(2,3,1);
 
-% TODO load from model output file 
-D = init_D_from_txt('mines.txt');
-%D = init_D_from_txt('mines_samyu.txt');
-h.alpha = 5;
-H = init_H(D,h);
+load(modelfile);
 [h, xs, ys] = plot_mines_graph(H, D);
 labelnode(h, 1:D.G.N, 1:D.G.N);
 
@@ -30,16 +26,16 @@ labelnode(h, 1:D.G.N, 1:D.G.N);
 
 subplot(2,3,2);
 
-%load(modelfile);
 
 
-
-% TODO from data file 
-c = 17;
-n = 20;
-m = c / 20;
+% from their paper
+c = 24;
+n = 32;
+m = c / n;
 se = std([ones(1,c) zeros(1,n-c)]) / sqrt(n);
 p = 1 - binocdf(c,n,0.5);
+
+fprintf('Data: right-tailed binomial test c = %d, n = %d, p = %.4f\n', c, n, p);
 
 hold on;
 h = bar(m);
@@ -56,23 +52,17 @@ ylabel('fraction of participants');
 hold off;
 
 
-
 title('Data', 'fontsize', fontsize);
+
 
 
 % C: Model
 
 subplot(2,3,3);
 
+load(modelfile);
 
-% TODO from model output 
-c = 16;
-n = 20;
-m = c / 20;
-se = std([ones(1,c) zeros(1,n-c)]) / sqrt(n);
-p = 1 - binocdf(c,n,0.5);
-
-fprintf('right-tailed binomial test c = %d, n = %d, p = %.4f\n', c, n, p);
+fprintf('Model: right-tailed binomial test c = %d, n = %d, p = %.4f\n', c, n, p);
 
 hold on;
 h = bar(m);
@@ -93,14 +83,12 @@ title('Model', 'fontsize', fontsize);
 
 % D: Hierarchies
 
-% TODO load MAP hierarchies from model output
-%{
 for s = 1:12
     subplot(4,6, 12 + s);
 
-    H = pl(i).H{j}(s,:);
-    D = pl(i).D{j}(s);
-    P = pl(i).P{j}(s,:);
+    H = H_all{s};
+    D = D;
+    P = P_all{s};
     [~,I] = max(P); % MAP H
     H = H(I);
     map_H{s} = H;
@@ -111,14 +99,13 @@ for s = 1:12
     labelnode(h, 1:D.G.N, '');
     set(gca, 'xtick', []);
     set(gca, 'ytick', []);
-    set(gca, 'xlim', [-2 4]);
+    set(gca, 'ylim', [-3 3]);
     h.MarkerSize = 6;
 
     if s == 3
         title('Example hierarchies', 'fontsize', fontsize);
     end
 end
-%}
 
 
 ax1 = axes('Position',[0 0 1 1],'Visible','off');

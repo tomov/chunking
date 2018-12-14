@@ -1,4 +1,4 @@
-function [samples, post] = sample(D, h, nsamples, burnin, lag)
+function [samples, post] = sample(D, h, nsamples, burnin, lag, H)
     %
     % Draw samples from posterior P(H|D) using Metropolis-Hastings-within-Gibbs sampling.
     % hierarchy H = (c, p, q, p', p", E', V')
@@ -38,7 +38,9 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag)
         lag = 1;
     end
 
-    H = init_H(D, h);
+    if ~exist('H', 'var') || isempty(H)
+        H = init_H(D, h);
+    end
 
     % Roberts & Rosenthal (2009)
     for n = 1:nsamples * lag + burnin
