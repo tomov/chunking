@@ -26,7 +26,6 @@ clear all;
 
 
 
-
 figure('pos', [100 100 1000 600] * 3/4);
 fontsize = 13;
 axisfontsize = 10;
@@ -39,10 +38,10 @@ lettersize = 20;
 
 h = subplot(2,1,1);
 pos = get(h, 'position');
-pos(1) = pos(1) * 1.0;
+pos(1) = pos(1) * 0.5;
 pos(2) = pos(2) * 1.0;
-pos(3) = pos(3) * 1.0;
-pos(4) = pos(4) * 1.0;
+pos(3) = pos(3) * 1.2;
+pos(4) = pos(4) * 1.2;
 subplot(2,1, 1, 'position', pos);
 
 PICpng = imread('active_reordered.png');
@@ -76,6 +75,27 @@ end
 
 subplot(2,4,5);
 
+
+%hold on;
+%m = [m_two m_three];
+%se = [se_two se_three];
+%x = [1:4 6:8];
+%bar(x, m);
+%errorbar(x, m, se, 'linestyle', 'none', 'color', 'black');
+%line([0 5], [0.5 0.5], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
+%line([5 9], [1/3 1/3], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
+%set(gca, 'xlim', [0 9]);
+%set(gca, 'ylim', [0 1]);
+%%set(gca, 'ytick', [0 0.5 1]);
+%set(gca, 'xtick', [1 2 3 4 6 7 8]);
+%xticklabels([1 2 3 4 5 6 7]);
+%%text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
+%%xticklabels({'P(fewer boundaries)'});
+%ylabel('fraction of participants');
+%xlabel('graph');
+
+
+
 hold on;
 bar(m_two);
 errorbar(m_two, se_two, 'linestyle', 'none', 'color', 'black');
@@ -88,7 +108,8 @@ set(gca, 'ylim', [0 1]);
 set(gca, 'xtick', [1 2 3 4]);
 %text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
 %xticklabels({'P(fewer boundaries)'});
-ylabel('fraction of participants');
+ylabel('P(edge A)');
+xlabel('graph');
 
 hold off;
 
@@ -108,7 +129,8 @@ set(gca, 'xtick', [1 2 3]);
 xticklabels([5 6 7]);
 %text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
 %xticklabels({'P(fewer boundaries)'});
-%ylabel('fraction of participants');
+ylabel('P(edge B)');
+xlabel('graph');
 
 hold off;
 
@@ -116,16 +138,114 @@ hold off;
 title('Data', 'fontsize', fontsize);
 
 
+
+
+
+
 % C: Model
+
+
+
+
+
+
+c_two = [20 30 3 5];
+c_three = [33 27 11];
+n = 40;
+
+m_two = c_two / n;
+m_three = c_three / n;
+
+for i = 1:length(c_two)
+    c = c_two(i);
+    se_two(i) = std([ones(1,c) zeros(1,n - c)]) / sqrt(n);
+    p_two(i) = 1 - binocdf(min(c,n-c),n,0.5);
+end
+for i = 1:length(c_three)
+    c = c_three(i);
+    se_three(i) = std([ones(1,c) zeros(1,n - c)]) / sqrt(n);
+    p_three(i) = 1 - binocdf(min(c,n-c),n,0.5);
+end
+
+
+
+subplot(2,4,7);
+
+
+%hold on;
+%m = [m_two m_three];
+%se = [se_two se_three];
+%x = [1:4 6:8];
+%bar(x, m);
+%errorbar(x, m, se, 'linestyle', 'none', 'color', 'black');
+%line([0 5], [0.5 0.5], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
+%line([5 9], [1/3 1/3], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
+%set(gca, 'xlim', [0 9]);
+%set(gca, 'ylim', [0 1]);
+%%set(gca, 'ytick', [0 0.5 1]);
+%set(gca, 'xtick', [1 2 3 4 6 7 8]);
+%xticklabels([1 2 3 4 5 6 7]);
+%%text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
+%%xticklabels({'P(fewer boundaries)'});
+%ylabel('fraction of participants');
+%xlabel('graph');
+
+
+
+hold on;
+bar(m_two);
+errorbar(m_two, se_two, 'linestyle', 'none', 'color', 'black');
+line([0 5], [0.5 0.5], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
+%h = fill([0 2 2 0], [0.5 - ci(j) 0.5 - ci(j) 0.5 + ci(j) 0.5 + ci(j)], [0.4 0.4 0.4]);
+%set(h, 'facealpha', 0.5, 'edgecolor', 'none');
+set(gca, 'xlim', [0 5]);
+set(gca, 'ylim', [0 1]);
+%set(gca, 'ytick', [0 0.5 1]);
+set(gca, 'xtick', [1 2 3 4]);
+%text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
+%xticklabels({'P(fewer boundaries)'});
+ylabel('P(edge A)');
+xlabel('graph');
+
+hold off;
+
+
+subplot(2,4,8);
+
+hold on;
+bar(m_three);
+errorbar(m_three, se_three, 'linestyle', 'none', 'color', 'black');
+line([0 4], [1/3 1/3], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
+%h = fill([0 2 2 0], [0.5 - ci(j) 0.5 - ci(j) 0.5 + ci(j) 0.5 + ci(j)], [0.4 0.4 0.4]);
+%set(h, 'facealpha', 0.5, 'edgecolor', 'none');
+set(gca, 'xlim', [0 4]);
+set(gca, 'ylim', [0 1]);
+%set(gca, 'ytick', [0 0.5 1]);
+set(gca, 'xtick', [1 2 3]);
+xticklabels([5 6 7]);
+%text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
+%xticklabels({'P(fewer boundaries)'});
+ylabel('P(edge B)');
+xlabel('graph');
+
+hold off;
+
+
+title('Model', 'fontsize', fontsize);
+
+
+
+
+
+
 
 
 
 ax1 = axes('Position',[0 0 1 1],'Visible','off');
 axes(ax1);
 text(0.10, 0.96, 'A', 'FontSize', lettersize, 'FontWeight', 'bold');
-text(0.64, 0.96, 'B', 'FontSize', lettersize, 'FontWeight', 'bold');
-text(0.80, 0.96, 'C', 'FontSize', lettersize, 'FontWeight', 'bold');
-text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
+text(0.10, 0.52, 'B', 'FontSize', lettersize, 'FontWeight', 'bold');
+text(0.50, 0.52, 'C', 'FontSize', lettersize, 'FontWeight', 'bold');
 
 
 % save figure
