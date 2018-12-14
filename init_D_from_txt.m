@@ -12,6 +12,7 @@ function D = init_D_from_txt(filename)
         i = A(1); j = A(2);
         D.G.E(i,j) = 1;
         D.G.E(j,i) = 1;
+        D.G.edges(k,:) = [i,j];
     end
 
     % tasks

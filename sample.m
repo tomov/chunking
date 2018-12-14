@@ -101,12 +101,6 @@ end
 
 
 
-% P(H|D) up to proportionality constant
-%
-function logp = logpost(H, D, h)
-    logp = loglik(H, D, h) + logprior(H, D, h);
-end
-
 % P(H|D) for updates of c_i
 % i.e. with new c's up to c_i, the candidate c_i, then old c's after (and old rest of H)
 %
