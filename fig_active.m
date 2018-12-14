@@ -63,13 +63,22 @@ m_three = c_three / n;
 for i = 1:length(c_two)
     c = c_two(i);
     se_two(i) = std([ones(1,c) zeros(1,n - c)]) / sqrt(n);
-    p_two(i) = 1 - binocdf(min(c,n-c),n,0.5);
+    p_two(i) = binocdf(min(c,n-c),n,0.5) + 1 - binocdf(max(c,n-c),n,0.5);
 end
 for i = 1:length(c_three)
     c = c_three(i);
     se_three(i) = std([ones(1,c) zeros(1,n - c)]) / sqrt(n);
-    p_three(i) = 1 - binocdf(min(c,n-c),n,0.5);
+    p_three(i) = binocdf(min(c,n-c),n,1/3) + 1 - binocdf(max(c,n-c),n,1/3);
 end
+
+m_data = [m_two m_three];
+p_data = [p_two p_three];
+p_data_corr = 1 - (1 - p_data) .^ length(p_data);
+
+disp('p-values for data (uncorrected)');
+p_data
+disp('p-values for data (Bonferroni corrected)');
+p_data_corr
 
 
 
@@ -159,14 +168,23 @@ m_three = c_three / n;
 for i = 1:length(c_two)
     c = c_two(i);
     se_two(i) = std([ones(1,c) zeros(1,n - c)]) / sqrt(n);
-    p_two(i) = 1 - binocdf(min(c,n-c),n,0.5);
+    p_two(i) = binocdf(min(c,n-c),n,0.5) + 1 - binocdf(max(c,n-c),n,0.5);
 end
 for i = 1:length(c_three)
     c = c_three(i);
     se_three(i) = std([ones(1,c) zeros(1,n - c)]) / sqrt(n);
-    p_three(i) = 1 - binocdf(min(c,n-c),n,0.5);
+    p_three(i) = binocdf(min(c,n-c),n,1/3) + 1 - binocdf(max(c,n-c),n,1/3);
 end
 
+
+m_model = [m_two m_three];
+p_model = [p_two p_three];
+p_model_corr = 1 - (1 - p_model) .^ length(p_model);
+
+disp('p-values for model (uncorrected)');
+p_model
+disp('p-values for model (Bonferroni corrected)');
+p_model_corr
 
 
 subplot(2,4,7);
@@ -236,6 +254,8 @@ title('Model', 'fontsize', fontsize);
 
 
 
+[rho,p] = corr(m_data', m_model', 'type', 'Spearman');
+fprintf('Spearman rho = %.4f, p = %.4f\n', rho, p);
 
 
 
