@@ -14,24 +14,28 @@ modelfile = 'model_all_data_20samples_MAP_2alpha.mat';
 
 % A: graph
 %
-subplot(2,5,1);
+subplot(2,4,1);
 
 load(modelfile);
 
 H = pl(ii).H{jj}(1,1);
 D = pl(ii).D{jj}(1,1);
 [h, xs, ys] = plot_subway10_graph(H, D);
-labelnode(h, 1:D.G.N, 1:D.G.N);
+%labelnode(h, 1:D.G.N, 1:D.G.N);
+for i = 1:D.G.N
+    text(h.XData(i) , h.YData(i) + 0.01, num2str(i), 'FontSize', 10, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+end
+
+title(['                                             ','Experimental Design'], 'fontsize', fontsize);
 
 
 
-
-h = subplot(2,5,2);
+h = subplot(2,4,2);
 pos = get(h, 'position');
-pos(1) = pos(1) * 0.92;
-pos(2) = pos(2) * 0.94;
-pos(3) = pos(3) * 1.2;
-pos(4) = pos(4) * 1.2;
+pos(1) = pos(1) * 1.0;
+pos(2) = pos(2) * 1.0;
+pos(3) = pos(3) * 1.0;
+pos(4) = pos(4) * 1.0;
 subplot(2,5, 2, 'position', pos);
 
 PICpng = imread('subway10_map_crop.png');
@@ -39,7 +43,6 @@ PICpng = imread('subway10_map_crop.png');
 imshow(PICpng, 'InitialMagnification', 'fit');  
 
 
-title('Experimental Design', 'fontsize', fontsize);
 
 
 
@@ -73,8 +76,10 @@ set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
 set(gca, 'xtick', [1]);
 %text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
-xticklabels({'P(fewer boundaries)'});
-ylabel('fraction of participants');
+%xticklabels({'P(fewer boundaries)'});
+%ylabel('fraction of participants');
+xticklabels({'fraction participants'});
+ylabel('P(action 6 \rightarrow 5)');
 
 hold off;
 
@@ -109,7 +114,8 @@ set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
 set(gca, 'xtick', [1]);
 %text(0.7, 0.9, sprintf('p = %.3f', pl(i).p(j)));
-xticklabels({'P(fewer boundaries)'});
+%xticklabels({'P(fewer boundaries)'});
+xticklabels({'fraction simulations'});
 hold off;
 
 
@@ -138,7 +144,7 @@ for s = 1:12
     h.MarkerSize = 6;
 
     if s == 3
-        title('Example hierarchies', 'fontsize', fontsize);
+        title(['                            ', 'Example hierarchies'], 'fontsize', fontsize);
     end
 end
 

@@ -13,8 +13,11 @@ lettersize = 20;
 subplot(2,3,1);
 
 h = plot_solway2_graph(H, D);
-labelnode(h, 9, ' start');
-labelnode(h, 16, ' goal');
+d = 0.1;
+text(h.XData(9), h.YData(9)  , 's', 'FontSize', 10, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+text(h.XData(16) , h.YData(16) + d, 'g', 'FontSize', 10, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+%labelnode(h, 9, ' start');
+%labelnode(h, 16, ' goal');
 title('Experimental Design', 'fontsize', fontsize);
 
 

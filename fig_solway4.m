@@ -11,8 +11,11 @@ lettersize = 20;
 subplot(2,3,1);
 
 [h, xs, ys] = plot_solway4_graph(H, D);
-labelnode(h, 10, ' start');
-labelnode(h, 20, ' goal');
+d = 0.7;
+text(h.XData(10) - d, h.YData(10) + d, 's', 'FontSize', 12, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+text(h.XData(20) + d, h.YData(20) - d, 'g', 'FontSize', 12, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+%labelnode(h, 10, ' start');
+%labelnode(h, 20, ' goal');
 title('Experimental Design', 'fontsize', fontsize);
 
 hold on;
@@ -150,7 +153,7 @@ for s = 1:12
     h.MarkerSize = 6;
 
     if s == 3
-        title('Example hierarchies', 'fontsize', fontsize);
+        title(['                            ', 'Example hierarchies'], 'fontsize', fontsize);
     end
 end
 

@@ -114,7 +114,7 @@ for s = 1:12
     set(gca, 'ytick', []);
 
     if s == 3
-        title('Example hierarchies', 'fontsize', fontsize);
+        title(['                            ', 'Example hierarchies'], 'fontsize', fontsize);
     end
 end
 

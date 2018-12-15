@@ -21,7 +21,10 @@ load(modelfile);
 H = pl(ii).H{jj(1)}(1,1);
 D = pl(ii).D{jj(1)}(1,1);
 [h, xs, ys] = plot_subway9_graph(H, D);
-labelnode(h, 1:D.G.N, 1:D.G.N);
+%labelnode(h, 1:D.G.N, 1:D.G.N);
+for i = 1:D.G.N
+    text(h.XData(i) , h.YData(i) + 0.01, num2str(i), 'FontSize', 10, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+end
 set(gca, 'xlim', [-2 4]);
 xlabel('bad');
 
@@ -31,10 +34,14 @@ subplot(3,6,2);
 
 c = [1 2 2 2 2 3 3 3 1];
 [h, xs, ys] = plot_subway9_graph(H, D, c);
-labelnode(h, 1:D.G.N, 1:D.G.N);
+%labelnode(h, 1:D.G.N, 1:D.G.N);
+for i = 1:D.G.N
+    text(h.XData(i) , h.YData(i) + 0.01, num2str(i), 'FontSize', 10, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+end
 set(gca, 'xlim', [-2 4]);
 xlabel('good');
 
+title('Experimental Design', 'fontsize', fontsize);
 
 
 h = subplot(3,6,3);
@@ -49,15 +56,14 @@ PICpng = imread('subway9_map_crop.png');
 imshow(PICpng, 'InitialMagnification', 'fit');  
 
 
-title('Experimental Design', 'fontsize', fontsize);
 
 
 h = subplot(3,2,2);
 pos = get(h, 'position');
-pos(1) = pos(1) * 1.0;
-pos(2) = pos(2) * 1.0;
-pos(3) = pos(3) * 1.0;
-pos(4) = pos(4) * 1.0;
+pos(1) = pos(1) * 0.90;
+pos(2) = pos(2) * 0.98;
+pos(3) = pos(3) * 1.3;
+pos(4) = pos(4) * 1.3;
 subplot(3,2, 2, 'position', pos);
 PICpng = imread('subway9_map_trials.png');
 [rows columns numberOfColorChannels] = size(PICpng);
@@ -105,9 +111,11 @@ line([0 length(jj)+1], [0.5 0.5], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
 set(gca, 'xlim', [0 length(jj)+1]);
 set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
-set(gca, 'xtick', [1]);
-xticklabels({'P(fewer boundaries)'});
-ylabel('fraction of participants');
+set(gca, 'xtick', [1 2 3 4]);
+%xticklabels({'P(fewer boundaries)'});
+xticklabels({'bad', 'control 1', 'control 2', 'good'});
+%ylabel('fraction of participants');
+ylabel('P(action 6 \rightarrow 5)');
 
 hold off;
 
@@ -153,9 +161,10 @@ line([0 length(jj)+1], [0.5 0.5], 'linestyle', '--', 'color', [0.6 0.6 0.6]);
 set(gca, 'xlim', [0 length(jj)+1]);
 set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
-set(gca, 'xtick', [1]);
-xticklabels({'P(fewer boundaries)'});
-ylabel('fraction of participants');
+set(gca, 'xtick', [1 2 3 4]);
+%xticklabels({'P(fewer boundaries)'});
+xticklabels({'bad', 'control 1', 'control 2', 'good'});
+%ylabel('fraction of participants');
 
 
 
@@ -185,7 +194,7 @@ for s = 1:12
     h.MarkerSize = 6;
 
     if s == 3
-        title('Example hierarchies', 'fontsize', fontsize);
+        %title(['                            ', 'Example hierarchies'], 'fontsize', fontsize);
     end
     if s == 1
         ylabel('bad');

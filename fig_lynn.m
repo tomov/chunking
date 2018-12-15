@@ -22,7 +22,7 @@ h(3) = plot(NaN, NaN, 'o', 'color', [0.1 0.1 0.1], 'markerfacecolor', [0 118 186
 h(4) = plot(NaN, NaN, 'o', 'color', [0.1 0.1 0.1], 'markerfacecolor', [181 23 0]/255);
 
 hold off;
-legend(h, {'0 (current node)', '1 (no violation)', '2 (short violation)', '3,4 (long violation)'}, 'Position', [0.05 0.81 0.05 0.1]);
+legend(h, {'0 (current node)', '1 (no violation)', '2 (short violation)', '3,4 (long violation)'}, 'Position', [0.06 0.82 0.05 0.1]);
 
 
 
@@ -48,7 +48,10 @@ hold off;
 %set(gca, 'ylim', [0 1]);
 %set(gca, 'ytick', [0 0.5 1]);
 xticklabels({'short', 'long'});
-xlabel('violations');
+h = xlabel('violations');
+pos = get(h,'Position');
+pos(2) = pos(2) * 0.7;
+set(h, 'Position', pos);
 ylabel('Change in RT (ms)');
 hold off;
 
@@ -77,7 +80,10 @@ hold off;
 %set(gca, 'ytick', [0 0.5 1]);
 %xticklabels({'P(fewer boundaries)'});
 xticklabels({'short', 'long'});
-xlabel('violations');
+h = xlabel('violations');
+pos = get(h,'Position');
+pos(2) = pos(2) * 0.7;
+set(h, 'Position', pos);
 ylabel('P(different cluster)');
 hold off;
 
@@ -96,7 +102,7 @@ for s = 1:12
     h.MarkerSize = 6;
 
     if s == 3
-        title('Example hierarchies', 'fontsize', fontsize);
+        title(['                            ', 'Example hierarchies'], 'fontsize', fontsize);
     end
 end
 

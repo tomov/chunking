@@ -9,13 +9,13 @@ h = init_hyperparams();
 
 
 %D = init_D_from_txt('solway4.txt');
-D = init_D_from_txt('solway1.txt');
+D = init_D_from_txt('solway4.txt');
 D.G.E(:) = 0; % erase edges; start empty
 
-M = 10; % # particles
+M = 100; % # particles
 nsamples = 10; % # rejuvination steps
 
-filename = sprintf('KL_rdms_M=%d_nsamples=%d_solway1.mat', M, nsamples);
+filename = sprintf('KL_rdms_M=%d_nsamples=%d_solway4.mat', M, nsamples);
 
 for i = 1:M
     H(i) = init_H(D, h);

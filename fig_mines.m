@@ -14,7 +14,10 @@ subplot(2,3,1);
 
 load(modelfile);
 [h, xs, ys] = plot_mines_graph(H, D);
-labelnode(h, 1:D.G.N, 1:D.G.N);
+%labelnode(h, 1:D.G.N, 1:D.G.N);
+for i = 1:D.G.N
+    text(h.XData(i) , h.YData(i) + 0.01, num2str(i), 'FontSize', 10, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+end
 
 
 
@@ -46,8 +49,10 @@ set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
 set(gca, 'xtick', [1]);
 %text(0.7, 0.9, sprintf('p = %.3f', p));
-xticklabels({'P(state 3)'});
-ylabel('fraction of participants');
+%xticklabels({'P(state 3)'});
+xticklabels({'fraction participants'});
+%ylabel('fraction of participants');
+ylabel('P(choose 3)');
 
 hold off;
 
@@ -73,7 +78,8 @@ set(gca, 'ylim', [0 1]);
 set(gca, 'ytick', [0 0.5 1]);
 set(gca, 'xtick', [1]);
 %text(0.7, 0.9, sprintf('p = %.3f', p));
-xticklabels({'P(state 3)'});
+%xticklabels({'P(state 3)'});
+xticklabels({'fraction simulations'});
 
 hold off;
 
@@ -103,7 +109,7 @@ for s = 1:12
     h.MarkerSize = 6;
 
     if s == 3
-        title('Example hierarchies', 'fontsize', fontsize);
+        title(['                            ', 'Example hierarchies'], 'fontsize', fontsize);
     end
 end
 

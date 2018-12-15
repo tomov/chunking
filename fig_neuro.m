@@ -160,13 +160,16 @@ title('Across trials', 'fontsize', fontsize);
 
 % KL in PPC
 
-load('KL_rdms.mat');
+%load('KL_rdms.mat');
+load('KL_rdms_M=100_nsamples=10_solway1.mat');
 
 KL(1) = 0;
+KL = [KL 0];
 subplot(6,2,6);
 plot(KL);
 xlim([1 length(KL)]);
-ylim([min(KL)-50 max(KL) + 50]);
+%ylim([min(KL)-50 max(KL) + 50]);
+ylim([min(KL) - 2 max(KL)] + 1);
 set(gca,'ytick', []);
 set(gca,'xtick', []);
 xlabel('trial number');
@@ -177,12 +180,12 @@ ylabel('PPC');
 % RDM
 
 subplot(2,2,4);
-image(scale01(rankTransform_equalsStayEqual(RDM,1)),'CDataMapping','scaled')
+imagesc(scale01(rankTransform_equalsStayEqual(RDM,1)),'CDataMapping','scaled')
 colormap(gca, RDMcolormap)
 colorbar;
 xlabel('trial number');
 ylabel('trial number');
-
+axis square
 
 
 ax1 = axes('Position',[0 0 1 1],'Visible','off');

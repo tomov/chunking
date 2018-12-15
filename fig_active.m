@@ -44,9 +44,12 @@ pos(3) = pos(3) * 1.2;
 pos(4) = pos(4) * 1.2;
 subplot(2,1, 1, 'position', pos);
 
+
 PICpng = imread('active_reordered.png');
 [rows columns numberOfColorChannels] = size(PICpng);
 imshow(PICpng, 'InitialMagnification', 'fit');  
+
+title('Experimental Design');
 
 
 % B: Data
@@ -122,6 +125,7 @@ xlabel('graph');
 
 hold off;
 
+title(['                                          ', 'Data'], 'fontsize', fontsize);
 
 subplot(2,4,6);
 
@@ -144,7 +148,6 @@ xlabel('graph');
 hold off;
 
 
-title('Data', 'fontsize', fontsize);
 
 
 
@@ -227,6 +230,8 @@ xlabel('graph');
 
 hold off;
 
+title(['                                          ', 'Model'], 'fontsize', fontsize);
+
 
 subplot(2,4,8);
 
@@ -249,7 +254,6 @@ xlabel('graph');
 hold off;
 
 
-title('Model', 'fontsize', fontsize);
 
 
 
