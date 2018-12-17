@@ -14,7 +14,7 @@ modelfile = 'model_all_data_20samples_MAP_2alpha.mat';
 
 % A: graph
 %
-subplot(2,4,1);
+subplot(2,5,1);
 
 load(modelfile);
 
@@ -26,24 +26,38 @@ for i = 1:D.G.N
     text(h.XData(i) , h.YData(i) + 0.01, num2str(i), 'FontSize', 10, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
 end
 
-title(['                                             ','Experimental Design'], 'fontsize', fontsize);
+%title(['                                             ','Experimental Design'], 'fontsize', fontsize);
 
 
 
-h = subplot(2,4,2);
+h = subplot(2,5,2);
 pos = get(h, 'position');
-pos(1) = pos(1) * 1.0;
-pos(2) = pos(2) * 1.0;
-pos(3) = pos(3) * 1.0;
-pos(4) = pos(4) * 1.0;
+pos(1) = pos(1) * 0.94;
+pos(2) = pos(2) * 0.96;
+pos(3) = pos(3) * 1.15;
+pos(4) = pos(4) * 1.15;
 subplot(2,5, 2, 'position', pos);
 
 PICpng = imread('subway10_map_crop.png');
 [rows columns numberOfColorChannels] = size(PICpng);
 imshow(PICpng, 'InitialMagnification', 'fit');  
 
+title('Experimental Design', 'fontsize', fontsize);
 
 
+
+
+h = subplot(2,5,3);
+pos = get(h, 'position');
+pos(1) = pos(1) * 0.94;
+pos(2) = pos(2) * 0.96;
+pos(3) = pos(3) * 1.12;
+pos(4) = pos(4) * 1.12;
+subplot(2,5, 3, 'position', pos);
+
+PICpng = imread('subway10_trials.png');
+[rows columns numberOfColorChannels] = size(PICpng);
+imshow(PICpng, 'InitialMagnification', 'fit');  
 
 
 

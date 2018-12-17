@@ -117,7 +117,7 @@ xlabel('state');
 subplot(6,2,9);
 
 plot(Str);
-ylabel('Str');
+ylabel('DLS');
 ylim([-1 4]);
 set(gca,'ytick', []);
 set(gca,'xtick', []);
@@ -161,7 +161,8 @@ title('Across trials', 'fontsize', fontsize);
 % KL in PPC
 
 %load('KL_rdms.mat');
-load('KL_rdms_M=100_nsamples=10_solway1.mat');
+%load('KL_rdms_M=100_nsamples=10_solway1.mat');
+load('KL_rdms_M=100_nsamples=10_solway4.mat');
 
 KL(1) = 0;
 KL = [KL 0];
@@ -172,7 +173,7 @@ xlim([1 length(KL)]);
 ylim([min(KL) - 2 max(KL)] + 1);
 set(gca,'ytick', []);
 set(gca,'xtick', []);
-xlabel('trial number');
+xlabel('trial');
 ylabel('PPC');
 
 
@@ -186,6 +187,8 @@ colorbar;
 xlabel('trial number');
 ylabel('trial number');
 axis square
+
+title('Representational dissimilarity');
 
 
 ax1 = axes('Position',[0 0 1 1],'Visible','off');

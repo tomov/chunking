@@ -25,7 +25,7 @@ D = pl(ii).D{jj(1)}(1,1);
 for i = 1:D.G.N
     text(h.XData(i) , h.YData(i) + 0.01, num2str(i), 'FontSize', 10, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
 end
-set(gca, 'xlim', [-2 4]);
+set(gca, 'xlim', [-1 3]);
 xlabel('bad');
 
 
@@ -38,7 +38,7 @@ c = [1 2 2 2 2 3 3 3 1];
 for i = 1:D.G.N
     text(h.XData(i) , h.YData(i) + 0.01, num2str(i), 'FontSize', 10, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
 end
-set(gca, 'xlim', [-2 4]);
+set(gca, 'xlim', [-1 3]);
 xlabel('good');
 
 title('Experimental Design', 'fontsize', fontsize);
