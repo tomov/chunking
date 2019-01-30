@@ -71,7 +71,7 @@ end
 for i = 1:length(c_three)
     c = c_three(i);
     se_three(i) = std([ones(1,c) zeros(1,n - c)]) / sqrt(n);
-    p_three(i) = binocdf(min(c,n-c),n,1/3) + 1 - binocdf(max(c,n-c),n,1/3);
+    p_three(i) = 1 - binocdf(c,n,1/3);
 end
 
 m_data = [m_two m_three];
@@ -176,7 +176,7 @@ end
 for i = 1:length(c_three)
     c = c_three(i);
     se_three(i) = std([ones(1,c) zeros(1,n - c)]) / sqrt(n);
-    p_three(i) = binocdf(min(c,n-c),n,1/3) + 1 - binocdf(max(c,n-c),n,1/3);
+    p_three(i) = 1 - binocdf(c,n,1/3);
 end
 
 
