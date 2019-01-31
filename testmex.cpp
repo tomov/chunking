@@ -1,3 +1,6 @@
+// compile with:
+// mex testmex.cpp printmex.cpp
+
 /* ========================================================================
  *  copy of 
  * phonebook.cpp
@@ -33,6 +36,10 @@
 #include<string>
 #include<memory>
 
+#define DEBUG 1
+#define DEBUG_PRINT(args ...) if (DEBUG) printThis(args)
+
+
 using namespace matlab::mex;
 using namespace matlab::data;
 
@@ -40,7 +47,7 @@ using namespace matlab::data;
 class Data
 {
     public:
-        Data(StructArray const &matlabStructArrayD);
+        Data(StructArray const matlabStructArrayD);
         ~Data();
 
         void initFromTxt(std::string filename);
@@ -71,18 +78,21 @@ class Data
 };
 
 
-Data::Data(StructArray const &matlabStructArrayD)
+Data::Data(StructArray const matlabStructArrayD)
 {
-    const TypedArray<double> _N = matlabStructArrayD[0]["N"];
+    const StructArray matlabStructArrayG = matlabStructArrayD[0]["G"];
+    const TypedArray<double> _N = matlabStructArrayG[0]["N"];
     G.N = (int)_N[0];
-
-	printThis("sheeeeiiit\n");
+	DEBUG_PRINT("G.N = %d\n", G.N);
 
     G.E = new int*[G.N];
     for (int i = 0; i < G.N; i++)
     {
         G.E[i] = new int[G.N];
     }
+    
+    //
+    //  .. tbd
 }
 
 Data::~Data()
@@ -177,7 +187,8 @@ public:
         checkStructureElements(structFieldG, "D.G", fieldNamesG, fieldTypesG);
     }
 
-    printThis("slkdjflks %d %s\n", 34, "sdf");
+    // init D
+    Data D(matlabStructArrayD);
 
     // check h
     StructArray const matlabStructArrayh = inputs[1];
