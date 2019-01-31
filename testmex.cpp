@@ -1,4 +1,5 @@
 // compile with:
+//
 // mex testmex.cpp printmex.cpp
 
 /* ========================================================================
@@ -57,11 +58,13 @@ class Data
         struct Edge
         {
             int u, v;
+            Edge(int _u, int _v) : u(_u), v(_v) {}
         };
 
         struct Task
         {
             int s, g;
+            Task(int _s, int _g) : s(_s), g(_g) {}
         };
         
         struct Graph
@@ -71,7 +74,7 @@ class Data
             std::vector<Edge> edges;
         };
 
-        std::string name;
+        //std::string name;
         Graph G;
         std::vector<Task> tasks;
         std::vector<double> *rewards;
@@ -80,19 +83,52 @@ class Data
 
 Data::Data(StructArray const matlabStructArrayD)
 {
+    // const TypedArray<char*> _name = matlabStructArrayD[0]["name"];
+
+    // convert G
+    //
     const StructArray matlabStructArrayG = matlabStructArrayD[0]["G"];
     const TypedArray<double> _N = matlabStructArrayG[0]["N"];
+    const TypedArray<double> _E = matlabStructArrayG[0]["E"];
+    const TypedArray<double> _edges = matlabStructArrayG[0]["edges"];
+
     G.N = (int)_N[0];
 	DEBUG_PRINT("G.N = %d\n", G.N);
 
+	DEBUG_PRINT("G.E = \n");
     G.E = new int*[G.N];
     for (int i = 0; i < G.N; i++)
     {
         G.E[i] = new int[G.N];
+        for (int j = 0; j < G.N; j++)
+        {
+            G.E[i][j] = (int)_E[i][j];
+            DEBUG_PRINT("%d ", G.E[i][j]);
+        }
+        DEBUG_PRINT("\n");
     }
-    
+
+    for (int i = 0; i < _edges.getDimensions()[0]; i++)
+    {
+        int u = _edges[i][0];
+        int v = _edges[i][1];
+        G.edges.push_back(Edge(u, v));
+        DEBUG_PRINT("G.edge %d %d\n", u, v);
+    }
+
+    // convert tasks  
     //
-    //  .. tbd
+    const StructArray matlabStructArrayTasks = matlabStructArrayD[0]["tasks"];
+    const TypedArray<double> _s = matlabStructArrayTasks[0]["s"];
+    const TypedArray<double> _g = matlabStructArrayTasks[0]["g"];
+
+    for (int i = 0; i < _s.getNumberOfElements(); i++)
+    {
+        int s = _s[i];
+        int g = _g[i];
+        tasks.push_back(Task(s, g));
+        DEBUG_PRINT("task %d %d\n", s, g);
+    }
 }
 
 Data::~Data()
@@ -185,6 +221,23 @@ public:
     {
         const StructArray structFieldG = matlabStructArrayD[i]["G"];
         checkStructureElements(structFieldG, "D.G", fieldNamesG, fieldTypesG);
+
+        const TypedArray<double> _N = structFieldG[0]["N"];
+        const TypedArray<double> _E = structFieldG[0]["E"];
+        int N = (int)_N[0];
+        if (_E.getNumberOfElements() != N * N)
+        {
+            displayError("D.G.E must have D.G.N^2 elements.");
+        }
+    }
+
+    // check D.tasks
+    const StructArray matlabStructArrayTasks = matlabStructArrayD[0]["tasks"];
+    const TypedArray<double> _s = matlabStructArrayTasks[0]["s"];
+    const TypedArray<double> _g = matlabStructArrayTasks[0]["g"];
+    if (_s.getNumberOfElements() != _g.getNumberOfElements())
+    {
+        displayError("D.tasks.s and D.tasks.g must have the same number of elements.");
     }
 
     // init D
