@@ -29,11 +29,73 @@
 
 #include "mex.hpp"
 #include "mexAdapter.hpp"
+#include "printmex.h"
 #include<string>
 #include<memory>
 
 using namespace matlab::mex;
 using namespace matlab::data;
+
+// TODO put in .h file
+class Data
+{
+    public:
+        Data(StructArray const &matlabStructArrayD);
+        ~Data();
+
+        void initFromTxt(std::string filename);
+
+    private:
+
+        struct Edge
+        {
+            int u, v;
+        };
+
+        struct Task
+        {
+            int s, g;
+        };
+        
+        struct Graph
+        {
+            int **E;
+            int N;
+            std::vector<Edge> edges;
+        };
+
+        std::string name;
+        Graph G;
+        std::vector<Task> tasks;
+        std::vector<double> *rewards;
+};
+
+
+Data::Data(StructArray const &matlabStructArrayD)
+{
+    const TypedArray<double> _N = matlabStructArrayD[0]["N"];
+    G.N = (int)_N[0];
+
+	printThis("sheeeeiiit\n");
+
+    G.E = new int*[G.N];
+    for (int i = 0; i < G.N; i++)
+    {
+        G.E[i] = new int[G.N];
+    }
+}
+
+Data::~Data()
+{
+    for (int i = 0; i < G.N; i++)
+    {
+        delete [] G.E[i];
+    }
+    delete [] G.E;
+}
+
+
+
 
 class MexFunction : public Function {
 private:
@@ -114,6 +176,8 @@ public:
         const StructArray structFieldG = matlabStructArrayD[i]["G"];
         checkStructureElements(structFieldG, "D.G", fieldNamesG, fieldTypesG);
     }
+
+    printThis("slkdjflks %d %s\n", 34, "sdf");
 
     // check h
     StructArray const matlabStructArrayh = inputs[1];
