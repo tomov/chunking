@@ -46,6 +46,9 @@ private:
     const std::vector<std::string> fieldNamesD = {"name", "G", "tasks", "r"}; // D
     const std::vector<ArrayType> fieldTypesD = {ArrayType::CHAR, ArrayType::STRUCT, ArrayType::STRUCT, ArrayType::CELL};
 
+    const std::vector<std::string> fieldNamesG = {"N", "E", "edges"}; // D.G
+    const std::vector<ArrayType> fieldTypesG = {ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE};
+
     const std::vector<std::string> fieldNamesh = {"alpha", "std_theta", "theta_mean", "std_mu", "std_r"}; // h
     const std::vector<ArrayType> fieldTypesh = {ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE};
 
@@ -100,12 +103,19 @@ public:
     
     checkArguments (outputs,inputs);
 
-        // TODO CONTINUE:  checkStructureElements for D and h;  return H; then make sure that it works
-        // then check D.G too
-        // 
+    // check D
     StructArray const matlabStructArrayD = inputs[0];
     checkStructureElements(matlabStructArrayD, "D", fieldNamesD, fieldTypesD);
 
+    // check D.G
+    size_t total_num_of_elements = matlabStructArrayD.getNumberOfElements();
+    for (size_t i=0; i<total_num_of_elements; i++) 
+    {
+        const StructArray structFieldG = matlabStructArrayD[i]["G"];
+        checkStructureElements(structFieldG, "D.G", fieldNamesG, fieldTypesG);
+    }
+
+    // check h
     StructArray const matlabStructArrayh = inputs[1];
     checkStructureElements(matlabStructArrayh, "h", fieldNamesh, fieldTypesh);
 
