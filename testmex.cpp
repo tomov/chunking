@@ -119,6 +119,8 @@ public:
     StructArray const matlabStructArrayh = inputs[1];
     checkStructureElements(matlabStructArrayh, "h", fieldNamesh, fieldTypesh);
 
+    // check nsamples
+
     ArrayFactory factory;   
     /*
 
@@ -262,16 +264,19 @@ public:
    * and is not expecting more than one output in results.
    */
   void checkArguments(ArgumentList outputs, ArgumentList inputs) {
-      // TODO add others
-      //
-      if (inputs.size() != 2)
+      if (inputs.size() < 2)
       {
-        displayError("One input required.");
+        displayError("Specify at least D and h as input arguments.");
+      }
+      if (inputs.size() > 6)
+      {
+        displayError("Too many input arguments.");
       }
       if (outputs.size() > 2)
       {
         displayError("Too many outputs specified.");
       }
+
       if (inputs[0].getType() != ArrayType::STRUCT)
       {
         displayError("D must be a structure.");
@@ -279,6 +284,22 @@ public:
       if (inputs[1].getType() != ArrayType::STRUCT)
       {
         displayError("h must be a structure.");
+      }
+      if (inputs.size() > 2 && inputs[2].getType() != ArrayType::DOUBLE)
+      {
+        displayError("nsamples must be a number.");
+      }
+      if (inputs.size() > 3 && inputs[3].getType() != ArrayType::DOUBLE)
+      {
+        displayError("burnin must be a number.");
+      }
+      if (inputs.size() > 4 && inputs[4].getType() != ArrayType::DOUBLE)
+      {
+        displayError("lag must be a number.");
+      }
+      if (inputs.size() > 5 && inputs[5].getType() != ArrayType::STRUCT)
+      {
+        displayError("H must be a number.");
       }
   }
 };
