@@ -129,6 +129,24 @@ Data::Data(StructArray const matlabStructArrayD)
         tasks.push_back(Task(s, g));
         DEBUG_PRINT("task %d %d\n", s, g);
     }
+
+    // convert rewards
+    // 
+    const CellArray matlabStructArrayRewards = matlabStructArrayD[0]["r"];
+   
+    rewards = new std::vector<double>[G.N];
+    for (int i = 0; i < G.N; i++)
+    {
+        const TypedArray<double> _r = matlabStructArrayRewards[i];
+        DEBUG_PRINT("r{%d} = [", i);
+        for (int j = 0; j < _r.getNumberOfElements(); j++)
+        {
+            double r = _r[j];
+            rewards[i].push_back(r);
+            DEBUG_PRINT("%lf ", r);
+        }
+        DEBUG_PRINT("]\n");
+    }
 }
 
 Data::~Data()
@@ -138,6 +156,7 @@ Data::~Data()
         delete [] G.E[i];
     }
     delete [] G.E;
+    delete [] rewards;
 }
 
 
@@ -215,10 +234,10 @@ public:
     StructArray const matlabStructArrayD = inputs[0];
     checkStructureElements(matlabStructArrayD, "D", fieldNamesD, fieldTypesD);
 
-    // check D.G
     size_t total_num_of_elements = matlabStructArrayD.getNumberOfElements();
     for (size_t i=0; i<total_num_of_elements; i++) 
     {
+        // check D.G
         const StructArray structFieldG = matlabStructArrayD[i]["G"];
         checkStructureElements(structFieldG, "D.G", fieldNamesG, fieldTypesG);
 
@@ -229,15 +248,22 @@ public:
         {
             displayError("D.G.E must have D.G.N^2 elements.");
         }
-    }
 
-    // check D.tasks
-    const StructArray matlabStructArrayTasks = matlabStructArrayD[0]["tasks"];
-    const TypedArray<double> _s = matlabStructArrayTasks[0]["s"];
-    const TypedArray<double> _g = matlabStructArrayTasks[0]["g"];
-    if (_s.getNumberOfElements() != _g.getNumberOfElements())
-    {
-        displayError("D.tasks.s and D.tasks.g must have the same number of elements.");
+        // check D.tasks
+        const StructArray matlabStructArrayTasks = matlabStructArrayD[i]["tasks"];
+        const TypedArray<double> _s = matlabStructArrayTasks[0]["s"];
+        const TypedArray<double> _g = matlabStructArrayTasks[0]["g"];
+        if (_s.getNumberOfElements() != _g.getNumberOfElements())
+        {
+            displayError("D.tasks.s and D.tasks.g must have the same number of elements.");
+        }
+
+        // check D.r
+        const CellArray matlabStructArrayRewards = matlabStructArrayD[i]["r"];
+        if (matlabStructArrayRewards.getNumberOfElements() != N)
+        {
+            displayError("D.r should have D.N elements");
+        }
     }
 
     // init D
