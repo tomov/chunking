@@ -51,8 +51,6 @@ class Data
         Data(StructArray const matlabStructArrayD);
         ~Data();
 
-        void initFromTxt(std::string filename);
-
     private:
 
         struct Edge
@@ -81,6 +79,7 @@ class Data
 };
 
 
+// TODO pass entryIndex and use instead of [0]
 Data::Data(StructArray const matlabStructArrayD)
 {
     // const TypedArray<char*> _name = matlabStructArrayD[0]["name"];
@@ -160,6 +159,91 @@ Data::~Data()
 }
 
 
+// TODO move to .h file
+class Hyperparams
+{
+    public:
+        Hyperparams(StructArray const matlabStructArrayHyperparams);
+
+    private:
+
+        double alpha;
+        double std_theta;
+        double theta_mean;
+        double std_mu;
+        double std_r;
+};
+
+Hyperparams::Hyperparams(StructArray const matlabStructArrayHyperparams)
+{
+    const TypedArray<double> _alpha = matlabStructArrayHyperparams[0]["alpha"];
+    alpha = _alpha[0];
+
+    const TypedArray<double> _std_theta = matlabStructArrayHyperparams[0]["std_theta"];
+    std_theta = _std_theta[0];
+
+    const TypedArray<double> _theta_mean = matlabStructArrayHyperparams[0]["theta_mean"];
+    theta_mean = _theta_mean[0];
+
+    const TypedArray<double> _std_mu = matlabStructArrayHyperparams[0]["std_mu"];
+    std_mu = _std_mu[0];
+
+    const TypedArray<double> _std_r = matlabStructArrayHyperparams[0]["std_r"];
+    std_r = _std_r[0];
+
+    DEBUG_PRINT("h = %lf %lf %lf %lf %lf\n", alpha, std_theta, theta_mean, std_mu, std_r);
+}
+
+
+
+class Hierarchy
+{
+    public:
+        Hierarchy(StructArray const matlabStructArrayH);
+        Hierarchy(int _N);
+        ~Hierarchy();
+
+        //void InitFromPrior(int _N, ); TODO
+
+    private:
+
+        int N;
+        int *c;
+        //std::vector<int> cnt;
+        double p;
+        double q;
+        double hp; // p'
+        double tp; // p''
+
+        double *theta;
+        double *mu;
+};
+
+// TODO pass entryIndex and use instead of [0]
+Hierarchy::Hierarchy(StructArray const matlabStructArrayH)
+{
+    //const TypedArray<double> _c = matlabStructArrayH[0]["c"];
+    //for (int i = 0; i < )
+    // TODO continue
+}
+
+//void Hierarchy::InitFromPrior() TODO
+
+Hierarchy::Hierarchy(int _N)
+{
+    N = _N;
+    c = new int[N];
+    theta = new double[N];
+    mu = new double[N];
+}
+
+
+Hierarchy::~Hierarchy()
+{
+    delete [] c;
+    delete [] theta;
+    delete [] mu;
+}
 
 
 class MexFunction : public Function {
@@ -270,8 +354,10 @@ public:
     Data D(matlabStructArrayD);
 
     // check h
-    StructArray const matlabStructArrayh = inputs[1];
-    checkStructureElements(matlabStructArrayh, "h", fieldNamesh, fieldTypesh);
+    StructArray const matlabStructArrayHyperparams = inputs[1];
+    checkStructureElements(matlabStructArrayHyperparams, "h", fieldNamesh, fieldTypesh);
+
+    Hyperparams h(matlabStructArrayHyperparams);
 
     // check nsamples
 
