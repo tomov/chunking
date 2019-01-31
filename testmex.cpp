@@ -51,8 +51,6 @@ class Data
         Data(StructArray const matlabStructArrayD);
         ~Data();
 
-    private:
-
         struct Edge
         {
             int u, v;
@@ -165,8 +163,6 @@ class Hyperparams
     public:
         Hyperparams(StructArray const matlabStructArrayHyperparams);
 
-    private:
-
         double alpha;
         double std_theta;
         double theta_mean;
@@ -199,13 +195,11 @@ Hyperparams::Hyperparams(StructArray const matlabStructArrayHyperparams)
 class Hierarchy
 {
     public:
-        Hierarchy(StructArray const matlabStructArrayH);
         Hierarchy(int _N);
         ~Hierarchy();
 
-        //void InitFromPrior(int _N, ); TODO
-
-    private:
+        void InitFromMATLAB(StructArray const matlabStructArrayH);
+        void InitFromPrior();
 
         int N;
         int *c;
@@ -220,14 +214,54 @@ class Hierarchy
 };
 
 // TODO pass entryIndex and use instead of [0]
-Hierarchy::Hierarchy(StructArray const matlabStructArrayH)
+void Hierarchy::InitFromMATLAB(StructArray const matlabStructArrayH)
 {
-    //const TypedArray<double> _c = matlabStructArrayH[0]["c"];
-    //for (int i = 0; i < )
-    // TODO continue
+    const TypedArray<double> _c = matlabStructArrayH[0]["c"];
+    DEBUG_PRINT("H.c = [");
+    for (int i = 0; i < _c.getNumberOfElements(); i++)
+    {
+        this->c[i] = _c[i];
+        DEBUG_PRINT("%d ", this->c[i]);
+    }
+    DEBUG_PRINT("]\n");
+
+    const TypedArray<double> _p = matlabStructArrayH[0]["p"];
+    this->p = _p[0];
+
+    const TypedArray<double> _q = matlabStructArrayH[0]["q"];
+    this->q = _q[0];
+
+    const TypedArray<double> _tp = matlabStructArrayH[0]["tp"];
+    this->tp = _tp[0];
+
+    const TypedArray<double> _hp = matlabStructArrayH[0]["hp"];
+    this->hp = _hp[0];
+
+    DEBUG_PRINT("H.p q tp hp = [%lf %lf %lf %lf]\n", this->p, this->q, this->tp, this->hp);
+
+    const TypedArray<double> _theta = matlabStructArrayH[0]["theta"];
+    DEBUG_PRINT("H.theta = [");
+    for (int i = 0; i < _theta.getNumberOfElements(); i++)
+    {
+        this->theta[i] = _theta[i];
+        DEBUG_PRINT("%lf ", this->theta[i]);
+    }
+    DEBUG_PRINT("]\n");
+   
+    const TypedArray<double> _mu = matlabStructArrayH[0]["mu"];
+    DEBUG_PRINT("H.mu = [");
+    for (int i = 0; i < _mu.getNumberOfElements(); i++)
+    {
+        this->mu[i] = _mu[i];
+        DEBUG_PRINT("%lf ", this->mu[i]);
+    }
+    DEBUG_PRINT("]\n");
 }
 
-//void Hierarchy::InitFromPrior() TODO
+void Hierarchy::InitFromPrior()
+{
+    // TODO
+}
 
 Hierarchy::Hierarchy(int _N)
 {
@@ -360,6 +394,63 @@ public:
     Hyperparams h(matlabStructArrayHyperparams);
 
     // check nsamples
+    int nsamples = 10000; // default
+    if (inputs.size() > 2)
+    {
+        const TypedArray<double> _nsamples = inputs[2];
+        nsamples = _nsamples[0];
+    }
+    DEBUG_PRINT("nsamples = %d\n", nsamples);
+
+    // check burnin
+    int burnin = 1; // default
+    if (inputs.size() > 3)
+    {
+        const TypedArray<double> _burnin = inputs[3];
+        burnin = _burnin[0];
+    }
+    DEBUG_PRINT("burnin = %d\n", burnin);
+
+    // check lag
+    int lag = 1; // default
+    if (inputs.size() > 4)
+    {
+        const TypedArray<double> _lag = inputs[4];
+        lag = _lag[0];
+    }
+    DEBUG_PRINT("lag = %d\n", lag);
+
+    // check H
+    Hierarchy H(D.G.N);
+    if (inputs.size() > 5)
+    {
+        StructArray const matlabStructArrayH = inputs[5];
+        checkStructureElements(matlabStructArrayH, "H", fieldNamesH, fieldTypesH);
+
+        const TypedArray<double> _c = matlabStructArrayH[0]["c"];
+        if (_c.getNumberOfElements() != D.G.N)
+        {
+            displayError("H.c should have D.G.N elements");
+        }
+
+        const TypedArray<double> _theta = matlabStructArrayH[0]["theta"];
+        if (_theta.getNumberOfElements() != D.G.N)
+        {
+            displayError("H.theta should have D.G.N elements");
+        }
+
+        const TypedArray<double> _mu = matlabStructArrayH[0]["mu"];
+        if (_mu.getNumberOfElements() != D.G.N)
+        {
+            displayError("H.mu should have D.G.N elements");
+        }
+
+        H.InitFromMATLAB(matlabStructArrayH);
+    }
+    else
+    {
+        H.InitFromPrior();
+    }
 
     ArrayFactory factory;   
     /*
