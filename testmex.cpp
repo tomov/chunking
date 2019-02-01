@@ -55,13 +55,14 @@ std::mt19937 gen(0); // for reproducibility
 // 
 double UnifRnd(double a = 0, double b = 1)
 {
-    std::uniform_real_distribution<> dis(a, b);
+    std::uniform_real_distribution<double> dis(a, b);
     double U = dis(gen);
     DEBUG_PRINT("unif = %lf\n", U);
     return U;
 }
 
-// random draw B ~ Beta(alpha, beta)
+// random draw X ~ Beta(alpha, beta)
+// Uses universality of the normal, i.e. F(X) ~ Unif(0,1), where X ~ CDF F
 // see https://stackoverflow.com/questions/4181403/generate-random-number-based-on-beta-distribution-using-boost
 //
 double BetaRnd(double alpha = 1, double beta = 1)
@@ -69,8 +70,28 @@ double BetaRnd(double alpha = 1, double beta = 1)
     boost::math::beta_distribution<> dist(alpha, beta);
 
     double U = UnifRnd();
-    double B = quantile(dist, U);
-    return B;
+    double X = quantile(dist, U);
+    return X;
+}
+
+// random draw X ~ N(mu, sigma)
+// see http://www.cplusplus.com/reference/random/normal_distribution/
+//
+double NormRnd(double mu, double sigma)
+{
+    std::normal_distribution<double> dis(mu, sigma);
+    double X = dis(gen);
+    return X;
+}
+
+// random draw X ~ Cat(p), where p is a vector of (unnormalized) categorical probabilities
+// see http://www.cplusplus.com/reference/random/discrete_distribution/
+//
+double CatRnd(const std::vector<double> &p)
+{
+    std::discrete_distribution<int> dis(p.begin(), p.end());
+    double X = dis(gen);
+    return X;
 }
 
 
@@ -387,20 +408,6 @@ public:
             displayError("D.r should have D.N elements");
         }
     }
-
-    double U = BetaRnd();
-    U = BetaRnd();
-    U = BetaRnd();
-    U = BetaRnd();
-    U = BetaRnd();
-    U = BetaRnd();
-    U = BetaRnd();
-    U = BetaRnd();
-    U = BetaRnd();
-    U = BetaRnd();
-    U = BetaRnd();
-    U = BetaRnd();
-    U = BetaRnd();
 
     // init D
     Data D(matlabStructArrayD);
