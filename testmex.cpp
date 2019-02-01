@@ -39,6 +39,7 @@
 #include <string>
 #include <memory>
 #include <random>
+#include <algorithm>
 #include <boost/math/distributions.hpp>
 
 #define DEBUG 1
@@ -87,10 +88,10 @@ double NormRnd(double mu, double sigma)
 // random draw X ~ Cat(p), where p is a vector of (unnormalized) categorical probabilities
 // see http://www.cplusplus.com/reference/random/discrete_distribution/
 //
-double CatRnd(const std::vector<double> &p)
+int CatRnd(const std::vector<double> &p)
 {
     std::discrete_distribution<int> dis(p.begin(), p.end());
-    double X = dis(gen);
+    int X = dis(gen);
     return X;
 }
 
@@ -253,11 +254,13 @@ class Hierarchy
         ~Hierarchy();
 
         void InitFromMATLAB(StructArray const matlabStructArrayH);
-        void InitFromPrior();
+        void InitFromPrior(const Data &D, const Hyperparams &h);
+
+        void PopulateCnt();
 
         int N;
         int *c;
-        //std::vector<int> cnt;
+        std::vector<int> cnt;
         double p;
         double q;
         double hp; // p'
@@ -266,6 +269,25 @@ class Hierarchy
         double *theta;
         double *mu;
 };
+
+// populate cluster cnt counts from cluster assignments c
+//
+void Hierarchy::PopulateCnt()
+{
+    int K = *std::max_element(this->c, this->c + N); // # of clusters
+    this->cnt.clear();
+    this->cnt.resize(K);
+    for (int i = 0; i < this->N; i++)
+    {
+        this->cnt[this->c[i] - 1]++;
+    }
+    DEBUG_PRINT("H.cnt = [");
+    for (int i = 0; i < K; i++)
+    {
+        DEBUG_PRINT("%d ", this->cnt[i]);
+    }
+    DEBUG_PRINT("]\n");
+}
 
 // TODO pass entryIndex and use instead of [0]
 void Hierarchy::InitFromMATLAB(StructArray const matlabStructArrayH)
@@ -310,11 +332,49 @@ void Hierarchy::InitFromMATLAB(StructArray const matlabStructArrayH)
         DEBUG_PRINT("%lf ", this->mu[i]);
     }
     DEBUG_PRINT("]\n");
+
+    this->PopulateCnt();
 }
 
-void Hierarchy::InitFromPrior()
+// transpiled from init_H.m
+// careful with off-by-ones
+//
+void Hierarchy::InitFromPrior(const Data &D, const Hyperparams &h)
 {
-    // TODO
+    this->c[0] = 1;
+    this->cnt.clear();
+    this->cnt.push_back(1);
+    for (int i = 0; i < D.G.N; i++)
+    {
+        std::vector<double> p(this->cnt.begin(), this->cnt.end()); // TODO optimize -- no need to copy, could be done in O(1)
+        p.push_back(h.alpha);
+        int c_new = CatRnd(p);
+        if (c_new >= this->cnt.size())
+        {
+            this->cnt.push_back(1);
+        }
+        else
+        {
+            this->cnt[c_new - 1]++;
+        }
+    }
+    // TODO randomize?
+    //
+
+    this->p = BetaRnd(1, 1);
+    this->q = BetaRnd(1, 1);
+    this->tp = BetaRnd(1, 1);
+    this->hp = BetaRnd(1, 1);
+
+    for (int k = 0; k < this->cnt.size(); k++)
+    {
+        this->theta[k] = NormRnd(h.theta_mean, h.std_theta);
+    }
+
+    for (int i = 0; i < D.G.N; i++)
+    {
+        this->mu[i] = NormRnd(this->theta[this->c[i]], h.std_mu);
+    }
 }
 
 Hierarchy::Hierarchy(int _N)
@@ -416,6 +476,7 @@ public:
     StructArray const matlabStructArrayHyperparams = inputs[1];
     checkStructureElements(matlabStructArrayHyperparams, "h", fieldNamesh, fieldTypesh);
 
+    // init h
     Hyperparams h(matlabStructArrayHyperparams);
 
     // check nsamples
@@ -474,7 +535,7 @@ public:
     }
     else
     {
-        H.InitFromPrior();
+        H.InitFromPrior(D, h);
     }
 
     ArrayFactory factory;   
