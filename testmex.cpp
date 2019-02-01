@@ -304,41 +304,12 @@ public:
     matlabPtr = getEngine();
   }
   
-  /* Helper function to print output string on MATLAB command prompt. */
-  void displayOnMATLAB(std::ostringstream stream)
-  {
-    ArrayFactory factory;
-    matlabPtr->feval(matlab::engine::convertUTF8StringToUTF16String("fprintf"),0, std::vector<Array>
-            ({ factory.createScalar(stream.str())}));
-  }
-  
-  /* Helper function to generate an error message from given string,
-   * and display it over MATLAB command prompt.
-   */
   void displayError(std::string errorMessage)
   {
     ArrayFactory factory;
     matlabPtr->feval(matlab::engine::convertUTF8StringToUTF16String("error"),
             0, std::vector<Array>({
       factory.createScalar(errorMessage) }));
-  }
-  
-  /* Helper function to information about an empty field in the structure. */
-  void emptyFieldInformation(std::string fieldName, size_t index)
-  {
-    std::ostringstream stream;
-    stream<<"Field: "<<std::string(fieldName)<<" of the element at index: "
-          <<index+1<<" is empty."<<std::endl;
-    displayOnMATLAB(std::move(stream));
-  }
-  
-  /* Helper function to information about an invalid field in the structure. */
-  void invalidFieldInformation(std::string fieldName, size_t index)
-  {
-    std::ostringstream stream;
-    stream<<"Field: "<<std::string(fieldName)<<" of the element at index: "
-          <<index+1<<" contains wrong value."<<std::endl;
-    displayOnMATLAB(std::move(stream));
   }
   
   
@@ -453,17 +424,6 @@ public:
     }
 
     ArrayFactory factory;   
-    /*
-
-    checkStructureElements(matlabStructArray);
-    auto fields = matlabStructArray.getFieldNames();
-    size_t total_num_of_elements = matlabStructArray.getNumberOfElements();   
-    CellArray phoneNumberStringArray = 
-            factory.createCellArray({ 1,total_num_of_elements });
-    CellArray nameStringArray = 
-            factory.createCellArray({ 1,total_num_of_elements });
-    std::vector<std::string> fieldNames(fields.begin(), fields.end());
-    */
 
     size_t n = 10; // # of H's
    
@@ -540,60 +500,9 @@ public:
       }
   }
   
-  /* Make sure that the passed structure has valid data. */
-  // TODO rm 
-  void checkStructureElements(StructArray const & matlabStructArray)
-  {
-    std::ostringstream stream;
-    size_t nfields = matlabStructArray.getNumberOfFields();
-    auto fields = matlabStructArray.getFieldNames();
-    size_t total_num_of_elements = matlabStructArray.getNumberOfElements();
-    std::vector<std::string> fieldNames(fields.begin(), fields.end());
-    
-    /* Produce error if structure has more than 2 fields. */
-    if(nfields != 2) {
-      displayError("Struct must consist of 2 entries."
-                   "(First: char array, Second: numeric double scalar).");
-    }
-    
-    /* Walk through each structure element. */
-    for (size_t entryIndex=0; entryIndex<total_num_of_elements; entryIndex++) {
-      const Array structField1 = 
-              matlabStructArray[entryIndex][fieldNames[0]];
-      const Array structField2 = 
-              matlabStructArray[entryIndex][fieldNames[1]];
-      
-      /* Produce error if name field in structure is empty. */
-      if (structField1.isEmpty()) {
-        emptyFieldInformation(fieldNames[0],entryIndex);
-        displayError("Empty fields are not allowed in this program." 
-                     "This field must contain character array.");
-      }
-      
-      /* Produce error if phone number field in structure is empty. */
-      if(structField2.isEmpty()) {
-        emptyFieldInformation(fieldNames[1],entryIndex);
-        displayError("Empty fields are not allowed in this program." 
-                     "This field must contain numeric double scalar.");
-      }
-      
-      /* Produce error if name is not a valid character array. */
-      if(structField1.getType()!= ArrayType::CHAR) {
-        invalidFieldInformation(fieldNames[0],entryIndex);
-        displayError("This field must contain character array.");
-      }
-      /* Produce error if phone number is not a valid double scalar. */
-      if (structField2.getType() != ArrayType::DOUBLE
-          || structField2.getNumberOfElements() != 1) {
-        invalidFieldInformation(fieldNames[1],entryIndex);
-        displayError("This field must contain numeric double scalar.");
-      }
-    }
-  }
-  
-  /* This function makes sure that user has provided structure as input,
-   * and is not expecting more than one output in results.
-   */
+ 
+  // check function arguments
+  // 
   void checkArguments(ArgumentList outputs, ArgumentList inputs) {
       if (inputs.size() < 2)
       {
