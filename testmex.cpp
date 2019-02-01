@@ -1,6 +1,8 @@
 // compile with:
 //
-// mex testmex.cpp printmex.cpp
+// mex testmex.cpp printmex.cpp -I/usr/local/boost-1.64.0/include/
+// see https://stackoverflow.com/questions/16127060/what-is-the-default-location-for-boost-library-when-installed-using-macport-on-m
+// and https://www.mathworks.com/matlabcentral/answers/7955-using-boost-libraries-with-mex-function-in-matlab
 
 /* ========================================================================
  *  copy of 
@@ -34,11 +36,42 @@
 #include "mex.hpp"
 #include "mexAdapter.hpp"
 #include "printmex.h"
-#include<string>
-#include<memory>
+#include <string>
+#include <memory>
+#include <random>
+#include <boost/math/distributions.hpp>
 
 #define DEBUG 1
 #define DEBUG_PRINT(args ...) if (DEBUG) printThis(args)
+
+// see https://en.cppreference.com/w/cpp/numeric/random/uniform_real_distribution
+// for random number generation
+std::random_device rd;  //Will be used to obtain a seed for the random number engine
+//std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+std::mt19937 gen(0); // for reproducibility
+
+// random draw U ~ Unif(a, b)
+// see https://en.cppreference.com/w/cpp/numeric/random/uniform_real_distribution
+// 
+double UnifRnd(double a = 0, double b = 1)
+{
+    std::uniform_real_distribution<> dis(a, b);
+    double U = dis(gen);
+    DEBUG_PRINT("unif = %lf\n", U);
+    return U;
+}
+
+// random draw B ~ Beta(alpha, beta)
+// see https://stackoverflow.com/questions/4181403/generate-random-number-based-on-beta-distribution-using-boost
+//
+double BetaRnd(double alpha = 1, double beta = 1)
+{
+    boost::math::beta_distribution<> dist(alpha, beta);
+
+    double U = UnifRnd();
+    double B = quantile(dist, U);
+    return B;
+}
 
 
 using namespace matlab::mex;
@@ -354,6 +387,20 @@ public:
             displayError("D.r should have D.N elements");
         }
     }
+
+    double U = BetaRnd();
+    U = BetaRnd();
+    U = BetaRnd();
+    U = BetaRnd();
+    U = BetaRnd();
+    U = BetaRnd();
+    U = BetaRnd();
+    U = BetaRnd();
+    U = BetaRnd();
+    U = BetaRnd();
+    U = BetaRnd();
+    U = BetaRnd();
+    U = BetaRnd();
 
     // init D
     Data D(matlabStructArrayD);
