@@ -528,10 +528,12 @@ public:
         }
 
         const TypedArray<double> _theta = matlabStructArrayH[0]["theta"];
-        if (_theta.getNumberOfElements() != D.G.N)
-        {
-            displayError("H.theta should have D.G.N elements");
-        }
+        // TODO this is wrong; needs to be max(c)
+        // also, wtf try to pass Hout as input argument -> Busy
+        //if (_theta.getNumberOfElements() != D.G.N)
+        //{
+        //    displayError("H.theta should have D.G.N elements");
+        //}
 
         const TypedArray<double> _mu = matlabStructArrayH[0]["mu"];
         if (_mu.getNumberOfElements() != D.G.N)
@@ -552,7 +554,8 @@ public:
     // see https://www.mathworks.com/help/matlab/matlab_external/create-struct-arrays-1.html
     StructArray resultH = factory.createStructArray({ 1,1 }, MexFunction::fieldNamesH ); // dims, fieldNames
 
-    resultH[0]["c"] = factory.createArray<double>({1, (size_t)H.N}, (const double*)H.c, (const double*)(H.c + H.N));
+   // resultH[0]["c"] = factory.createArray<double>({1, (size_t)H.N}, (const double*)H.c, (const double*)(H.c + H.N));
+    resultH[0]["c"] = factory.createArray<double>({1, 6}, {1, 2, 3, 4, 5, 6});
     DEBUG_PRINT("c\n");
     resultH[0]["p"] = factory.createScalar<double>(H.p);
     DEBUG_PRINT("p\n");
@@ -562,19 +565,23 @@ public:
     DEBUG_PRINT("tp\n");
     resultH[0]["hp"] = factory.createScalar<double>(H.hp);
     DEBUG_PRINT("hp\n");
-    double *theta = new double[H.theta.size()];
+   // double *theta = new double[H.theta.size()];
     DEBUG_PRINT("pre theta 1\n");
-    for (int i = 0; i < H.theta.size(); i++)
-    {
-        theta[i] = H.theta[i];
-        DEBUG_PRINT("pre theta    s %d\n", i);
-    }
+   // for (int i = 0; i < H.theta.size(); i++)
+   // {
+   //     theta[i] = H.theta[i];
+   //     DEBUG_PRINT("pre theta    s %d\n", i);
+   // }
     DEBUG_PRINT("preee theta");
-    resultH[0]["theta"] = factory.createArray<double>({1, H.theta.size()}, (const double*)theta, (const double*)(theta + H.theta.size()));
+    //resultH[0]["theta"] = factory.createArray<double>({1, H.theta.size()}, (const double*)theta, (const double*)(theta + H.theta.size()));
+    //resultH[0]["theta"] = factory.createArray<std::vector<double>::iterator, double>({1, H.theta.size()}, H.theta.begin(), H.theta.end());
+    resultH[0]["theta"] = factory.createArray<double>({1, 4}, {0.1, 35.3, 34.5, 12.33});
+    //resultH[0]["theta"] = factory.createArray<double>({1, 4}, {1, 2, 3, 4});
     DEBUG_PRINT("thetaaa\n");
-    delete [] theta;
+    //delete [] theta;
     DEBUG_PRINT("theta\n");
-    resultH[0]["mu"] = factory.createArray<double>({1, (size_t)H.N}, (const double*)H.mu, (const double*)(H.mu + H.N));
+    //resultH[0]["mu"] = factory.createArray<double>({1, (size_t)H.N}, (const double*)H.mu, (const double*)(H.mu + H.N));
+    resultH[0]["mu"] = factory.createArray<double>({1, 4}, {1000.1, 9935.3, 9934.5, 9912.33});
     DEBUG_PRINT("mu\n");
 
     /*
