@@ -1,6 +1,7 @@
 // compile with:
 //
 // mex testmex.cpp printmex.cpp -I/usr/local/boost-1.64.0/include/
+//
 // see https://stackoverflow.com/questions/16127060/what-is-the-default-location-for-boost-library-when-installed-using-macport-on-m
 // and https://www.mathworks.com/matlabcentral/answers/7955-using-boost-libraries-with-mex-function-in-matlab
 
@@ -266,7 +267,7 @@ class Hierarchy
         double hp; // p'
         double tp; // p''
 
-        double *theta;
+        std::vector<double> theta;
         double *mu;
 };
 
@@ -317,9 +318,10 @@ void Hierarchy::InitFromMATLAB(StructArray const matlabStructArrayH)
 
     const TypedArray<double> _theta = matlabStructArrayH[0]["theta"];
     DEBUG_PRINT("H.theta = [");
+    this->theta.clear();
     for (int i = 0; i < _theta.getNumberOfElements(); i++)
     {
-        this->theta[i] = _theta[i];
+        this->theta.push_back(_theta[i]);
         DEBUG_PRINT("%lf ", this->theta[i]);
     }
     DEBUG_PRINT("]\n");
@@ -366,9 +368,11 @@ void Hierarchy::InitFromPrior(const Data &D, const Hyperparams &h)
     this->tp = BetaRnd(1, 1);
     this->hp = BetaRnd(1, 1);
 
-    for (int k = 0; k < this->cnt.size(); k++)
+    int K = this->cnt.size();
+    this->theta.clear();
+    for (int k = 0; k < K; k++)
     {
-        this->theta[k] = NormRnd(h.theta_mean, h.std_theta);
+        this->theta.push_back(NormRnd(h.theta_mean, h.std_theta));
     }
 
     for (int i = 0; i < D.G.N; i++)
@@ -381,7 +385,6 @@ Hierarchy::Hierarchy(int _N)
 {
     N = _N;
     c = new int[N];
-    theta = new double[N];
     mu = new double[N];
 }
 
@@ -389,7 +392,6 @@ Hierarchy::Hierarchy(int _N)
 Hierarchy::~Hierarchy()
 {
     delete [] c;
-    delete [] theta;
     delete [] mu;
 }
 
@@ -544,6 +546,15 @@ public:
    
     // see https://www.mathworks.com/help/matlab/matlab_external/create-struct-arrays-1.html
     StructArray resultH = factory.createStructArray({ 1,n }, MexFunction::fieldNamesH ); // dims, fieldNames
+
+    /*
+    resultH[0]["c"] = factory.createArray<double>({1, H.N}, H.c);
+    resultH[0]["p"] = factory.createScalar<double>(H.p);
+    resultH[0]["q"] = factory.createScalar<double>(H.q);
+    resultH[0]["tp"] = factory.createScalar<double>(H.tp);
+    resultH[0]["hp"] = factory.createScalar<double>(H.hp);
+    resultH[0]["theta"] = factory.createArray<double>({1, H.theta.size()}, H.theta);
+    */
 
     for (size_t i = 0; i < n; i++)
     {
