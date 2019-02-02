@@ -319,10 +319,10 @@ void Hierarchy::InitFromMATLAB(StructArray const matlabStructArrayH)
     const TypedArray<double> _theta = matlabStructArrayH[0]["theta"];
     DEBUG_PRINT("H.theta = [");
     this->theta.clear();
-    for (int i = 0; i < _theta.getNumberOfElements(); i++)
+    for (int k = 0; k < _theta.getNumberOfElements(); k++)
     {
-        this->theta.push_back(_theta[i]);
-        DEBUG_PRINT("%lf ", this->theta[i]);
+        this->theta.push_back(_theta[k]);
+        DEBUG_PRINT("%lf ", this->theta[k]);
     }
     DEBUG_PRINT("]\n");
    
@@ -370,15 +370,21 @@ void Hierarchy::InitFromPrior(const Data &D, const Hyperparams &h)
 
     int K = this->cnt.size();
     this->theta.clear();
+    DEBUG_PRINT("H.theta = [");
     for (int k = 0; k < K; k++)
     {
         this->theta.push_back(NormRnd(h.theta_mean, h.std_theta));
+        DEBUG_PRINT("%lf ", this->theta[k]);
     }
+    DEBUG_PRINT("]\n");
 
+    DEBUG_PRINT("H.mu = [");
     for (int i = 0; i < D.G.N; i++)
     {
         this->mu[i] = NormRnd(this->theta[this->c[i]], h.std_mu);
+        DEBUG_PRINT("%lf ", this->mu[i]);
     }
+    DEBUG_PRINT("]\n");
 }
 
 Hierarchy::Hierarchy(int _N)
@@ -540,22 +546,41 @@ public:
         H.InitFromPrior(D, h);
     }
 
+    // read up on https://www.mathworks.com/help/matlab/apiref/matlab.data.arrayfactory.html?searchHighlight=createarray&s_tid=doc_srchtitle#bvn7dve-1
     ArrayFactory factory;   
 
-    size_t n = 10; // # of H's
-   
     // see https://www.mathworks.com/help/matlab/matlab_external/create-struct-arrays-1.html
-    StructArray resultH = factory.createStructArray({ 1,n }, MexFunction::fieldNamesH ); // dims, fieldNames
+    StructArray resultH = factory.createStructArray({ 1,1 }, MexFunction::fieldNamesH ); // dims, fieldNames
+
+    resultH[0]["c"] = factory.createArray<double>({1, (size_t)H.N}, (const double*)H.c, (const double*)(H.c + H.N));
+    DEBUG_PRINT("c\n");
+    resultH[0]["p"] = factory.createScalar<double>(H.p);
+    DEBUG_PRINT("p\n");
+    resultH[0]["q"] = factory.createScalar<double>(H.q);
+    DEBUG_PRINT("q\n");
+    resultH[0]["tp"] = factory.createScalar<double>(H.tp);
+    DEBUG_PRINT("tp\n");
+    resultH[0]["hp"] = factory.createScalar<double>(H.hp);
+    DEBUG_PRINT("hp\n");
+    double *theta = new double[H.theta.size()];
+    DEBUG_PRINT("pre theta 1\n");
+    for (int i = 0; i < H.theta.size(); i++)
+    {
+        theta[i] = H.theta[i];
+        DEBUG_PRINT("pre theta    s %d\n", i);
+    }
+    DEBUG_PRINT("preee theta");
+    resultH[0]["theta"] = factory.createArray<double>({1, H.theta.size()}, (const double*)theta, (const double*)(theta + H.theta.size()));
+    DEBUG_PRINT("thetaaa\n");
+    delete [] theta;
+    DEBUG_PRINT("theta\n");
+    resultH[0]["mu"] = factory.createArray<double>({1, (size_t)H.N}, (const double*)H.mu, (const double*)(H.mu + H.N));
+    DEBUG_PRINT("mu\n");
 
     /*
-    resultH[0]["c"] = factory.createArray<double>({1, H.N}, H.c);
-    resultH[0]["p"] = factory.createScalar<double>(H.p);
-    resultH[0]["q"] = factory.createScalar<double>(H.q);
-    resultH[0]["tp"] = factory.createScalar<double>(H.tp);
-    resultH[0]["hp"] = factory.createScalar<double>(H.hp);
-    resultH[0]["theta"] = factory.createArray<double>({1, H.theta.size()}, H.theta);
-    */
-
+    size_t n = 10; // # of H's
+   
+    StructArray resultH = factory.createStructArray({ 1,n }, MexFunction::fieldNamesH ); // dims, fieldNames
     for (size_t i = 0; i < n; i++)
     {
         // see https://www.mathworks.com/help/matlab/apiref/matlab.data.arrayfactory.html#bvmdqqr-1
@@ -568,6 +593,7 @@ public:
         resultH[i]["theta"] = factory.createArray<double>({1, 4}, {0.1, 35.3, 34.5, 12.33});
         resultH[i]["mu"] = factory.createArray<double>({1, 4}, {1000.1, 9935.3, 9934.5, 9912.33});
     }
+    */
     
     outputs[0] = resultH;
   }
