@@ -41,6 +41,7 @@
 #include <memory>
 #include <random>
 #include <algorithm>
+#include <cstdlib>
 #include <boost/math/distributions.hpp>
 
 #define DEBUG 1
@@ -258,6 +259,7 @@ class Hierarchy
         void InitFromPrior(const Data &D, const Hyperparams &h);
 
         void PopulateCnt();
+        void Print();
 
         int N;
         int *c;
@@ -294,13 +296,10 @@ void Hierarchy::PopulateCnt()
 void Hierarchy::InitFromMATLAB(StructArray const matlabStructArrayH)
 {
     const TypedArray<double> _c = matlabStructArrayH[0]["c"];
-    DEBUG_PRINT("H.c = [");
     for (int i = 0; i < _c.getNumberOfElements(); i++)
     {
         this->c[i] = _c[i];
-        DEBUG_PRINT("%d ", this->c[i]);
     }
-    DEBUG_PRINT("]\n");
 
     const TypedArray<double> _p = matlabStructArrayH[0]["p"];
     this->p = _p[0];
@@ -314,28 +313,54 @@ void Hierarchy::InitFromMATLAB(StructArray const matlabStructArrayH)
     const TypedArray<double> _hp = matlabStructArrayH[0]["hp"];
     this->hp = _hp[0];
 
-    DEBUG_PRINT("H.p q tp hp = [%lf %lf %lf %lf]\n", this->p, this->q, this->tp, this->hp);
 
     const TypedArray<double> _theta = matlabStructArrayH[0]["theta"];
-    DEBUG_PRINT("H.theta = [");
     this->theta.clear();
     for (int k = 0; k < _theta.getNumberOfElements(); k++)
     {
         this->theta.push_back(_theta[k]);
-        DEBUG_PRINT("%lf ", this->theta[k]);
     }
-    DEBUG_PRINT("]\n");
    
     const TypedArray<double> _mu = matlabStructArrayH[0]["mu"];
-    DEBUG_PRINT("H.mu = [");
     for (int i = 0; i < _mu.getNumberOfElements(); i++)
     {
         this->mu[i] = _mu[i];
-        DEBUG_PRINT("%lf ", this->mu[i]);
+    }
+
+    this->PopulateCnt();
+}
+
+void Hierarchy::Print()
+{
+    DEBUG_PRINT("H.c = [");
+    for (int i = 0; i < this->N; i++)
+    {
+        DEBUG_PRINT("%d ", this->c[i]);
     }
     DEBUG_PRINT("]\n");
 
-    this->PopulateCnt();
+    DEBUG_PRINT("H.cnt = [");
+    for (int k = 0; k < this->cnt.size(); k++)
+    {
+        DEBUG_PRINT("%d ", this->cnt[k]);
+    }
+    DEBUG_PRINT("]\n");
+
+    DEBUG_PRINT("H.p q tp hp = [%lf %lf %lf %lf]\n", this->p, this->q, this->tp, this->hp);
+
+    DEBUG_PRINT("H.theta = [");
+    for (int k = 0; k < this->theta.size(); k++)
+    {
+        DEBUG_PRINT("%lf ", this->theta[k]);
+    }
+    DEBUG_PRINT("]\n");
+
+    DEBUG_PRINT("H.mu = [");
+    for (int i = 0; i < this->N; i++)
+    {
+        DEBUG_PRINT("%lf ", this->mu[i]);
+    }
+    DEBUG_PRINT("]\n");
 }
 
 // transpiled from init_H.m
@@ -346,12 +371,12 @@ void Hierarchy::InitFromPrior(const Data &D, const Hyperparams &h)
     this->c[0] = 1;
     this->cnt.clear();
     this->cnt.push_back(1);
-    for (int i = 0; i < D.G.N; i++)
+    for (int i = 1; i < D.G.N; i++)
     {
         std::vector<double> p(this->cnt.begin(), this->cnt.end()); // TODO optimize -- no need to copy, could be done in O(1)
         p.push_back(h.alpha);
-        int c_new = CatRnd(p);
-        if (c_new >= this->cnt.size())
+        int c_new = CatRnd(p) + 1;
+        if (c_new - 1 >= this->cnt.size())
         {
             this->cnt.push_back(1);
         }
@@ -359,9 +384,10 @@ void Hierarchy::InitFromPrior(const Data &D, const Hyperparams &h)
         {
             this->cnt[c_new - 1]++;
         }
+        this->c[i] = c_new;
     }
-    // TODO randomize?
-    //
+    std::random_shuffle(this->c, this->c + this->N);
+
 
     this->p = BetaRnd(1, 1);
     this->q = BetaRnd(1, 1);
@@ -370,21 +396,15 @@ void Hierarchy::InitFromPrior(const Data &D, const Hyperparams &h)
 
     int K = this->cnt.size();
     this->theta.clear();
-    DEBUG_PRINT("H.theta = [");
     for (int k = 0; k < K; k++)
     {
         this->theta.push_back(NormRnd(h.theta_mean, h.std_theta));
-        DEBUG_PRINT("%lf ", this->theta[k]);
     }
-    DEBUG_PRINT("]\n");
 
-    DEBUG_PRINT("H.mu = [");
     for (int i = 0; i < D.G.N; i++)
     {
         this->mu[i] = NormRnd(this->theta[this->c[i]], h.std_mu);
-        DEBUG_PRINT("%lf ", this->mu[i]);
     }
-    DEBUG_PRINT("]\n");
 }
 
 Hierarchy::Hierarchy(int _N)
@@ -438,6 +458,7 @@ public:
   /* This is the gateway routine for the MEX-file. */
   void 
   operator()(ArgumentList outputs, ArgumentList inputs) { 
+    std::srand(0); // for reproducibility
     
     checkArguments (outputs,inputs);
 
@@ -547,6 +568,8 @@ public:
     {
         H.InitFromPrior(D, h);
     }
+
+    H.Print();
 
     // read up on https://www.mathworks.com/help/matlab/apiref/matlab.data.arrayfactory.html?searchHighlight=createarray&s_tid=doc_srchtitle#bvn7dve-1
     ArrayFactory factory;   
