@@ -42,6 +42,7 @@
 #include <random>
 #include <algorithm>
 #include <cstdlib>
+#include <cmath>
 #include <boost/math/distributions.hpp>
 
 #define DEBUG 1
@@ -70,21 +71,34 @@ double UnifRnd(double a = 0, double b = 1)
 //
 double BetaRnd(double alpha = 1, double beta = 1)
 {
-    boost::math::beta_distribution<> dist(alpha, beta);
+    boost::math::beta_distribution<double> dist(alpha, beta);
 
     double U = UnifRnd();
     double X = quantile(dist, U);
     return X;
 }
 
+double BetaPDF(double x, double alpha = 1, double beta = 1)
+{
+    boost::math::beta_distribution<double> dist(alpha, beta);
+    return boost::math::pdf(dist, x);
+}
+
+
 // random draw X ~ N(mu, sigma)
 // see http://www.cplusplus.com/reference/random/normal_distribution/
 //
 double NormRnd(double mu, double sigma)
 {
-    std::normal_distribution<double> dis(mu, sigma);
-    double X = dis(gen);
+    std::normal_distribution<double> dist(mu, sigma);
+    double X = dist(gen);
     return X;
+}
+
+double NormPDF(double x, double mu, double sigma)
+{
+    boost::math::normal_distribution<double> dist(mu, sigma);
+    return boost::math::pdf(dist, x);
 }
 
 // random draw X ~ Cat(p), where p is a vector of (unnormalized) categorical probabilities
@@ -92,8 +106,8 @@ double NormRnd(double mu, double sigma)
 //
 int CatRnd(const std::vector<double> &p)
 {
-    std::discrete_distribution<int> dis(p.begin(), p.end());
-    int X = dis(gen);
+    std::discrete_distribution<int> dist(p.begin(), p.end());
+    int X = dist(gen);
     return X;
 }
 
@@ -257,9 +271,12 @@ class Hierarchy
 
         void InitFromMATLAB(StructArray const matlabStructArrayH);
         void InitFromPrior(const Data &D, const Hyperparams &h);
-
         void PopulateCnt();
+
         void Print();
+
+        double LogPrior(const Data &D, const Hyperparams &h);
+        double LogLik(const Data &D, const Hyperparams &h);
 
         int N;
         int *c;
@@ -285,9 +302,9 @@ void Hierarchy::PopulateCnt()
         this->cnt[this->c[i] - 1]++;
     }
     DEBUG_PRINT("H.cnt = [");
-    for (int i = 0; i < K; i++)
+    for (int k = 0; k < K; k++)
     {
-        DEBUG_PRINT("%d ", this->cnt[i]);
+        DEBUG_PRINT("%d ", this->cnt[k]);
     }
     DEBUG_PRINT("]\n");
 }
@@ -375,7 +392,7 @@ void Hierarchy::InitFromPrior(const Data &D, const Hyperparams &h)
     {
         std::vector<double> p(this->cnt.begin(), this->cnt.end()); // TODO optimize -- no need to copy, could be done in O(1)
         p.push_back(h.alpha);
-        int c_new = CatRnd(p) + 1;
+        int c_new = CatRnd(p) + 1; // careful with off-by-one
         if (c_new - 1 >= this->cnt.size())
         {
             this->cnt.push_back(1);
@@ -403,7 +420,7 @@ void Hierarchy::InitFromPrior(const Data &D, const Hyperparams &h)
 
     for (int i = 0; i < D.G.N; i++)
     {
-        this->mu[i] = NormRnd(this->theta[this->c[i]], h.std_mu);
+        this->mu[i] = NormRnd(this->theta[this->c[i] - 1], h.std_mu);
     }
 }
 
@@ -420,6 +437,74 @@ Hierarchy::~Hierarchy()
     delete [] c;
     delete [] mu;
 }
+
+double Hierarchy::LogPrior(const Data &D, const Hyperparams &h)
+{
+    double logP = 0;
+
+    // cluster assignments
+    //
+    std::vector<int> cnt(this->cnt.size()); // temporary count
+    cnt[this->c[0] - 1] = 1;
+    for (int i = 1; i < this->N; i++)
+    {
+        int c = this->c[i];
+        assert(c <= this->cnt.size());
+        if (cnt[c - 1] == 0)
+        {
+            logP += log(h.alpha) - log(i + h.alpha);
+        }
+        else
+        {
+            logP += log(cnt[c - 1]) - log(i + h.alpha);
+        }
+        cnt[c - 1]++;
+    }
+
+    // TODO optimize by having beta for object
+    logP += log(BetaPDF(this->p, 1, 1)) + log(BetaPDF(this->q, 1, 1)) + log(BetaPDF(this->tp, 1, 1)) + log(BetaPDF(this->hp, 1, 1));// TODO const
+
+    // cluster rewards
+    //
+    assert(this->cnt.size() == this->theta.size());
+    for (int k = 0; k < this->theta.size(); k++)
+    {
+        // TODO optimize with norm dists for each k for H
+        logP += log(NormPDF(this->theta[k], h.theta_mean, h.std_theta));
+    }
+
+    // state rewards
+    //
+    for (int i = 0; i < this->N; i++)
+    {
+        logP += log(NormPDF(this->mu[i], this->theta[this->c[i] - 1], h.std_mu));
+    }
+
+    // prevent -Infs = impossible events; equivalent to using a Gaussian + uniform mixture
+    //
+    if (isinf(logP))
+    {
+        logP = 1e-100;
+    }
+}
+
+double Hierarchy::LogLik(const Data &D, const Hyperparams &h)
+{
+}
+
+
+std::vector<Hierarchy> sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin, const int lag, Hierarchy H)
+{
+    std::vector<double> post;
+
+    for (int n = 0; n < nsamples * lag + burnin; n++)
+    {
+        for (int i = 0; i < D.G.N; i++)
+        {
+        }
+    }
+}
+
 
 
 class MexFunction : public Function {
@@ -570,6 +655,10 @@ public:
     }
 
     H.Print();
+
+
+    std::vector<Hierarchy> samples = sample(D, h, nsamples, burnin, lag, H);
+
 
     // read up on https://www.mathworks.com/help/matlab/apiref/matlab.data.arrayfactory.html?searchHighlight=createarray&s_tid=doc_srchtitle#bvn7dve-1
     ArrayFactory factory;   
