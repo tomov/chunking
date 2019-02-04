@@ -577,54 +577,16 @@ public:
     // see https://www.mathworks.com/help/matlab/matlab_external/create-struct-arrays-1.html
     StructArray resultH = factory.createStructArray({ 1,1 }, MexFunction::fieldNamesH ); // dims, fieldNames
 
-   // resultH[0]["c"] = factory.createArray<double>({1, (size_t)H.N}, (const double*)H.c, (const double*)(H.c + H.N));
-    resultH[0]["c"] = factory.createArray<double>({1, 6}, {1, 2, 3, 4, 5, 6});
-    DEBUG_PRINT("c\n");
+    //resultH[0]["c"] = factory.createArray<int>({1, (size_t)H.N}, (const int*)H.c, (const int*)(H.c + H.N)); // double is the default in MATLAB; having int here introduces complications...
+    std::vector<double> c(H.c, H.c + H.N);
+    resultH[0]["c"] = factory.createArray<std::vector<double>::iterator, double>({1, (size_t)H.N}, c.begin(), c.end());
     resultH[0]["p"] = factory.createScalar<double>(H.p);
-    DEBUG_PRINT("p\n");
     resultH[0]["q"] = factory.createScalar<double>(H.q);
-    DEBUG_PRINT("q\n");
     resultH[0]["tp"] = factory.createScalar<double>(H.tp);
-    DEBUG_PRINT("tp\n");
     resultH[0]["hp"] = factory.createScalar<double>(H.hp);
-    DEBUG_PRINT("hp\n");
-   // double *theta = new double[H.theta.size()];
-    DEBUG_PRINT("pre theta 1\n");
-   // for (int i = 0; i < H.theta.size(); i++)
-   // {
-   //     theta[i] = H.theta[i];
-   //     DEBUG_PRINT("pre theta    s %d\n", i);
-   // }
-    DEBUG_PRINT("preee theta");
-    //resultH[0]["theta"] = factory.createArray<double>({1, H.theta.size()}, (const double*)theta, (const double*)(theta + H.theta.size()));
-    //resultH[0]["theta"] = factory.createArray<std::vector<double>::iterator, double>({1, H.theta.size()}, H.theta.begin(), H.theta.end());
-    resultH[0]["theta"] = factory.createArray<double>({1, 4}, {0.1, 35.3, 34.5, 12.33});
-    //resultH[0]["theta"] = factory.createArray<double>({1, 4}, {1, 2, 3, 4});
-    DEBUG_PRINT("thetaaa\n");
-    //delete [] theta;
-    DEBUG_PRINT("theta\n");
-    //resultH[0]["mu"] = factory.createArray<double>({1, (size_t)H.N}, (const double*)H.mu, (const double*)(H.mu + H.N));
-    resultH[0]["mu"] = factory.createArray<double>({1, 4}, {1000.1, 9935.3, 9934.5, 9912.33});
-    DEBUG_PRINT("mu\n");
+    resultH[0]["theta"] = factory.createArray<std::vector<double>::iterator, double>({1, H.theta.size()}, H.theta.begin(), H.theta.end());
+    resultH[0]["mu"] = factory.createArray<double>({1, (size_t)H.N}, (const double*)H.mu, (const double*)(H.mu + H.N));
 
-    /*
-    size_t n = 10; // # of H's
-   
-    StructArray resultH = factory.createStructArray({ 1,n }, MexFunction::fieldNamesH ); // dims, fieldNames
-    for (size_t i = 0; i < n; i++)
-    {
-        // see https://www.mathworks.com/help/matlab/apiref/matlab.data.arrayfactory.html#bvmdqqr-1
-        // and https://www.mathworks.com/help/matlab/apiref/matlab.data.arrayfactory.html
-        resultH[i]["c"] = factory.createArray<double>({1, 6}, {1, 2, 3, 4, 5, 6});
-        resultH[i]["p"] = factory.createScalar<double>(0.1);
-        resultH[i]["q"] = factory.createScalar<double>(0.1);
-        resultH[i]["tp"] = factory.createScalar<double>(0.1);
-        resultH[i]["hp"] = factory.createScalar<double>(0.1);
-        resultH[i]["theta"] = factory.createArray<double>({1, 4}, {0.1, 35.3, 34.5, 12.33});
-        resultH[i]["mu"] = factory.createArray<double>({1, 4}, {1000.1, 9935.3, 9934.5, 9912.33});
-    }
-    */
-    
     outputs[0] = resultH;
   }
 
@@ -674,7 +636,7 @@ public:
                   /* Produce error if name is not a valid character array. */
                   if (structField.getType() != expectedFieldTypes[i])
                   {
-                      sprintf(err, "Struct %s has field %s on index %zu has invalid type", name.c_str(), expectedFieldNames[i].c_str(), entryIndex);
+                      sprintf(err, "Struct %s field %s on index %zu has invalid type", name.c_str(), expectedFieldNames[i].c_str(), entryIndex);
                       displayError(err);
                   }
               }
