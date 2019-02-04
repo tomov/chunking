@@ -60,7 +60,7 @@ function logp = loglik(H, D, h)
     end
 
     % bridges
-    for k = 1:N
+    for k = 1:N % TODO bug? max(H.c)?
         if cnt(k) > 0
             for l = 1:k-1
                 if cnt(l) > 0 && E(k,l)

@@ -139,6 +139,7 @@ class Data
             int **E;
             int N;
             std::vector<Edge> edges;
+            std::vector<int> *adj;
         };
 
         //std::string name;
@@ -165,12 +166,14 @@ Data::Data(StructArray const matlabStructArrayD)
 
 	DEBUG_PRINT("G.E = \n");
     G.E = new int*[G.N];
+    G.adj = new std::vector<int>[G.N];
     for (int i = 0; i < G.N; i++)
     {
         G.E[i] = new int[G.N];
         for (int j = 0; j < G.N; j++)
         {
             G.E[i][j] = (int)_E[i][j];
+            G.adj[i].push_back(j);
             DEBUG_PRINT("%d ", G.E[i][j]);
         }
         DEBUG_PRINT("\n");
@@ -224,6 +227,7 @@ Data::~Data()
         delete [] G.E[i];
     }
     delete [] G.E;
+    delete [] G.adj;
     delete [] rewards;
 }
 
@@ -440,6 +444,8 @@ Hierarchy::~Hierarchy()
 
 double Hierarchy::LogPrior(const Data &D, const Hyperparams &h)
 {
+    assert(D.G.N == this->N);
+
     double logP = 0;
 
     // cluster assignments
@@ -462,6 +468,7 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h)
     }
 
     // TODO optimize by having beta for object
+    // TODO or marginalize over them
     logP += log(BetaPDF(this->p, 1, 1)) + log(BetaPDF(this->q, 1, 1)) + log(BetaPDF(this->tp, 1, 1)) + log(BetaPDF(this->hp, 1, 1));// TODO const
 
     // cluster rewards
@@ -486,10 +493,187 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h)
     {
         logP = 1e-100;
     }
+
+    return logP;
 }
 
 double Hierarchy::LogLik(const Data &D, const Hyperparams &h)
 {
+    assert(D.G.N == this->N);
+
+    double logP = 0;
+
+    // connectivity
+    //
+    for (int i = 0; i < D.G.N; i++)
+    {
+        for (int j = 0; j < i - 1; j++)
+        {
+            if (this->c[i] == this->c[j])
+            {
+                if (D.G.E[i][j])
+                {
+                    logP += log(this->p);
+                }
+                else 
+                {
+                    logP += log(1 - this->p);
+                }
+            }
+            else
+            {
+                if (D.G.E[i][j])
+                {
+                    logP += log(this->p * this->q);
+                }
+                else 
+                {
+                    logP += log(1 - this->p * this->q);
+                }
+            }
+        }
+    }
+
+    // transitive closures
+    // TODO optimize the crap out of this
+    //
+    int A[this->N][this->N];
+    for (int i = 0; i < D.G.N; i++)
+    {
+        for (int j = 0; j < D.G.N; j++)
+        {
+            if (this->c[i] == this->c[j])
+            {
+                A[i][j] = D.G.E[i][j];
+            }
+        }
+    }
+    for (int k = 0; k < D.G.N; k++) 
+    {
+        for (int i = 0; i < D.G.N; i++)
+        {
+            if (this->c[i] != this->c[k])
+            {
+                continue;
+            }
+            for (int j = 0; j < D.G.N; j++)
+            {
+                if (this->c[i] != this->c[j])
+                {
+                    continue;
+                }
+                A[i][j] = A[i][j] || (A[i][k] && A[k][j]);
+            }
+        }
+    }
+
+    // penalize disconnected chunks
+    //
+    for (int i = 0; i < D.G.N; i++)
+    {
+        for (int j = 0; j < D.G.N; j++)
+        {
+            if (this->c[i] == this->c[j] && !A[i][j])
+            {
+                logP -= 100;
+            }
+        }
+    }
+
+    // get_H_E
+    int K = this->cnt.size();
+    int E[K][K];
+    for (int i = 0; i < this->N; i++)
+    {
+        for (int j = 0; j < i; j++)
+        {
+            if (this->c[i] == this->c[j] && D.G.E[i][j])
+            {
+                E[this->c[i] - 1][this->c[j] - 1] = 1;
+                E[this->c[j] - 1][this->c[i] - 1] = 1;
+            }
+        }
+    }
+
+    // (hierarchical) edges
+    // TODO sample them too, or marginalize over them
+    //
+    for (int k = 0; k < K; k++)
+    {
+        if (this->cnt[k] == 0)
+        {
+            continue;
+        }
+        for (int l = 0; l < K; l++)
+        {
+            if (this->cnt[l] == 0)
+            {
+                continue;
+            }
+            if (E[k][l])
+            {
+                logP += log(this->hp);
+            }
+            else
+            {
+                logP += log(1 - this->hp);
+            }
+        }
+    }
+
+    // bridges
+    //
+    for (int k = 0; k < K; k++)
+    {
+        if (this->cnt[k] == 0)
+        {
+            continue;
+        }
+        for (int l = 0; l < k; l++)
+        {
+            if (this->cnt[l] == 0)
+            {
+                continue;
+            }
+            if (E[k][l])
+            {
+                logP += log(1) - log(this->cnt[k]) - log(this->cnt[l]);
+                logP -= log(this->p * this->q); // b/c the bridge is always there, but we penalized / overcounted the corresponding edge when accounting for the connectivity of G
+            }
+        }
+    }
+
+    // tasks
+    //
+    for (int i = 0; i < D.tasks.size(); i++)
+    {
+        int s = D.tasks[i].s;
+        logP += log(1) - log(this->N);
+
+        int g = D.tasks[i].g;
+        if (this->c[s] == this->c[g])
+        {
+            logP += log(1);
+        }
+        else
+        {
+            logP += log(this->tp);
+        }
+        double denom = this->cnt[this->c[s] - 1] + (this->N - this->cnt[this->c[s] - 1]) * this->tp;
+        logP -= log(denom);
+    }
+
+    // rewards
+    //
+    for (int i = 0; i < this->N; i++)
+    {
+        for (int o = 0; o < D.rewards[i].size(); o++)
+        {
+            logP += log(NormPDF(D.rewards[i][o], this->mu[i], h.std_r));
+        }
+    }
+
+    return logP;
 }
 
 
@@ -501,6 +685,7 @@ std::vector<Hierarchy> sample(const Data &D, const Hyperparams &h, const int nsa
     {
         for (int i = 0; i < D.G.N; i++)
         {
+            // TODO
         }
     }
 }
