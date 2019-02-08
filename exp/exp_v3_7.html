@@ -1,0 +1,267 @@
+<html>
+<head>
+    <title> Subway Navigation </title>
+    <!--Load in ajax and jquery related API's-->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="jquery-1.10.2.min.js"></script>
+    <script type ="text/javascript" src ="exp_v3_7.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+</head>
+
+<!-- exp_v3_1 copy but with subway 10 (full view map) -->
+<!-- with flipping and no test trial warning -->
+
+
+<body>
+
+  <script type="text/javascript"> document.body.addEventListener('keydown', checkKeyPressed); </script>
+
+  <div  id = "captcha" data-type="image" class="g-recaptcha" data-sitekey="6Lcv-WkUAAAAAEdcoHLA76IUW4_6tUkw1e-L5nUy" data-callback="correctCaptcha" style="position:absolute; top:650px;left:600px;"></div>
+
+
+  <div id="consent_page" style = "font-size: 20px; display: block;" align = "center">
+      <h3>Consent form for participation in this online experiment</h3>
+      <p>
+          Designed by: Momchil Tomov<br>
+      </p>
+      <p>Before you decide whether you want to take part, it is important for you to <br>read the following information carefully.</p>
+      <p>The study provides information about the nature of learning and decision making</p>
+      <p>The study will take about <b>10 minutes on average</b>. You will <b>receive $2</b> for your participation.</p>
+      <p>If you have any suggestions on how we can improve this or future HITs, <br> please do not hesitate to get in touch.</p>
+      <br>
+      <p>By clicking on the button below, you agree to the following:</p>
+      <p>I have read the above information.</p>
+      <p>I understand that I am free to withdraw from the study without penalty if I so wish.</p>
+      <p>I understand that my information will be treated as strictly confidential and handled in <br>accordance with the Data Protection Act 1998. </p>
+      <p>I understand that the information I have submitted will be published as a report; <br>confidentiality and anonymity will be maintained.</p>
+      <br>
+      <button type="button" name="button" style="font-size: 22px;" id="agree" ;>Agree</button>
+  </div>
+
+
+  <div id="instruction_page" style="font-size: 22px; display:block;" align = "center" >
+      <h2>Subway Navigation</h2>
+      <p>Imagine you are a tourist and you have to navigate the subway network in an unfamiliar town.</p>
+      <p>On each trial, you will have to navigate from a starting station to a goal station, which will appear on the screen for 2 seconds:</p>
+      <p><img src="images/new_trial_map.png" height="300px" ></p>
+      <p>You can plan your trip during those 2 seconds. After that, your trip will begin.</p>
+      <p>During your trip, you will see a map of the subway system. The current station will be highlighted with a thick border. The goal station will be in green:</p>
+      <p><img src="images/trial_map.png" height="300px"></p>
+      <p>You can navigate between stations using the <b>arrow keys</b> (up, down, left, right).</p>
+      <p>Once you reach the goal station, press the <b>space key</b> to end the trial and start the next trial:</p>
+      <p><img src="images/success_map.png" height="300px"></p>
+      <p>There will be 81 trials in the experiment. All stations are named after cities.</p>
+      <p>The experiment can only be performed on a computer. Please disable any ad-blockers before starting the experiment.</p>
+      <button type="button" id="continue" style="font-size: 22px;">Continue</button>
+
+      <br/><br/>
+      <textarea id="experiment" rows=30 cols=20 hidden>
+            118
+2 -1 -1 6 -5 -4
+3 -1 1 7 -4 -4
+4 101 2 8 -3 -4
+5 -1 3 9 -2 -4
+-1 -1 4 10 -1 -4
+7 1 -1 11 -5 -3
+8 2 6 12 -4 -3
+9 3 7 13 -3 -3
+10 4 8 14 -2 -3
+-1 5 9 15 -1 -3
+12 6 -1 16 -5 -2
+13 7 11 17 -4 -2
+14 8 12 18 -3 -2
+15 9 13 19 -2 -2
+-1 10 14 20 -1 -2
+17 11 -1 21 -5 -1
+18 12 16 22 -4 -1
+19 13 17 23 -3 -1
+20 14 18 24 -2 -1
+-1 15 19 25 -1 -1
+22 16 -1 26 -5 0
+23 17 21 27 -4 0
+24 18 22 28 -3 0
+25 19 23 29 -2 0
+-1 20 24 30 -1 0
+27 21 -1 31 -5 1
+28 22 26 32 -4 1
+29 23 27 33 -3 1
+30 24 28 34 -2 1
+-1 25 29 35 -1 1
+32 26 -1 36 -5 2
+33 27 31 37 -4 2
+34 28 32 38 -3 2
+35 29 33 39 -2 2
+-1 30 34 40 -1 2
+37 31 -1 41 -5 3
+38 32 36 42 -4 3
+39 33 37 43 -3 3
+40 34 38 44 -2 3
+-1 35 39 45 -1 3
+42 36 -1 46 -5 4
+43 37 41 47 -4 4
+44 38 42 48 -3 4
+45 39 43 49 -2 4
+-1 40 44 50 -1 4
+47 41 -1 -1 -5 5
+48 42 46 -1 -4 5
+49 43 47 110 -3 5
+50 44 48 -1 -2 5
+-1 45 49 -1 -1 5
+52 -1 -1 56 3 -4
+53 -1 51 57 4 -4
+54 109 52 58 5 -4
+55 -1 53 59 6 -4
+-1 -1 54 60 7 -4
+57 51 -1 61 3 -3
+58 52 56 62 4 -3
+59 53 57 63 5 -3
+60 54 58 64 6 -3
+-1 55 59 65 7 -3
+62 56 -1 66 3 -2
+63 57 61 67 4 -2
+64 58 62 68 5 -2
+65 59 63 69 6 -2
+-1 60 64 70 7 -2
+67 61 -1 71 3 -1
+68 62 66 72 4 -1
+69 63 67 73 5 -1
+70 64 68 74 6 -1
+-1 65 69 75 7 -1
+72 66 -1 76 3 0
+73 67 71 77 4 0
+74 68 72 78 5 0
+75 69 73 79 6 0
+-1 70 74 80 7 0
+77 71 -1 81 3 1
+78 72 76 82 4 1
+79 73 77 83 5 1
+80 74 78 84 6 1
+-1 75 79 85 7 1
+82 76 -1 86 3 2
+83 77 81 87 4 2
+84 78 82 88 5 2
+85 79 83 89 6 2
+-1 80 84 90 7 2
+87 81 -1 91 3 3
+88 82 86 92 4 3
+89 83 87 93 5 3
+90 84 88 94 6 3
+-1 85 89 95 7 3
+92 86 -1 96 3 4
+93 87 91 97 4 4
+94 88 92 98 5 4
+95 89 93 99 6 4
+-1 90 94 100 7 4
+97 91 -1 -1 3 5
+98 92 96 -1 4 5
+99 93 97 118 5 5
+100 94 98 -1 6 5
+-1 95 99 -1 7 5
+102 -1 -1 3 -3 -5
+103 -1 101 -1 -2 -5
+104 -1 102 -1 -1 -5
+105 -1 103 -1 0 -5
+106 -1 104 -1 1 -5
+107 -1 105 -1 2 -5
+108 -1 106 -1 3 -5
+109 -1 107 -1 4 -5
+-1 -1 108 53 5 -5
+111 48 -1 -1 -3 6
+112 -1 110 -1 -2 6
+113 -1 111 -1 -1 6
+114 -1 112 -1 0 6
+115 -1 113 -1 1 6
+116 -1 114 -1 2 6
+117 -1 115 -1 3 6
+118 -1 116 -1 4 6
+-1 98 117 -1 5 6
+            9
+            1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 -> 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 x 30
+            26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 -> 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 x 30
+            51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 -> 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 x 30
+            -1 -> -1 x 10
+            105 -> 114 @ 1
+            105 -> 114 @ 22
+            105 -> 114 @ 53 
+            105 -> 114 @ 79
+            105 -> 114 @ 105
+            0
+      </textarea>
+  </div>
+
+
+  <div id = "new_trial_page" class="trial_page" >
+      <div style="position: absolute; left: 0; top: 30%; width: 100%; text-align: center;">
+          <p>From</p>
+          <h1 id="from_state">FROM</h1>
+          <h3>go to</h3>
+          <h1 id="to_state">TO</h1>
+      </div>
+  </div>
+
+  <div id = "trial_page" class="trial_page" >
+      <canvas id="map" width="1600" height="1200" style="padding-top: 5%; height: 80%;"> Your browser doesn't support HTML canvas. </canvas>
+
+      <p id="goal_state" style="position: absolute; left: 10%; top: 10%; text-align: left;">Goal</p>
+
+      <h1 id="message" style="position: absolute; left: 0; top: 60%; width: 100%; text-align: center;">message</h1>
+      <!-- <h1 id="countdown" style="position: absolute; left: 0; top: 80%; width: 100%; text-align: center;">countdown</h1> -->
+      <p id="tip" style="position: absolute; left: 0; top: 90%; width: 100%; text-align: center; color: grey;">Move using the <b>arrow keys</b> (up, down, left, right). Press <b>space</b> when you reach the goal.</p>
+  </div>
+
+  <div id="test_page" style="font-size: 22px; display:block;" align = "center" >
+      <div style="position: absolute; left: 0; top: 30%; width: 100%; text-align: center;">
+          <h2>Unreliable trips</h2>
+          <p>An accident has occurred and the subway system is now unreliable.</p>
+          <p>For the remaining trials, your trip may be interrupted and a new trial may begin automatically.</p>
+          <button type ="button" name ="button" id ="advance"; style="font-size: 22px;">Advance</button>
+      </div>
+  </div>
+
+  <div id = "final_page">
+      <p>Congratulations! You have completed the experiment. Your completion code is <img src="images/code5.png" ></p>
+  </div>
+
+
+  <script type="text/javascript">
+      $("#consent_page").hide();
+      $("#captcha").hide();
+      $("#instruction_page").hide();
+      $("#new_trial_page").show();
+      $("#trial_page").hide();
+      $("#test_page").hide();
+      $("#final_page").hide();
+ 
+      initExp(); // TODO RM
+
+      $("#agree").click(function () {
+        $("#captcha").show();
+
+        var response = grecaptcha.getResponse();
+        var correctCaptcha = function(response) {
+            console.log(response);
+            if (response.length == 0) console.log("You can't proceed!");
+            else {
+              $("#captcha").hide();
+              $("#consent_page").hide();
+              $("#instruction_page").show();
+            }
+        };
+
+        window.correctCaptcha = correctCaptcha;
+      })
+
+      $("#continue").click(function () {
+          $("#instruction_page").hide();
+          initExp();
+      })
+
+      $("#advance").click(function () {
+          $("#test_page").hide();
+          nextTrial();
+      })
+  </script>
+
+
+</body>
+</html>
