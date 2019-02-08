@@ -281,6 +281,7 @@ class Hierarchy
 
         double LogPrior(const Data &D, const Hyperparams &h);
         double LogLik(const Data &D, const Hyperparams &h);
+        double LogPost(const Data &D, const Hyperparams &h);
 
         int N;
         int *c;
@@ -675,6 +676,15 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h)
 
     return logP;
 }
+
+
+double Hierarchy::LogPost(const Data &D, const Hyperparams &h)
+{
+    double logP = this->LogPrior(D, h) + this->LogLik(D, h);
+    return logP;
+}
+
+
 
 
 std::vector<Hierarchy> sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin, const int lag, Hierarchy H)
