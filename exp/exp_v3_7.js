@@ -359,7 +359,7 @@ function checkKeyPressed(e) {
                     $("#message").text("SUCCESS!!");
                     in_trial = false;
                     logTrial();
-                    sleep(1000).then(() => {
+                    sleep(500).then(() => {
                         nextTrial();
                     });
                 } else {
@@ -422,10 +422,8 @@ function redraw() {
     //scale = 300;
     scale = 60;
 
-    //xoffs = canvas.width / 2 - (Math.max(...exp.x) - Math.min(...exp.x)) * scale / 2;
-    //yoffs = canvas.height / 2 - (Math.max(...exp.y) - Math.min(...exp.y)) * scale / 2 + 200;
-    xoffs = canvas.width / 2;
-    yoffs = canvas.height / 2;
+    xoffs = canvas.width / 2 - (Math.max(...exp.x) + Math.min(...exp.x)) * scale / 2;
+    yoffs = canvas.height / 2 - (Math.max(...exp.y) + Math.min(...exp.y)) * scale / 2;
 
     // edges
     for (var i = 0; i < exp.N; i++) {
