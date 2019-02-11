@@ -44,7 +44,7 @@
       <p>Imagine you are a mail carrier and you have to deliver mail between locations in a city.</p>
       <p>On each trial, you will have to navigate from a starting location to a goal location in a grid which represents the city:</p>
       <p><img src="images/mail_trial.png" height="300px" ></p>
-      <p>Locations are represented by squares connected by lines which represent streets.</p>
+      <p>Squares represent locations. Lines represent streets connecting the locations.</p>
       <p>Your current location will have a thick border. The goal location will be in green:</p>
       <p><img src="images/mail_cur.png" height="300px" >  <img src="images/mail_goal.png" height="300px" ></p>
       <p>You can navigate between locations using the <b>arrow keys</b> (up, down, left, right).</p>
@@ -176,7 +176,7 @@
 118 -1 116 -1 4 6
 -1 98 117 -1 5 6
             9
-            11 12 13 14 15 16 17 18 19 20 -> 1 2 3 4 5 6 7 8 9 10  x 50
+            11 12 13 14 15 16 17 18 19 20 -> 1 2 3 4 5 6 7 8 9 10 x 50
             41 42 43 44 45 46 47 48 49 50 -> 31 32 33 34 35 36 37 38 39 40 x 50
             91 92 93 94 95 96 97 98 99 100 -> 51 52 53 54 55 56 57 58 59 60 x 50
             -1 -> -1 x 10
@@ -225,9 +225,9 @@
 
 
   <script type="text/javascript">
-      $("#consent_page").hide();
+      $("#consent_page").show();
       $("#captcha").hide();
-      $("#instruction_page").show();
+      $("#instruction_page").hide();
       $("#new_trial_page").hide();
       $("#trial_page").hide();
       $("#test_page").hide();
