@@ -473,7 +473,7 @@ function redraw() {
         //ctx.fillText(exp.names[i] + ' (' + (i+1).toString() + ')', exp.x[i] * scale + xoffs, exp.y[i] * scale + yoffs);
     }
 
-    $("#goal_state").text("Go to " + goal_name);
+    //$("#goal_state").text("Go to " + goal_name);
 
     $("#from_state").text(start_name);
     $("#to_state").text(goal_name);
