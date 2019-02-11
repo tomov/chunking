@@ -159,21 +159,21 @@ function genExp(exp) {
     exp.test_trials = genTrials(exp.test);
 
     // randomly flip graph
-    //exp.flip = Math.floor(Math.random() * 2);
-    //if (exp.flip) {
-    //    var maxx = -Infinity;
-    //    for (var i = 0; i < exp.N; i++) {
-    //        var tmp = exp.adj[i][0];
-    //        exp.adj[i][0] = exp.adj[i][2];
-    //        exp.adj[i][2] = tmp;
-    //        if (exp.x[i] > maxx) {
-    //            maxx = exp.x[i];
-    //        }
-    //    }
-    //    for (var i = 0; i < exp.N; i++) {
-    //        exp.x[i] = maxx - exp.x[i];
-    //    }
-    //}
+    exp.flip = Math.floor(Math.random() * 2);
+    if (exp.flip) {
+        var maxx = -Infinity;
+        for (var i = 0; i < exp.N; i++) {
+            var tmp = exp.adj[i][0];
+            exp.adj[i][0] = exp.adj[i][2];
+            exp.adj[i][2] = tmp;
+            if (exp.x[i] > maxx) {
+                maxx = exp.x[i];
+            }
+        }
+        for (var i = 0; i < exp.N; i++) {
+            exp.x[i] = maxx - exp.x[i];
+        }
+    }
     
 
     // optionally rotate graph
@@ -292,7 +292,7 @@ function nextTrial() {
     $("#new_trial_page").show();
 
     // countdown
-    sleep(2000).then(() => {
+    sleep(50).then(() => {
         $("#new_trial_page").hide();
         $("#trial_page").show();
 
@@ -422,8 +422,10 @@ function redraw() {
     //scale = 300;
     scale = 60;
 
-    xoffs = canvas.width / 2 - (Math.max(...exp.x) - Math.min(...exp.x)) * scale / 2;
-    yoffs = canvas.height / 2 - (Math.max(...exp.y) - Math.min(...exp.y)) * scale / 2 + 200;
+    //xoffs = canvas.width / 2 - (Math.max(...exp.x) - Math.min(...exp.x)) * scale / 2;
+    //yoffs = canvas.height / 2 - (Math.max(...exp.y) - Math.min(...exp.y)) * scale / 2 + 200;
+    xoffs = canvas.width / 2;
+    yoffs = canvas.height / 2;
 
     // edges
     for (var i = 0; i < exp.N; i++) {
@@ -444,10 +446,14 @@ function redraw() {
     for (var i = 0; i < exp.N; i++) {
         ctx.beginPath();
         ctx.rect(exp.x[i] * scale + xoffs - 0.25 * scale, exp.y[i] * scale + yoffs - 0.25 * scale, 0.5 * scale, 0.50 * scale);
-        ctx.fillStyle = "black"; 
+        if (i == goal - 1) {
+            ctx.fillStyle = green; 
+        } else {
+            ctx.fillStyle = "black"; 
+        }
         ctx.fill();
         if (i == cur - 1) {
-            ctx.lineWidth = 10;
+            ctx.lineWidth = 12;
         } else {
             ctx.lineWidth = 2;
         }
@@ -463,7 +469,7 @@ function redraw() {
             ctx.font = "10px Ariel";
         }
         ctx.textAlign = "center";
-        ctx.fillText(exp.names[i], exp.x[i] * scale + xoffs, exp.y[i] * scale + yoffs);
+        //ctx.fillText(exp.names[i], exp.x[i] * scale + xoffs, exp.y[i] * scale + yoffs);
         //ctx.fillText(exp.names[i] + ' (' + (i+1).toString() + ')', exp.x[i] * scale + xoffs, exp.y[i] * scale + yoffs);
     }
 

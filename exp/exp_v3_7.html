@@ -26,7 +26,7 @@
       </p>
       <p>Before you decide whether you want to take part, it is important for you to <br>read the following information carefully.</p>
       <p>The study provides information about the nature of learning and decision making</p>
-      <p>The study will take about <b>10 minutes on average</b>. You will <b>receive $2</b> for your participation.</p>
+      <p>The study will take about <b>15 minutes on average</b>. You will <b>receive $2.5</b> for your participation.</p>
       <p>If you have any suggestions on how we can improve this or future HITs, <br> please do not hesitate to get in touch.</p>
       <br>
       <p>By clicking on the button below, you agree to the following:</p>
@@ -40,17 +40,17 @@
 
 
   <div id="instruction_page" style="font-size: 22px; display:block;" align = "center" >
-      <h2>Subway Navigation</h2>
-      <p>Imagine you are a tourist and you have to navigate the subway network in an unfamiliar town.</p>
-      <p>On each trial, you will have to navigate from a starting station to a goal station, which will appear on the screen for 2 seconds:</p>
-      <p><img src="images/new_trial_map.png" height="300px" ></p>
-      <p>You can plan your trip during those 2 seconds. After that, your trip will begin.</p>
-      <p>During your trip, you will see a map of the subway system. The current station will be highlighted with a thick border. The goal station will be in green:</p>
-      <p><img src="images/trial_map.png" height="300px"></p>
-      <p>You can navigate between stations using the <b>arrow keys</b> (up, down, left, right).</p>
-      <p>Once you reach the goal station, press the <b>space key</b> to end the trial and start the next trial:</p>
-      <p><img src="images/success_map.png" height="300px"></p>
-      <p>There will be 81 trials in the experiment. All stations are named after cities.</p>
+      <h2>Mail Delivery</h2>
+      <p>Imagine you are a mail carrier and you have to deliver mail between locations in a city.</p>
+      <p>On each trial, you will have to navigate from a starting location to a goal location in a grid which represents the city:</p>
+      <p><img src="images/mail_trial.png" height="300px" ></p>
+      <p>Locations are represented by squares connected by lines which represent streets.</p>
+      <p>Your current location will have a thick border. The goal location will be in green:</p>
+      <p><img src="images/mail_cur.png" height="300px" >  <img src="images/mail_goal.png" height="300px" ></p>
+      <p>You can navigate between locations using the <b>arrow keys</b> (up, down, left, right).</p>
+      <p>Once you reach the goal location, press the <b>space key</b> to end the trial and start the next trial:</p>
+      <p><img src="images/mail_success.png" height="300px"></p>
+      <p>There will be 165 trials in the experiment.</p>
       <p>The experiment can only be performed on a computer. Please disable any ad-blockers before starting the experiment.</p>
       <button type="button" id="continue" style="font-size: 22px;">Continue</button>
 
@@ -176,15 +176,15 @@
 118 -1 116 -1 4 6
 -1 98 117 -1 5 6
             9
-            1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 -> 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 x 30
-            26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 -> 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 x 30
-            51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 -> 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 x 30
+            11 12 13 14 15 16 17 18 19 20 -> 1 2 3 4 5 6 7 8 9 10  x 50
+            41 42 43 44 45 46 47 48 49 50 -> 31 32 33 34 35 36 37 38 39 40 x 50
+            91 92 93 94 95 96 97 98 99 100 -> 51 52 53 54 55 56 57 58 59 60 x 50
             -1 -> -1 x 10
             105 -> 114 @ 1
-            105 -> 114 @ 22
-            105 -> 114 @ 53 
-            105 -> 114 @ 79
-            105 -> 114 @ 105
+            105 -> 114 @ 42
+            105 -> 114 @ 83 
+            105 -> 114 @ 124
+            105 -> 114 @ 165
             0
       </textarea>
   </div>
@@ -192,10 +192,11 @@
 
   <div id = "new_trial_page" class="trial_page" >
       <div style="position: absolute; left: 0; top: 30%; width: 100%; text-align: center;">
-          <p>From</p>
+<!--          <p>From</p>
           <h1 id="from_state">FROM</h1>
           <h3>go to</h3>
-          <h1 id="to_state">TO</h1>
+          <h1 id="to_state">TO</h1> 
+-->
       </div>
   </div>
 
@@ -204,7 +205,7 @@
 
       <p id="goal_state" style="position: absolute; left: 10%; top: 10%; text-align: left;">Goal</p>
 
-      <h1 id="message" style="position: absolute; left: 0; top: 60%; width: 100%; text-align: center;">message</h1>
+      <h1 id="message" style="position: absolute; left: 0; top: 80%; width: 100%; text-align: center;">message</h1>
       <!-- <h1 id="countdown" style="position: absolute; left: 0; top: 80%; width: 100%; text-align: center;">countdown</h1> -->
       <p id="tip" style="position: absolute; left: 0; top: 90%; width: 100%; text-align: center; color: grey;">Move using the <b>arrow keys</b> (up, down, left, right). Press <b>space</b> when you reach the goal.</p>
   </div>
@@ -226,13 +227,13 @@
   <script type="text/javascript">
       $("#consent_page").hide();
       $("#captcha").hide();
-      $("#instruction_page").hide();
-      $("#new_trial_page").show();
+      $("#instruction_page").show();
+      $("#new_trial_page").hide();
       $("#trial_page").hide();
       $("#test_page").hide();
       $("#final_page").hide();
  
-      initExp(); // TODO RM
+      //initExp(); // TODO RM
 
       $("#agree").click(function () {
         $("#captcha").show();
