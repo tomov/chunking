@@ -1,6 +1,7 @@
 % analyze behavioral data from chunking experiment
 
-[data, Ts] = load_data('exp/results', 165); % for exp_v3_7
+%[data, Ts] = load_data('exp/results', 165); % for exp_v3_7
+load data.mat
 
 sem = @(x) std(x) / sqrt(length(x));
 
@@ -114,6 +115,9 @@ nexts = [
 
 figure;
 
+
+ms = [];
+sems = [];
 for t = 1:length(start)
     which = s == start(t) & g == goal(t) & ord == ordinal(t); % ord is usually just 1
     move = dir(which);
@@ -123,6 +127,9 @@ for t = 1:length(start)
     d = abs(c1 - c2);
     n = sum(which);
     p = 2 * binopdf((n - d) / 2, n, 0.5);
+
+    ms = [ms mean(move == m(1))];
+    sems = [sems sem(move == m(1))];
 
     subplot(2,3,t);
     bar(1:2, [c1 c2]);
@@ -143,6 +150,15 @@ for t = 1:length(start)
     end
     %}
 end
+
+figure;
+hold on;
+bar(ms);
+errorbar(ms, sems, 'linestyle', 'none', 'color', 'black');
+plot([0 6], [0.5 0.5], '--', 'color', [0.5 0.5 0.5])
+hold off;
+ylabel('p(HBFS direction)');
+xlabel('probe trial');
 
 
 

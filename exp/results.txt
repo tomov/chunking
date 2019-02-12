@@ -157,3 +157,9 @@ exp_v4.html in master (mines 10 map)
         ARCHIVE/mines10_map_batch3
 
     merged in mines10_map
+    ...also see maybe_mines_10_wtf_idk
+
+exp_v3_7.html in master (mail big)
+
+     [Toyota] momchil mail exp_v3_7 (26b0a710bb8217af16d62f662f33d7bc62d842cb)
+     in exp_v3_7_mail_big_1_noeffect
