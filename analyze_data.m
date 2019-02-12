@@ -1,6 +1,6 @@
 % analyze behavioral data from chunking experiment
 
-[data, Ts] = load_data;
+[data, Ts] = load_data('exp/results', 165); % for exp_v3_7
 
 sem = @(x) std(x) / sqrt(length(x));
 
@@ -14,7 +14,7 @@ subj_group = [];
 subj_len = [];
 s_id = [];
 for subj = 1:size(data,1) % for each subject
-    phase = 2; % training
+    phase = 1; % training exp_v3_7, usually it's 2 = test
     for i = 1:length(data(subj, phase).s) % for each trial 
         which = find(data(subj, phase).s == data(subj, phase).s(i) & data(subj, phase).g == data(subj, phase).g(i));
         clear o;
@@ -55,17 +55,28 @@ ylabel('path length');
 
 % show test choices
 %
+% for mail delivery  exp_v3_7.html
+start = [105 105 105 105 105];
+goal = [114 114 114 114 114];
+ordinal = [1 2 3 4 5];
+nexts = [
+106 104;
+106 104;
+106 104;
+106 104;
+106 104
+];
 
 % for subway 10 and 9
-start = [6 7 3 1 2 8];
-goal = [1 2 8 6 7 3];
-nexts = [
-5 7;
-8 6;
-2 4;
-2 10;
-1 3;
-9 7];
+%start = [6 7 3 1 2 8];
+%goal = [1 2 8 6 7 3];
+%nexts = [
+%5 7;
+%8 6;
+%2 4;
+%2 10;
+%1 3;
+%9 7];
 
 % for subway 8
 %{
@@ -104,7 +115,7 @@ nexts = [
 figure;
 
 for t = 1:length(start)
-    which = s == start(t) & ord == 1;
+    which = s == start(t) & g == goal(t) & ord == ordinal(t); % ord is usually just 1
     move = dir(which);
     m = nexts(t,:);
     c1 = sum(move == m(1)); % count 1
