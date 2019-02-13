@@ -1,7 +1,8 @@
 % analyze behavioral data from chunking experiment
 
 %[data, Ts] = load_data('exp/results', 165); % for exp_v3_7
-load data.mat
+[data, Ts] = load_data('exp/results', 105); % for exp_v3_8
+%load data.mat
 
 sem = @(x) std(x) / sqrt(length(x));
 
@@ -54,19 +55,36 @@ errorbar(ms, es);
 xlabel('training trial');
 ylabel('path length');
 
+
+
+
 % show test choices
 %
-% for mail delivery  exp_v3_7.html
-start = [105 105 105 105 105];
-goal = [114 114 114 114 114];
+
+% for  exp_v3_8.html (subway 18 map)
+start = [6 6 6 6 6];
+goal = [1 1 1 1 1];
 ordinal = [1 2 3 4 5];
 nexts = [
-106 104;
-106 104;
-106 104;
-106 104;
-106 104
+7 5;
+7 5;
+7 5;
+7 5;
+7 5
 ];
+
+
+% for mail delivery  exp_v3_7.html
+%start = [105 105 105 105 105];
+%goal = [114 114 114 114 114];
+%ordinal = [1 2 3 4 5];
+%nexts = [
+%106 104;
+%106 104;
+%106 104;
+%106 104;
+%106 104
+%];
 
 % for subway 10 and 9
 %start = [6 7 3 1 2 8];
