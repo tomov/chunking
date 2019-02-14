@@ -55,36 +55,36 @@ function readExp() {
     }
 
     // read training tasks
-   // exp.ntrain = parseInt(lines[l], 10);
-   // l++;
-   // exp.train = [];
-   // for (var i = 0; i < exp.ntrain; i++) {
-   //     var a = lines[l].trim().split(" ");
-   //     l++;
-   //     var task = {};
-   //     task.s = parseInt(a[0], 10);
-   //     task.g = parseInt(a[1], 10);
-   //     task.n = parseInt(a[2], 10);
-   //     exp.train.push(task);
-   // }
+    //exp.ntrain = parseInt(lines[l], 10);
+    //l++;
+    //exp.train = [];
+    //for (var i = 0; i < exp.ntrain; i++) {
+    //    var a = lines[l].trim().split(" ");
+    //    l++;
+    //    var task = {};
+    //    task.s = parseInt(a[0], 10);
+    //    task.g = parseInt(a[1], 10);
+    //    task.n = parseInt(a[2], 10);
+    //    exp.train.push(task);
+    //}
     exp.ntrain = parseInt(lines[l], 10);
     l++;
     exp.train = readTasks(lines, l, exp.ntrain);
     l += exp.ntrain;
 
     // read test tasks
-   // exp.ntest = parseInt(lines[l], 10);
-   // l++;
-   // exp.test = [];
-   // for (var i = 0; i < exp.ntest; i++) {
-   //     var a = lines[l].trim().split(" ");
-   //     l++;
-   //     var task = {};
-   //     task.s = parseInt(a[0], 10);
-   //     task.g = parseInt(a[1], 10);
-   //     task.n = parseInt(a[2], 10);
-   //     exp.test.push(task);
-   // }
+    //exp.ntest = parseInt(lines[l], 10);
+    //l++;
+    //exp.test = [];
+    //for (var i = 0; i < exp.ntest; i++) {
+    //    var a = lines[l].trim().split(" ");
+    //    l++;
+    //    var task = {};
+    //    task.s = parseInt(a[0], 10);
+    //    task.g = parseInt(a[1], 10);
+    //    task.n = parseInt(a[2], 10);
+    //    exp.test.push(task);
+    //}
     exp.ntest = parseInt(lines[l], 10);
     l++;
     exp.test = readTasks(lines, l, exp.ntest);
@@ -100,7 +100,7 @@ function readTasks(lines, l, n) {
         var task = {};
 
         if (lines[l].includes("@")) {
-            // e.g. 1 -> 2 @ 10
+            // e.g. 1 -> 2 @ 10 
             // means put this task on trial #10
             //
             a = lines[l].trim().split("@");
@@ -132,6 +132,7 @@ function readTasks(lines, l, n) {
         }
 
         tasks.push(task);
+        l++;
     }
     return tasks;
 }
@@ -160,7 +161,7 @@ function genExp(exp) {
     }
 
     // optionally rotate graph
-    // DON'T do it -- key asymmetry
+    // DON'T do it -- left/right arrow keys are symmetrical; up/down not so much
     //exp.rotate = Math.floor(Math.random() * 4);
     //for (var i = 0; i < exp.N; i++) {
     //    var a = exp.adj[i].slice();
@@ -170,6 +171,7 @@ function genExp(exp) {
     //}
     return exp;
 }
+
 
 function genTrial(desc, j) {
     var task = {};
@@ -187,26 +189,27 @@ function genTrial(desc, j) {
     return task;
 }
 
- function genTrials(desc) {
-     trials = [];
-     for (var i = 0; i < desc.length; i++) {
-         for (var j = 0; j < desc[i].n; j++) {
+function genTrials(desc) {
+    trials = [];
+    for (var i = 0; i < desc.length; i++) {
+        for (var j = 0; j < desc[i].n; j++) {
             if (desc[i].pos != -1) {
                 continue;
-             }
+            }
             trials.push(genTrial(desc[i], j));
-         }
-     }
-     trials.sort(function(a, b) {return 0.5 - Math.random()});
+        }
+    }
+    trials.sort(function(a, b) {return 0.5 - Math.random()});
 
-     for (var i = 0; i < desc.length; i++) {
-         if (desc[i].pos == -1) {
-             continue;
-         }
-         trials.splice(desc[i].pos, 0, genTrial(desc[i], 1));
-     }
-     return trials;
+    for (var i = 0; i < desc.length; i++) {
+        if (desc[i].pos == -1) {
+            continue;
+        }
+        trials.splice(desc[i].pos, 0, genTrial(desc[i], 1));
+    }
+    return trials;
 }
+
 
 // Fisher-Yates (aka Knuth) Shuffle, from 
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -390,9 +393,9 @@ function logTrial() {
 
 
 function redraw() {
-    cur_name = exp.names[cur - 1];
-    start_name = exp.names[start - 1];
-    goal_name = exp.names[goal - 1];
+    cur_name = exp.names[cur - 1]; // + " (" + cur.toString() + ")";
+    start_name = exp.names[start - 1]; // + " (" + start.toString() + ")";
+    goal_name = exp.names[goal - 1]; // + " (" + goal.toString() + ")";
     var adj_names = [];
     for (var i = 0; i < 4; i++) {
         if (exp.adj[cur - 1][i] <= 0) {
