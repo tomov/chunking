@@ -151,12 +151,20 @@ function genExp(exp) {
     exp.test_trials = genTrials(exp.test);
 
     // randomly flip graph
-    exp.flip = Math.floor(Math.random() * 2);
-    if (exp.flip) {
+    exp.flip_horiz = Math.floor(Math.random() * 2);
+    if (exp.flip_horiz) {
         for (var i = 0; i < exp.N; i++) {
             var tmp = exp.adj[i][0];
             exp.adj[i][0] = exp.adj[i][2];
             exp.adj[i][2] = tmp;
+        }
+    }
+    exp.flip_vert = Math.floor(Math.random() * 2);
+    if (exp.flip_vert) {
+        for (var i = 0; i < exp.N; i++) {
+            var tmp = exp.adj[i][1];
+            exp.adj[i][1] = exp.adj[i][3];
+            exp.adj[i][3] = tmp;
         }
     }
 
