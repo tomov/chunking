@@ -1,7 +1,8 @@
 % analyze behavioral data from chunking experiment
 
-%[data, Ts] = load_data('exp/results', 165); % for exp_v3_7
-[data, Ts] = load_data('exp/results', 105); % for exp_v3_8
+%[data, Ts] = load_data('exp/results', 165); % for exp_v3_7 (mail delivery map aka exp 3 scaled up)
+%[data, Ts] = load_data('exp/results', 105); % for exp_v3_8 (subway 18 map aka mail delivery scaled down)
+[data, Ts] = load_data('exp/results', 81); % for exp_v1_6 (subway 10 but no assoc)
 %load data.mat
 
 sem = @(x) std(x) / sqrt(length(x));
@@ -61,17 +62,25 @@ ylabel('path length');
 % show test choices
 %
 
-% for  exp_v3_8.html (subway 18 map)
-start = [6 6 6 6 6];
-goal = [1 1 1 1 1];
-ordinal = [1 2 3 4 5];
+% for exp_v1_6.html (subway 10 no assoc)
+start = [6];
+goal = [1];
+ordinal = [1];
 nexts = [
-7 5;
-7 5;
-7 5;
-7 5;
 7 5
 ];
+
+% for  exp_v3_8.html (subway 18 map)
+%start = [6 6 6 6 6];
+%goal = [1 1 1 1 1];
+%ordinal = [1 2 3 4 5];
+%nexts = [
+%7 5;
+%7 5;
+%7 5;
+%7 5;
+%7 5
+%];
 
 
 % for mail delivery  exp_v3_7.html
@@ -158,6 +167,8 @@ for t = 1:length(start)
     hold off;
     xticklabels({num2str(m(1)), num2str(m(2))});
     title(sprintf('%d -> %d: p = %.3f (d = %d, n = %d)', start(t), goal(t), p, d, n));
+
+    fprintf('%d -> %d: p = %.3f (d = %d, n = %d)\n', start(t), goal(t), p, d, n);
     %ylim([4 5]);
 
     %{
@@ -177,6 +188,7 @@ plot([0 6], [0.5 0.5], '--', 'color', [0.5 0.5 0.5])
 hold off;
 ylabel('p(HBFS direction)');
 xlabel('probe trial');
+title(sprintf('N = %d', length(data)));
 
 
 
