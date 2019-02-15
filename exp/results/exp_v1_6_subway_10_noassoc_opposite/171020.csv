@@ -1,0 +1,7 @@
+group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot, timestamp, datetime
+A,171020,train,1,7,1 2 3 4 5 6 7,7,2125 1388 1385 1089 1009 1995 795 881,39 39 40 40 40 37 37 32,10667,1550171961.679,Thu Feb 14 2019 12:19:21 GMT-0700 (Mountain Standard Time)
+A,171020,train,10,7,10 9 8 7,4,586 1402 613 426,40 40 40 32,3027,1550171970.719,Thu Feb 14 2019 12:19:30 GMT-0700 (Mountain Standard Time)
+A,171020,train,10,7,10 9 8 7,4,708 475 637 536 653,40 40 32 40 32,3009,1550171979.74,Thu Feb 14 2019 12:19:39 GMT-0700 (Mountain Standard Time)
+A,171020,train,2,3,2 3,2,548 349,40 32,897,1550171986.649,Thu Feb 14 2019 12:19:46 GMT-0700 (Mountain Standard Time)
+A,171020,train,2,3,2 3,2,567 355,40 32,922,1550171993.583,Thu Feb 14 2019 12:19:53 GMT-0700 (Mountain Standard Time)
+A,171020,train,4,5,4 5,2,647 441,40 32,1088,1550172000.683,Thu Feb 14 2019 12:20:00 GMT-0700 (Mountain Standard Time)

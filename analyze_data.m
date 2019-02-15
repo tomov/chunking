@@ -184,7 +184,7 @@ figure;
 hold on;
 bar(ms);
 errorbar(ms, sems, 'linestyle', 'none', 'color', 'black');
-plot([0 6], [0.5 0.5], '--', 'color', [0.5 0.5 0.5])
+plot([0 2], [0.5 0.5], '--', 'color', [0.5 0.5 0.5])
 hold off;
 ylabel('p(HBFS direction)');
 xlabel('probe trial');
