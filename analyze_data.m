@@ -2,8 +2,9 @@
 
 %[data, Ts] = load_data('exp/results', 165); % for exp_v3_7 (mail delivery map aka exp 3 scaled up)
 %[data, Ts] = load_data('exp/results', 105); % for exp_v3_8 (subway 18 map aka mail delivery scaled down)
-[data, Ts] = load_data('exp/results', 81); % for exp_v1_6 (subway 10 but no assoc)
-%load data.mat
+%[data, Ts] = load_data('exp/results', 81); % for exp_v1_6 (subway 10 but no assoc)
+%[data, Ts] = load_data('exp/results', 101); % for exp_v2_1 (subway 10 no adj, no assoc)
+load data.mat
 
 sem = @(x) std(x) / sqrt(length(x));
 
@@ -52,10 +53,30 @@ for t = 1:length(data(1,1).len)
     es = [es e];
 end
 
+subplot(2,1,1);
 errorbar(ms, es);
 xlabel('training trial');
 ylabel('path length');
+title('all trials');
 
+
+% show learning on non-task trials
+
+len = [];
+for subj = 1:size(data,1)
+    which = ~ismember(data(subj,1).s, [2 4 10]) | ~ismember(data(subj,1).g, [3 5 7]);
+    l = data(subj,1).len(which);
+    l = [l nan(1, 41 - length(l))];
+    len = [len; l];
+end
+ms = mean(len, 1);
+sems = std(len, 1) / sqrt(size(len, 1));
+
+subplot(2,1,2);
+errorbar(ms, sems);
+xlabel('training trial');
+ylabel('path length');
+title('random trials');
 
 
 
