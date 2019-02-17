@@ -3,8 +3,8 @@
 %[data, Ts] = load_data('exp/results', 165); % for exp_v3_7 (mail delivery map aka exp 3 scaled up)
 %[data, Ts] = load_data('exp/results', 105); % for exp_v3_8 (subway 18 map aka mail delivery scaled down)
 %[data, Ts] = load_data('exp/results', 81); % for exp_v1_6 (subway 10 but no assoc)
-%[data, Ts] = load_data('exp/results', 101); % for exp_v2_1 (subway 10 no adj, no assoc)
-load data.mat
+[data, Ts] = load_data('exp/results', 101); % for exp_v2_1 (subway 10 no adj, no assoc)
+%load data.mat
 
 sem = @(x) std(x) / sqrt(length(x));
 
