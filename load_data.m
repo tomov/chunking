@@ -1,4 +1,4 @@
-function [data, Ts, f_chunk, RT_all, RT_new] = load_data(dirname, expected_number_of_rows)
+function [data, Ts, f_chunk, durs, RT_all, RT_new] = load_data(dirname, expected_number_of_rows)
 
     if ~exist('dirname', 'var')
         dirname = 'exp/results/mines10_map'; 
@@ -179,4 +179,4 @@ function [data, Ts, f_chunk, RT_all, RT_new] = load_data(dirname, expected_numbe
     durs = durs / 60;
     fprintf('avg duration = %.2f +- %.2f mins\n', mean(durs), std(durs)/sqrt(length(durs)));
 
-    save('data.mat', 'data', 'Ts');
+    save('data.mat', 'data', 'Ts', 'durs');

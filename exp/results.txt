@@ -169,6 +169,11 @@ exp_v3_8.html in master (subway 18 map)
     [Toyota] momchil mail exp_v3_8 (822173e72dc76cb11d1a8d4882bb3bf96918e989)
     in subway18_map_expv3_8_ns
 
+exp_v2_2.html in master (subway 18 no adj)
+
+    [Toyota] momchil subway 18 no adj exp_v2_2 (c2e1e3f8020e6874eec0538a90f42c8c70a0b8ad)
+    in exp_v2_2_subway18_noadj_noassoc
+
 exp_v1_6.html in master (subway 10 no assoc)
 
     [Toyota] momchil subway 10 exp_v1_6 (a8fa95ce099da630e88364e03857844b35ae6317)

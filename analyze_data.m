@@ -3,8 +3,11 @@
 %[data, Ts] = load_data('exp/results', 165); % for exp_v3_7 (mail delivery map aka exp 3 scaled up)
 %[data, Ts] = load_data('exp/results', 105); % for exp_v3_8 (subway 18 map aka mail delivery scaled down)
 %[data, Ts] = load_data('exp/results', 81); % for exp_v1_6 (subway 10 but no assoc)
-[data, Ts] = load_data('exp/results', 101); % for exp_v2_1 (subway 10 no adj, no assoc)
+%[data, Ts] = load_data('exp/results', 101); % for exp_v2_1 (subway 10 no adj, no assoc)
+%[data, Ts, ~, durs] = load_data('exp/results', 205); % for exp_v2_2 (subway 18 no adj, no assoc)
 %load data.mat
+
+%data = data(durs < 50, :);
 
 sem = @(x) std(x) / sqrt(length(x));
 
@@ -62,21 +65,22 @@ title('all trials');
 
 % show learning on non-task trials
 
-len = [];
-for subj = 1:size(data,1)
-    which = ~ismember(data(subj,1).s, [2 4 10]) | ~ismember(data(subj,1).g, [3 5 7]);
-    l = data(subj,1).len(which);
-    l = [l nan(1, 41 - length(l))];
-    len = [len; l];
-end
-ms = mean(len, 1);
-sems = std(len, 1) / sqrt(size(len, 1));
-
-subplot(2,1,2);
-errorbar(ms, sems);
-xlabel('training trial');
-ylabel('path length');
-title('random trials');
+% TODO it's hardcoded for exp_v1_6
+%len = [];
+%for subj = 1:size(data,1)
+%    which = ~ismember(data(subj,1).s, [2 4 10]) | ~ismember(data(subj,1).g, [3 5 7]);
+%    l = data(subj,1).len(which);
+%    l = [l nan(1, 41 - length(l))];
+%    len = [len; l];
+%end
+%ms = mean(len, 1);
+%sems = std(len, 1) / sqrt(size(len, 1));
+%
+%subplot(2,1,2);
+%errorbar(ms, sems);
+%xlabel('training trial');
+%ylabel('path length');
+%title('random trials');
 
 
 
@@ -84,24 +88,24 @@ title('random trials');
 %
 
 % for exp_v1_6.html (subway 10 no assoc)
-start = [6];
-goal = [1];
-ordinal = [1];
-nexts = [
-7 5
-];
-
-% for  exp_v3_8.html (subway 18 map)
-%start = [6 6 6 6 6];
-%goal = [1 1 1 1 1];
-%ordinal = [1 2 3 4 5];
+%start = [6];
+%goal = [1];
+%ordinal = [1];
 %nexts = [
-%7 5;
-%7 5;
-%7 5;
-%7 5;
 %7 5
 %];
+
+% for  exp_v3_8.html (subway 18 map) and exp_v2_2.html (subway 18 no adj)
+start = [6 6 6 6 6];
+goal = [1 1 1 1 1];
+ordinal = [1 2 3 4 5];
+nexts = [
+7 5;
+7 5;
+7 5;
+7 5;
+7 5
+];
 
 
 % for mail delivery  exp_v3_7.html
@@ -205,7 +209,7 @@ figure;
 hold on;
 bar(ms);
 errorbar(ms, sems, 'linestyle', 'none', 'color', 'black');
-plot([0 2], [0.5 0.5], '--', 'color', [0.5 0.5 0.5])
+plot([0 6], [0.5 0.5], '--', 'color', [0.5 0.5 0.5])
 hold off;
 ylabel('p(HBFS direction)');
 xlabel('probe trial');
