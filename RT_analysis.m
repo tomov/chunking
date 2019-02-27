@@ -68,7 +68,13 @@ action_chunk_RTs = [];
 state_chunk_RTs = [];
 bridge_RTs = [];
 
-% aggregate across datasets for more power
+% for fitglme
+rt = []; % all RTs
+type = []; % RT category 1 = action chunk, 2 = state chunk, 3 = bridge
+subject = [];  % subject
+experiment = []; %
+
+% aggregate across datasets for more power NOTE -- we only do the map ones
 %
 for f = 1:3  %length(dirname)
     fprintf('\n\n ---------------- Data dir %s -------------- \n\n', dirname{f});
@@ -175,19 +181,30 @@ for f = 1:3  %length(dirname)
                     v = path(j+1);
                     key = keys(j);
 
+                    % for fitglme
+                    rt = [rt; RT];
+                    subject = [subject; subj];
+                    experiment = [experiment; f];
+
                     if any(ismember(bridges{f}, [u v], 'rows'))
                         bridge_RTs = [bridge_RTs RT];
+                        type = [type; 3];
                     elseif any(ismember(action_chunk_transitions{f}, [u v], 'rows'))
                         action_chunk_RTs = [action_chunk_RTs RT];
+                        type = [type; 1];
                     else
                         assert(any(ismember(state_chunk_transitions{f}, [u v], 'rows')));
                         state_chunk_RTs = [state_chunk_RTs RT];
+                        type = [type; 2];
                     end
                 end
             end
         end
     end
 end
+
+type = categorical(type); % important! for fitglme
+experiment = categorical(experiment);
 
 %{
 [h, p, ci, stats] = ttest2(action_chunk_RTs, bridge_RTs);
@@ -230,5 +247,5 @@ errorbar(m, se, 'linestyle', 'none', 'color', 'black');
 ylabel('RT (ms)');
 xticklabels({'action chunks', 'state chunks', 'bridges'});
 
-save('RT_analysis.mat');
+save('RT_analysis_forglme.mat');
 
