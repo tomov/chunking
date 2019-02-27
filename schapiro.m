@@ -1,14 +1,21 @@
 % simulate experiment 1 from schapiro 2013
-
-clear all;
+function schapiro(N, h, nsamples)
 
 rng default;
 
 sem = @(x) std(x) / sqrt(length(x));
 
-N = 30; % participants
-h.alpha = 2;
-nsamples = 1000;
+if ~exist('N', 'var')
+    N = 30; % participants
+end
+if ~exist('h', 'var')
+    h = init_hyperparams;
+    h.alpha = 2;
+end
+if ~exist('nsamples', 'var')
+    nsamples = 1000;
+end
+
 nwalks = 18; % how many random walks or hamiltonians for each subject (based on paper)
 
 D = init_D_from_txt('schapiro.txt');
@@ -96,7 +103,7 @@ for s = 1:N % for each simulated subject
     other_p_hamil(s) = other_press_hamil / (other_press_hamil + other_nopress_hamil);
 end
 
-filename = sprintf('schapiro_alpha=%d_nsamples=%d.mat', h.alpha, nsamples);
+filename = sprintf('schapiro_N=%d_alpha=%.4f_nsamples=%d.mat', N, h.alpha, nsamples);
 save(filename);
 
 %load('schapiro.mat');

@@ -18,7 +18,7 @@ function logp = logprior(H, D, h)
     end
 
     % p's
-    logp = logp + log(betapdf(H.p,1,1)) + log(betapdf(H.q,1,1)) + log(betapdf(H.tp,1,1)) + log(betapdf(H.hp,1,1)); % TODO const
+    %logp = logp + log(betapdf(H.p,1,1)) + log(betapdf(H.q,1,1)) + log(betapdf(H.tp,1,1)) + log(betapdf(H.hp,1,1)); % TODO const; also removed b/c cluster MATLAB sucks
 
 
     % cluster rewards

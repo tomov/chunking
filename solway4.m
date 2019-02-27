@@ -1,14 +1,21 @@
 % simulate experiment 4 from solway 2014
 
-clear all;
+function solway4(N, h, nsamples)
 
 rng default;
 
 sem = @(x) std(x) / sqrt(length(x));
 
-N = 35; % participants
-h.alpha = 2;
-nsamples = 10000;
+if ~exist('N', 'var')
+    N = 35; % participants
+end
+if ~exist('h', 'var')
+    h = init_hyperparams;
+    h.alpha = 2;
+end
+if ~exist('nsamples', 'var')
+    nsamples = 10000;
+end
 
 D = init_D_from_txt('solway4.txt');
 
@@ -51,7 +58,7 @@ for subj = 1:N % for each simulated subject
     end
 end
 
-filename = sprintf('solway4_alpha=%d_nsamples=%d.mat', h.alpha, nsamples);
+filename = sprintf('solway4_N=%d_alpha=%.4f_nsamples=%d.mat', N, h.alpha, nsamples);
 save(filename);
 
 %load('solway4.mat');

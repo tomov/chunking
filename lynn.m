@@ -1,14 +1,23 @@
 % simulate RT experiment from Lynn et al. 2018
 
-clear all;
+
+function lynn(N, h, nsamples)
 
 rng default;
 
-%{
 sem = @(x) std(x) / sqrt(length(x));
 
-N = 78; % participants
-h.alpha = 5;
+if ~exist('N', 'var')
+    N = 78; % participants
+end
+if ~exist('h', 'var')
+    h = init_hyperparams;
+    h.alpha = 5;
+end
+if ~exist('nsamples', 'var')
+    nsamples = 1000;
+end
+
 
 nsteps = 1500;
 
@@ -20,12 +29,12 @@ for i = 4:-1:1 % important -- backwards
 end
 A(logical(eye(size(A)))) = 0; % never self-transition
 
-load('lynn.mat');
+%load('lynn.mat');
 
 for subj = 1:N % for each simulated subject
     fprintf('subject %d\n', subj);
 
-    [H, P] = sample(D, h, 1000);
+    [H, P] = sample(D, h, nsamples);
     H_all{subj} = H;
     P_all{subj} = P;
     %H = H_all{subj};
@@ -58,10 +67,10 @@ for subj = 1:N % for each simulated subject
 end
 
 
-save('lynn.mat');
-%}
+filename = sprintf('lynn_N=%d_alpha=%.4f_nsamples=%d.mat', N, h.alpha, nsamples);
+save(filename);
 
-load('lynn.mat');
+%load('lynn.mat');
 
 
 p_short = p_cross(:,2) - p_cross(:,1);
