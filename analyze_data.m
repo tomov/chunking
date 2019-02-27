@@ -5,6 +5,8 @@
 %[data, Ts] = load_data('exp/results', 81); % for exp_v1_6 (subway 10 but no assoc)
 %[data, Ts] = load_data('exp/results', 101); % for exp_v2_1 (subway 10 no adj, no assoc)
 %[data, Ts, ~, durs] = load_data('exp/results', 205); % for exp_v2_2 (subway 18 no adj, no assoc)
+%[data, Ts] = load_data('exp/results/exp_v2_1_subway10_noadj_noassoc/', 101); % for exp_v2_1 (subway 10 no adj, no assoc)
+[data, Ts] = load_data('exp/results/ARCHIVE/exp_v2_1_batch_2/', 101); % for exp_v2_1 (subway 10 no adj, no assoc)
 %load data.mat
 
 %data = data(durs < 50, :);
@@ -87,25 +89,25 @@ title('all trials');
 % show test choices
 %
 
-% for exp_v1_6.html (subway 10 no assoc)
-%start = [6];
-%goal = [1];
-%ordinal = [1];
-%nexts = [
-%7 5
-%];
-
-% for  exp_v3_8.html (subway 18 map) and exp_v2_2.html (subway 18 no adj)
-start = [6 6 6 6 6];
-goal = [1 1 1 1 1];
-ordinal = [1 2 3 4 5];
+% for exp_v1_6.html (subway 10 no assoc), exp_v2_1.html
+start = [6];
+goal = [1];
+ordinal = [1];
 nexts = [
-7 5;
-7 5;
-7 5;
-7 5;
 7 5
 ];
+
+% for  exp_v3_8.html (subway 18 map) and exp_v2_2.html (subway 18 no adj)
+%start = [6 6 6 6 6];
+%goal = [1 1 1 1 1];
+%ordinal = [1 2 3 4 5];
+%nexts = [
+%7 5;
+%7 5;
+%7 5;
+%7 5;
+%7 5
+%];
 
 
 % for mail delivery  exp_v3_7.html

@@ -2,12 +2,12 @@ function [data, Ts, f_chunk, durs, RT_all, RT_new] = load_data(dirname, expected
 
     if ~exist('dirname', 'var')
         dirname = 'exp/results/mines10_map'; 
-        %bad_dirname = 'exp/results/bad';
     end
 
     if ~exist('expected_number_of_rows', 'var')
         expected_number_of_rows = 101;
     end
+    %bad_dirname = 'exp/results/bad';
 
     %dirname = 'exp/results/subway10_map';  % expected = 81 <---------- MONEY
     %dirname = 'exp/results/subway6';  % expected = 83
