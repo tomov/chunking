@@ -5,8 +5,11 @@
 %[data, Ts] = load_data('exp/results', 81); % for exp_v1_6 (subway 10 but no assoc)
 %[data, Ts] = load_data('exp/results', 101); % for exp_v2_1 (subway 10 no adj, no assoc)
 %[data, Ts, ~, durs] = load_data('exp/results', 205); % for exp_v2_2 (subway 18 no adj, no assoc)
+[data, Ts, ~, durs] = load_data('exp/results/exp_v2_2_subway18_noadj_noassoc', 205, false); % for exp_v2_2 (subway 18 no adj, no assoc)
 %[data, Ts] = load_data('exp/results/exp_v2_1_subway10_noadj_noassoc/', 101); % for exp_v2_1 (subway 10 no adj, no assoc)
-[data, Ts] = load_data('exp/results/ARCHIVE/exp_v2_1_batch_2/', 101); % for exp_v2_1 (subway 10 no adj, no assoc)
+%[data, Ts] = load_data('exp/results/ARCHIVE/exp_v2_1_batch_2/', 101); % for exp_v2_1 (subway 10 no adj, no assoc)
+%[data, Ts] = load_data('exp/results/subway10_repro', 83); % for subway 10 repro TODO change phase = 2!
+%[data, Ts] = load_data('exp/results/subway9', 81); % for subway 10 repro TODO change phase = 2!
 %load data.mat
 
 %data = data(durs < 50, :);
@@ -21,9 +24,10 @@ dir = []; % direction = 2nd state on path
 ord = []; % ordinal of trial type within phase (e.g. "first 1->6", "second 1->6", etc)
 subj_group = [];
 subj_len = [];
-s_id = [];
+s_id = []; % subject index
+t_id = []; % trial index
 for subj = 1:size(data,1) % for each subject
-    phase = 1; % training exp_v3_7, usually it's 2 = test
+    phase = 1; % = 1 for training exp_v3_7, usually it's 2 = test; TODO DON'T FORGET TO CHANGE TO 2 for subway10 and other old stuff
     for i = 1:length(data(subj, phase).s) % for each trial 
         which = find(data(subj, phase).s == data(subj, phase).s(i) & data(subj, phase).g == data(subj, phase).g(i));
         clear o;
@@ -35,6 +39,7 @@ for subj = 1:size(data,1) % for each subject
         dir = [dir; data(subj, phase).path{i}(2)];
         group = [group; data(subj, phase).group(i)];
         s_id = [s_id; subj];
+        t_id = [t_id; i];
     end
     subj_group = [subj_group; data(subj,1).group(1)];
     subj_len = [subj_len; mean(data(subj, 1).len)];
@@ -90,24 +95,25 @@ title('all trials');
 %
 
 % for exp_v1_6.html (subway 10 no assoc), exp_v2_1.html
-start = [6];
-goal = [1];
-ordinal = [1];
-nexts = [
-7 5
-];
-
-% for  exp_v3_8.html (subway 18 map) and exp_v2_2.html (subway 18 no adj)
-%start = [6 6 6 6 6];
-%goal = [1 1 1 1 1];
-%ordinal = [1 2 3 4 5];
+%start = [6];
+%goal = [1];
+%ordinal = [1];
 %nexts = [
-%7 5;
-%7 5;
-%7 5;
-%7 5;
 %7 5
 %];
+
+% for  exp_v3_8.html (subway 18 map) and exp_v2_2.html (subway 18 no adj)
+start = [6 6 6 6 6];
+goal = [1 1 1 1 1];
+%ordinal = [1 2 3 4 5]; <-- don't use that, e.g. if we happened to have 6 1 by chance
+index = [1 52 103 154 205]; % from html -- @ ..
+nexts = [
+7 5;
+7 5;
+7 5;
+7 5;
+7 5
+];
 
 
 % for mail delivery  exp_v3_7.html

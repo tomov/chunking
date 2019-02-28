@@ -22,7 +22,7 @@ function initExp() {
     start = -1;
     goal = -1;
 
-    $.post("results_data.php", {postresult: "group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot, timestamp, datetime\n", postfile: file_name })
+    $.post("results_data.php", {postresult: "group, subj_id, stage, start, goal, path, length, RTs, keys, valid_keys, RT_tot, timestamp, datetime\n", postfile: file_name })
 
     nextTrial();
 }
@@ -264,7 +264,8 @@ function nextTrial() {
             // kick off test phase
             stage = "test";
             trial_idx = -1;
-            $("#test_page").show();
+            //$("#test_page").show(); <- skip this; make it seamless
+            nextTrial();
         } else {
             // fin
             $("#final_page").show();
@@ -276,12 +277,17 @@ function nextTrial() {
     cur = start;
     goal = trials[trial_idx].g;
 
-    trials_left = exp.train_trials.length - trial_idx;
+    if (stage == "train") {
+        trials_left = exp.test_trials.length + exp.train_trials.length - trial_idx;
+    } else {
+        trials_left = exp.test_trials.length - trial_idx;
+    }
     $('#trials_left').html(trials_left.toString());
 
     RT_tot = 0;
     RTs = [];
     keys = [];
+    valid_keys = [];
     path = [cur];
 
     redraw();
@@ -346,9 +352,14 @@ function checkKeyPressed(e) {
             next = exp.adj[cur - 1][3];
         }
 
-        if (stage == "train") {
+        // IMPORTANT! here train = subway 10 no_assoc (i.e. exp_v2_1) and test = subway 10 (i.e. exp_v2)
+        if (stage == "train" || stage == "test") {
+
             // move to next state 
             if (next >= 0) {
+
+                valid_keys.push(keys.length - 1);
+
                 cur = next;
                 stateColor("grey");
                 in_trial = false;
@@ -375,9 +386,14 @@ function checkKeyPressed(e) {
                     $("#message").text("Incorrect");
                 }
             }
-        } else { // stage == "test"
+        }
+        /*else { // stage == "test"
+
             // end trial after first button press
             if (next >= 0) {
+
+                valid_keys.push(keys.length - 1);
+
                 path.push(next);
                 stateColor("grey");
                 in_trial = false;
@@ -387,7 +403,7 @@ function checkKeyPressed(e) {
                     nextTrial();
                 });
             }
-        }
+        }*/
     }
 
     return true;
@@ -398,9 +414,10 @@ function logTrial() {
     var RT_str = (RTs.toString()).replace(/,/g, ' ');
     var path_str = (path.toString()).replace(/,/g, ' ');
     var key_str = (keys.toString()).replace(/,/g, ' ');
+    var valid_key_str = (valid_keys.toString()).replace(/,/g, ' ');
     var d = new Date();
     var t = d.getTime() / 1000;
-    var row = "A," + subj_id + "," + stage + "," + start.toString() + "," + goal.toString() + "," + path_str + "," + path.length.toString() + "," + RT_str + "," + key_str + "," + RT_tot.toString() + "," + t.toString() + "," + d.toString() + "\n";
+    var row = "A," + subj_id + "," + stage + "," + start.toString() + "," + goal.toString() + "," + path_str + "," + path.length.toString() + "," + RT_str + "," + key_str + "," + valid_key_str + "," + RT_tot.toString() + "," + t.toString() + "," + d.toString() + "\n";
     console.log(row);
     $.post("results_data.php", {postresult: row, postfile: file_name});
 }
