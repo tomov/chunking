@@ -697,7 +697,7 @@ void sample2() // works
 {
 }
 
-Hierarchy sample3() // crashes 
+Hierarchy sample3() // works! crashes if  you rm return tho
 {
     return Hierarchy(10);
 }
