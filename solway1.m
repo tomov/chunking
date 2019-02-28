@@ -62,6 +62,7 @@ x = [-3 -1 -2 -3 -1 1 3 2 1 3];
 y = [-3 -3 -2 -1 -1 1 1 2 3 3];
 y = -y;
 
+%{
 figure;
 
 H.c = [1 1 1 1 1 2 2 2 2 2];
@@ -101,3 +102,4 @@ hold off;
 
 
 fprintf('right-tailed binomial test n = %d, p = %.4f\n', n, p);
+%}

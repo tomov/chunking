@@ -108,6 +108,7 @@ save(filename);
 
 %load('schapiro.mat');
 
+%{
 figure;
 
 m = [mean(comm_p) mean(other_p);
@@ -128,3 +129,4 @@ fprintf('random walks: t(%d) = %.2f, p = %.4f (two sample two-tailed t-test)', s
 
 [h, p, ci, stats] = ttest2(comm_p_hamil, other_p_hamil);
 fprintf('hamiltonians: t(%d) = %.2f, p = %.4f (two sample two-tailed t-test)', stats.df, stats.tstat, p);
+%}

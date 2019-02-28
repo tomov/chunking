@@ -72,7 +72,7 @@ save(filename);
 
 %load('lynn.mat');
 
-
+%{
 p_short = p_cross(:,2) - p_cross(:,1);
 p_long = p_cross(:,3) - p_cross(:,1);
 
@@ -95,3 +95,5 @@ fprintf('long violations: t(%d) = %.2f, p = %.4f (one sample two-tailed t-test a
 
 [h, p, ci, stats] = ttest2(p_short, p_long);
 fprintf('short vs. long violations: t(%d) = %.2f, p = %.4f (two sample two-tailed t-test against 0)\n', stats.df, stats.tstat, p);
+
+%}

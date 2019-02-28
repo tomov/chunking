@@ -67,7 +67,7 @@ save(filename);
 
 %load('solway2.mat');
 
-
+%{
 for j = 1:null_iters
     null_p(j) = mean(null{j}(corr(:)) == 10);
 end
@@ -96,3 +96,5 @@ if isempty(pos)
 end
 pos = pos(end);
 fprintf('MC test (%d samples from null), p = %.4f\n', null_iters, pos / length(null_p));
+
+%}

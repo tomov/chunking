@@ -64,6 +64,7 @@ save(filename);
 %load('solway4.mat');
 %load('solway4_1000.mat');
 
+%{
 c1 = 0;
 c2 = 0;
 n = 0;
@@ -92,4 +93,4 @@ hold off;
 fprintf('two-sided binomial test n = %d, p = %.4f\n', n, p);
 
 
-
+%}
