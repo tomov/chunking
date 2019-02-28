@@ -22,7 +22,7 @@ function initExp() {
     start = -1;
     goal = -1;
 
-    $.post("results_data.php", {postresult: "group, subj_id, stage, start, goal, path, length, RTs, keys, valid_keys, RT_tot, timestamp, datetime\n", postfile: file_name })
+    $.post("results_data.php", {postresult: "group, subj_id, stage, trial, start, goal, path, length, RTs, keys, valid_keys, RT_tot, timestamp, datetime\n", postfile: file_name })
 
     nextTrial();
 }
@@ -358,7 +358,7 @@ function checkKeyPressed(e) {
             // move to next state 
             if (next >= 0) {
 
-                valid_keys.push(keys.length - 1);
+                valid_keys.push(keys.length);
 
                 cur = next;
                 stateColor("grey");
@@ -392,7 +392,7 @@ function checkKeyPressed(e) {
             // end trial after first button press
             if (next >= 0) {
 
-                valid_keys.push(keys.length - 1);
+                valid_keys.push(keys.length);
 
                 path.push(next);
                 stateColor("grey");
@@ -417,7 +417,7 @@ function logTrial() {
     var valid_key_str = (valid_keys.toString()).replace(/,/g, ' ');
     var d = new Date();
     var t = d.getTime() / 1000;
-    var row = "A," + subj_id + "," + stage + "," + start.toString() + "," + goal.toString() + "," + path_str + "," + path.length.toString() + "," + RT_str + "," + key_str + "," + valid_key_str + "," + RT_tot.toString() + "," + t.toString() + "," + d.toString() + "\n";
+    var row = "A," + subj_id + "," + stage + "," + (trial_idx + 1).toString() + "," + start.toString() + "," + goal.toString() + "," + path_str + "," + path.length.toString() + "," + RT_str + "," + key_str + "," + valid_key_str + "," + RT_tot.toString() + "," + t.toString() + "," + d.toString() + "\n";
     console.log(row);
     $.post("results_data.php", {postresult: row, postfile: file_name});
 }
