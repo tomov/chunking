@@ -470,6 +470,7 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h)
 
     // TODO optimize by having beta for object
     // TODO or marginalize over them
+    // TODO actually jk just rm them
     logP += log(BetaPDF(this->p, 1, 1)) + log(BetaPDF(this->q, 1, 1)) + log(BetaPDF(this->tp, 1, 1)) + log(BetaPDF(this->hp, 1, 1));// TODO const
 
     // cluster rewards
@@ -477,7 +478,7 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h)
     assert(this->cnt.size() == this->theta.size());
     for (int k = 0; k < this->theta.size(); k++)
     {
-        // TODO optimize with norm dists for each k for H
+        // TODO optimize with norm dist objects for each k for H
         logP += log(NormPDF(this->theta[k], h.theta_mean, h.std_theta));
     }
 
@@ -686,18 +687,29 @@ double Hierarchy::LogPost(const Data &D, const Hyperparams &h)
 
 
 
+std::vector<Hierarchy> sample1()
+{
+}
 
 std::vector<Hierarchy> sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin, const int lag, Hierarchy H)
 {
-    std::vector<double> post;
+    //std::vector<double> post;
+    //std::vector<Hierarchy> samples;
 
+	//DEBUG_PRINT("logprior = %.6lf", H.LogPrior(D,h));
+	//DEBUG_PRINT("Log lik = %.6lf, logprior = %.6lf, logpost = %.6lf ", H.LogLik(D, h), H.LogPrior(D,h), H.LogPost(D, h));
+
+
+    /*
     for (int n = 0; n < nsamples * lag + burnin; n++)
     {
         for (int i = 0; i < D.G.N; i++)
         {
             // TODO
         }
-    }
+    }*/
+
+    //return samples;
 }
 
 
@@ -852,7 +864,9 @@ public:
     H.Print();
 
 
-    std::vector<Hierarchy> samples = sample(D, h, nsamples, burnin, lag, H);
+    //std::vector<Hierarchy> samples = sample(D, h, nsamples, burnin, lag, H);
+    //sample(D, h, nsamples, burnin, lag, H);
+    sample1();
 
 
     // read up on https://www.mathworks.com/help/matlab/apiref/matlab.data.arrayfactory.html?searchHighlight=createarray&s_tid=doc_srchtitle#bvn7dve-1
