@@ -439,8 +439,11 @@ Hierarchy::Hierarchy(int _N)
 
 Hierarchy::~Hierarchy()
 {
+    DEBUG_PRINT("deleting c for %p", this);
     delete [] c;
+    DEBUG_PRINT("deleting mu for %p", this);
     delete [] mu;
+    DEBUG_PRINT("deleted all! for %p", this);
 }
 
 double Hierarchy::LogPrior(const Data &D, const Hyperparams &h)
@@ -686,10 +689,24 @@ double Hierarchy::LogPost(const Data &D, const Hyperparams &h)
 }
 
 
-
-std::vector<Hierarchy> sample1()
+std::vector<Hierarchy> sample1() // crashes
 {
 }
+
+void sample2() // works
+{
+}
+
+Hierarchy sample3() // crashes 
+{
+    return Hierarchy(10);
+}
+
+Hierarchy* sample4() // works
+{
+    Hierarchy *h = new Hierarchy(12); ///<-- test
+}
+
 
 std::vector<Hierarchy> sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin, const int lag, Hierarchy H)
 {
@@ -866,7 +883,8 @@ public:
 
     //std::vector<Hierarchy> samples = sample(D, h, nsamples, burnin, lag, H);
     //sample(D, h, nsamples, burnin, lag, H);
-    sample1();
+    Hierarchy wtf = sample3();
+    //sample4();
 
 
     // read up on https://www.mathworks.com/help/matlab/apiref/matlab.data.arrayfactory.html?searchHighlight=createarray&s_tid=doc_srchtitle#bvn7dve-1
