@@ -1,3 +1,5 @@
+% sanity check
+
 load('demo_testmex.mat');
 
 Hout = testmex(D, h, 12)
