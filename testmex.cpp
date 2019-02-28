@@ -279,9 +279,9 @@ class Hierarchy
 
         void Print();
 
-        double LogPrior(const Data &D, const Hyperparams &h);
-        double LogLik(const Data &D, const Hyperparams &h);
-        double LogPost(const Data &D, const Hyperparams &h);
+        double LogPrior(const Data &D, const Hyperparams &h) const;
+        double LogLik(const Data &D, const Hyperparams &h) const;
+        double LogPost(const Data &D, const Hyperparams &h) const;
 
         int N;
         int *c;
@@ -439,14 +439,14 @@ Hierarchy::Hierarchy(int _N)
 
 Hierarchy::~Hierarchy()
 {
-    DEBUG_PRINT("deleting c for %p", this);
+    DEBUG_PRINT("deleting c for %p\n", this);
     delete [] c;
-    DEBUG_PRINT("deleting mu for %p", this);
+    DEBUG_PRINT("deleting mu for %p\n", this);
     delete [] mu;
-    DEBUG_PRINT("deleted all! for %p", this);
+    DEBUG_PRINT("deleted all! for %p\n", this);
 }
 
-double Hierarchy::LogPrior(const Data &D, const Hyperparams &h)
+double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
 {
     assert(D.G.N == this->N);
 
@@ -502,7 +502,7 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h)
     return logP;
 }
 
-double Hierarchy::LogLik(const Data &D, const Hyperparams &h)
+double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
 {
     assert(D.G.N == this->N);
 
@@ -682,39 +682,22 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h)
 }
 
 
-double Hierarchy::LogPost(const Data &D, const Hyperparams &h)
+double Hierarchy::LogPost(const Data &D, const Hyperparams &h) const
 {
     double logP = this->LogPrior(D, h) + this->LogLik(D, h);
     return logP;
 }
 
 
-std::vector<Hierarchy> sample1() // crashes
-{
-}
-
-void sample2() // works
-{
-}
-
-Hierarchy sample3() // works! crashes if  you rm return tho
-{
-    return Hierarchy(10);
-}
-
-Hierarchy* sample4() // works
-{
-    Hierarchy *h = new Hierarchy(12); ///<-- test
-}
-
-
-std::vector<Hierarchy> sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin, const int lag, Hierarchy H)
+//std::vector<Hierarchy*> 
+void sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin, const int lag, const Hierarchy &H)
 {
     //std::vector<double> post;
-    //std::vector<Hierarchy> samples;
+    //std::vector<Hierarchy*> samples;
 
-	//DEBUG_PRINT("logprior = %.6lf", H.LogPrior(D,h));
-	//DEBUG_PRINT("Log lik = %.6lf, logprior = %.6lf, logpost = %.6lf ", H.LogLik(D, h), H.LogPrior(D,h), H.LogPost(D, h));
+	DEBUG_PRINT("logprior = %.6lf\n", H.LogPrior(D,h));
+	DEBUG_PRINT("loglik = %.6lf\n", H.LogLik(D,h));
+	DEBUG_PRINT("logpost = %.6lf\n", H.LogPost(D,h));
 
 
     /*
@@ -724,9 +707,10 @@ std::vector<Hierarchy> sample(const Data &D, const Hyperparams &h, const int nsa
         {
             // TODO
         }
-    }*/
+    }
 
-    //return samples;
+    return samples;
+    */
 }
 
 
@@ -881,10 +865,8 @@ public:
     H.Print();
 
 
-    //std::vector<Hierarchy> samples = sample(D, h, nsamples, burnin, lag, H);
-    //sample(D, h, nsamples, burnin, lag, H);
-    Hierarchy wtf = sample3();
-    //sample4();
+    //std::vector<Hierarchy*> samples = sample(D, h, nsamples, burnin, lag, H);
+    sample(D, h, nsamples, burnin, lag, H);
 
 
     // read up on https://www.mathworks.com/help/matlab/apiref/matlab.data.arrayfactory.html?searchHighlight=createarray&s_tid=doc_srchtitle#bvn7dve-1
