@@ -24,6 +24,8 @@ function logp = loglik(H, D, h)
         end
     end
 
+    fprintf('at 1 -> %.6f\n', logp);
+
     % find chunk transitive closures
     c = unique(H.c);
     A = D.G.E;
@@ -41,9 +43,12 @@ function logp = loglik(H, D, h)
         end
     end
 
+    fprintf('at 2 -> %.6f\n', logp);
+
     % (hierarchical) edges
     N = max(H.c);
     E = get_H_E(H, D); % TODO prior or likelihood? who knows..
+    E
     cnt = get_H_cnt(H, D);
     for k = 1:N
         if cnt(k) > 0
@@ -51,13 +56,17 @@ function logp = loglik(H, D, h)
                 if cnt(l) > 0
                     if E(k,l)
                         logp = logp + log(H.hp);
+                        fprintf(' %.4f for edge (%d %d)\n', log(H.hp), k, l);
                     else
                         logp = logp + log(1 - H.hp);
+                        fprintf(' %.4f for edge -(%d %d)\n', log(1 - H.hp), k, l);
                     end
                 end
             end
         end
     end
+
+    fprintf('at 3 -> %.6f\n', logp);
 
     % bridges
     for k = 1:N % TODO bug? max(H.c)?
@@ -71,6 +80,8 @@ function logp = loglik(H, D, h)
         end
     end
 
+    fprintf('at 4 -> %.6f\n', logp);
+
     % tasks
     for i = 1:length(D.tasks.s)
         s = D.tasks.s(i);
@@ -83,6 +94,8 @@ function logp = loglik(H, D, h)
     end
 
 
+    fprintf('at 5 -> %.6f\n', logp);
+
 
     % rewards
     for i = 1:D.G.N
@@ -91,6 +104,8 @@ function logp = loglik(H, D, h)
             logp = logp + log(normpdf( D.r{i}(obs), H.mu(i), h.std_r ));
         end
     end
+
+    fprintf('at 6 -> %.6f\n', logp);
     
     if isinf(logp)
         logp = -1e100;

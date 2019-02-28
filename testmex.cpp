@@ -512,7 +512,7 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
     //
     for (int i = 0; i < D.G.N; i++)
     {
-        for (int j = 0; j < i - 1; j++)
+        for (int j = 0; j < i; j++)
         {
             if (this->c[i] == this->c[j])
             {
@@ -538,6 +538,8 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
             }
         }
     }
+
+	DEBUG_PRINT("at 1 -> %.6lf\n", logP);
 
     // transitive closures
     // TODO optimize the crap out of this
@@ -576,7 +578,7 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
     //
     for (int i = 0; i < D.G.N; i++)
     {
-        for (int j = 0; j < D.G.N; j++)
+        for (int j = 0; j < i; j++)
         {
             if (this->c[i] == this->c[j] && !A[i][j])
             {
@@ -585,15 +587,19 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
         }
     }
 
+	DEBUG_PRINT("at 2 -> %.6lf\n", logP);
+
     // get_H_E
     int K = this->cnt.size();
     int E[K][K];
+    memset(E, 0, sizeof(E));
     for (int i = 0; i < this->N; i++)
     {
         for (int j = 0; j < i; j++)
         {
-            if (this->c[i] == this->c[j] && D.G.E[i][j])
+            if (this->c[i] != this->c[j] && D.G.E[i][j])
             {
+                DEBUG_PRINT("hierarchical edge (%d %d)\n", this->c[i], this->c[j]);
                 E[this->c[i] - 1][this->c[j] - 1] = 1;
                 E[this->c[j] - 1][this->c[i] - 1] = 1;
             }
@@ -603,13 +609,14 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
     // (hierarchical) edges
     // TODO sample them too, or marginalize over them
     //
+    DEBUG_PRINT(" this->hp = %.4lf\n", this->hp);
     for (int k = 0; k < K; k++)
     {
         if (this->cnt[k] == 0)
         {
             continue;
         }
-        for (int l = 0; l < K; l++)
+        for (int l = 0; l < k; l++)
         {
             if (this->cnt[l] == 0)
             {
@@ -618,13 +625,17 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
             if (E[k][l])
             {
                 logP += log(this->hp);
+                DEBUG_PRINT(" %.4lf for edge (%d %d)\n", log(this->hp), k + 1, l + 1);
             }
             else
             {
                 logP += log(1 - this->hp);
+                DEBUG_PRINT(" %.4lf for edge -(%d %d)\n", log(1 - this->hp), k + 1, l + 1);
             }
         }
     }
+
+	DEBUG_PRINT("at 3 -> %.6lf\n", logP);
 
     // bridges
     //
@@ -648,6 +659,8 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
         }
     }
 
+	DEBUG_PRINT("at 4 -> %.6lf\n", logP);
+
     // tasks
     //
     for (int i = 0; i < D.tasks.size(); i++)
@@ -668,6 +681,8 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
         logP -= log(denom);
     }
 
+	DEBUG_PRINT("at 5 -> %.6lf\n", logP);
+
     // rewards
     //
     for (int i = 0; i < this->N; i++)
@@ -677,6 +692,8 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
             logP += log(NormPDF(D.rewards[i][o], this->mu[i], h.std_r));
         }
     }
+
+	DEBUG_PRINT("at 6 -> %.6lf\n", logP);
 
     return logP;
 }
@@ -697,7 +714,7 @@ void sample(const Data &D, const Hyperparams &h, const int nsamples, const int b
 
 	DEBUG_PRINT("logprior = %.6lf\n", H.LogPrior(D,h));
 	DEBUG_PRINT("loglik = %.6lf\n", H.LogLik(D,h));
-	DEBUG_PRINT("logpost = %.6lf\n", H.LogPost(D,h));
+	//DEBUG_PRINT("logpost = %.6lf\n", H.LogPost(D,h));
 
 
     /*
