@@ -68,6 +68,9 @@ end
 save('model_exp_v2_3.mat');
 
 %}
+load('model_exp_v2_3.mat');
+%[data, Ts, ~, ~, ~, ~, exclude] = load_data('exp/results/exp_v2_3_subway10_unlearn/', 246, false); % for exp_v2_3 (subway 10 unlearn)
+%move = move(~exclude, :);
 
 ms = mean(move, 1);
 sems = std(move, 1) / sqrt(size(move, 1));
@@ -83,4 +86,4 @@ ylabel('p(HBFS direction)');
 xticks(1:6);
 xticklabels(index);
 xlabel('trial #');
-title(sprintf('model N = %d', length(D)));
+title(sprintf('model N = %d', size(move,1)));

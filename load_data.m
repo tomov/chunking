@@ -1,4 +1,4 @@
-function [data, Ts, f_chunk, durs, RT_all, RT_new] = load_data(dirname, expected_number_of_rows, use_cutoff)
+function [data, Ts, f_chunk, durs, RT_all, RT_new, exclude] = load_data(dirname, expected_number_of_rows, use_cutoff)
 
     if ~exist('dirname', 'var')
         dirname = 'exp/results/mines10_map'; 
@@ -60,6 +60,7 @@ function [data, Ts, f_chunk, durs, RT_all, RT_new] = load_data(dirname, expected
         Ts{subj} = T;
 
         skip_subj = false;
+        exclude(subj) = false;
 
         % TODO dedupe with init_D_from_csv.m
         RT_chunk = [];
@@ -119,10 +120,15 @@ function [data, Ts, f_chunk, durs, RT_all, RT_new] = load_data(dirname, expected
             id = T.subj_id(i);
 
             % skip subjects with unrealistically long paths
-            if use_cutoff && length(path) > 25 && i > 25
-                fprintf('Skipping %s: trial %d has path length %d\n', files(idx).name, i, length(path));
-                skip_subj = true;
-                break;
+            if length(path) > 25 && i > 25
+                if use_cutoff
+                    fprintf('Skipping %s: trial %d has path length %d\n', files(idx).name, i, length(path));
+                    skip_subj = true;
+                    break;
+                else
+                    fprintf('WOULD BE Skipping %s (%d): trial %d has path length %d\n', files(idx).name, subj, i, length(path));
+                    exclude(subj) = true;
+                end
             end
 
             data(subj, phase).s(j) = s;
