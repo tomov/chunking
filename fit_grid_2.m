@@ -8,10 +8,10 @@ for alpha = 1 : 0.5 : 20
     h.alpha = alpha;
     disp(h)
     tic
-    schapiro(N, h, nsamples);
-    solway1(N, h, nsamples);
-    solway2(N, h, nsamples);
-    solway4(N, h, nsamples);
-    lynn(N, h, nsamples);
+    schapiro(N, h, nsamples, false);
+    solway1(N, h, nsamples, false);
+    solway2(N, h, nsamples, false);
+    solway4(N, h, nsamples, false);
+    lynn(N, h, nsamples, false);
     toc
 end

@@ -1,6 +1,6 @@
 % simulate experiment 4 from solway 2014
 
-function solway4(N, h, nsamples)
+function solway4(N, h, nsamples, take_map)
 
 rng default;
 
@@ -15,6 +15,9 @@ if ~exist('h', 'var')
 end
 if ~exist('nsamples', 'var')
     nsamples = 10000;
+end
+if ~exist('take_map', 'var')
+    take_map = true;
 end
 
 D = init_D_from_txt('solway4.txt');
@@ -48,9 +51,13 @@ for subj = 1:N % for each simulated subject
     %H = H_all{subj};
     %P = P_all{subj};
 
-    [~,I] = max(P); % MAP H
-    H = H(I);
-    map_H{subj} = H;
+    if take_map
+        [~,I] = max(P); % MAP H
+        H = H(I);
+        map_H{subj} = H;
+    else
+        H = H(end); % last one
+    end
 
     for t = 1:size(tasks,1)
         [path, hpath] = hbfs(tasks(t,1), tasks(t,2), H, D);

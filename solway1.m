@@ -1,6 +1,6 @@
 % simulate experiment 1 from solway 2014
 
-function solway1(N, h, nsamples)
+function solway1(N, h, nsamples, take_map)
 
 rng default;
 
@@ -16,6 +16,9 @@ end
 if ~exist('nsamples', 'var')
     nsamples = 100;
 end
+if ~exist('take_map', 'var')
+    take_map = true;
+end
 
 D = init_D_from_txt('solway1.txt');
 
@@ -27,9 +30,13 @@ for s = 1:N % for each simulated subject
     H_all{s} = H;
     P_all{s} = P;
 
-    [~,I] = max(P); % MAP H
-    H = H(I);
-    map_H{s} = H;
+    if take_map
+        [~,I] = max(P); % MAP H
+        H = H(I);
+        map_H{s} = H;
+    else
+        H = H(end); % last one
+    end
 
     H = populate_H(H, D); % fill up bridges
 

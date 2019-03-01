@@ -1,7 +1,7 @@
 % simulate RT experiment from Lynn et al. 2018
 
 
-function lynn(N, h, nsamples)
+function lynn(N, h, nsamples, take_map)
 
 rng default;
 
@@ -16,6 +16,9 @@ if ~exist('h', 'var')
 end
 if ~exist('nsamples', 'var')
     nsamples = 1000;
+end
+if ~exist('take_map', 'var')
+    take_map = true;
 end
 
 
@@ -40,9 +43,13 @@ for subj = 1:N % for each simulated subject
     %H = H_all{subj};
     %P = P_all{subj};
 
-    [~,I] = max(P); % MAP H
-    H = H(I);
-    map_H{subj} = H;
+    if take_map
+        [~,I] = max(P); % MAP H
+        H = H(I);
+        map_H{subj} = H;
+    else
+        H = H(end); % last one
+    end
 
     cross = [];
     % 2 = short violation

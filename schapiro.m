@@ -1,5 +1,5 @@
 % simulate experiment 1 from schapiro 2013
-function schapiro(N, h, nsamples)
+function schapiro(N, h, nsamples, take_map)
 
 rng default;
 
@@ -14,6 +14,9 @@ if ~exist('h', 'var')
 end
 if ~exist('nsamples', 'var')
     nsamples = 1000;
+end
+if ~exist('take_map', 'var')
+    take_map = true;
 end
 
 nwalks = 18; % how many random walks or hamiltonians for each subject (based on paper)
@@ -39,9 +42,13 @@ for s = 1:N % for each simulated subject
     H_all{s} = H;
     P_all{s} = P;
 
-    [~,I] = max(P); % MAP H
-    H = H(I);
-    map_H{s} = H;
+    if take_map
+        [~,I] = max(P); % MAP H
+        H = H(I);
+        map_H{s} = H;
+    else
+        H = H(end); % last one
+    end
 
     paths = random_walks(D, nwalks, D.G.N-1); % random walks
     i = randsample(length(hamils), nwalks);
