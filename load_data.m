@@ -119,7 +119,7 @@ function [data, Ts, f_chunk, durs, RT_all, RT_new] = load_data(dirname, expected
             id = T.subj_id(i);
 
             % skip subjects with unrealistically long paths
-            if use_cutoff && length(path) > 25 && i > size(T,1) / 4
+            if use_cutoff && length(path) > 25 && i > 25
                 fprintf('Skipping %s: trial %d has path length %d\n', files(idx).name, i, length(path));
                 skip_subj = true;
                 break;
