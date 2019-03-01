@@ -1,7 +1,7 @@
 // compile with:
 //
-// mex loglik_c.cpp printmex.cpp -I/usr/local/boost-1.64.0/include/
-// TODO dedupe with logprior_c and sample_c
+// mex logprior_c.cpp printmex.cpp -I/usr/local/boost-1.64.0/include/
+// TODO dedupe with loglik_c and sample_c
 //
 // see https://stackoverflow.com/questions/16127060/what-is-the-default-location-for-boost-library-when-installed-using-macport-on-m
 // and https://www.mathworks.com/matlabcentral/answers/7955-using-boost-libraries-with-mex-function-in-matlab
@@ -166,7 +166,7 @@ public:
 
     // compute Loglik
     //
-    double logp = H.LogLik(D, h);
+    double logp = H.LogPrior(D, h);
 
 
     // read up on https://www.mathworks.com/help/matlab/apiref/matlab.data.arrayfactory.html?searchHighlight=createarray&s_tid=doc_srchtitle#bvn7dve-1
