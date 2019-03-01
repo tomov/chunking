@@ -119,7 +119,7 @@ function P = propP_c_i(c_i_old, i, H, D, h)
     if isempty(z)
         cnt = [cnt h.alpha];
     else
-        cnt(z) = h.alpha;
+        cnt(z(1)) = h.alpha; % !!!!!!!!!!!!!!!!! BUG!!!!!!!!!!!!!
     end
     P = cnt / sum(cnt);
 end

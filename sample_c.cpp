@@ -38,20 +38,139 @@
 #include "mexAdapter.hpp"
 #include "printmex.h"
 #include "datastructs.h"
+#include <cmath>
 
 
-//std::vector<Hierarchy*> 
-void sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin, const int lag, const Hierarchy &H)
+// P(H|D) for updates of c_i
+// i.e. with new c's up to c_i, the candidate c_i, then old c's after (and old rest of H)
+//
+// TODO optimize the crap out of it
+double logpost_c_i(int c_i, int i, Hierarchy& H, const Data &D, const Hyperparams &h)
 {
-    //std::vector<double> post;
-    //std::vector<Hierarchy*> samples;
+    double old_c_i = H.c[i];
+    H.c[i] = c_i;
+    double logP = H.LogPost(D, h);
+    H.c[i] = old_c_i;
+    return logP;
+}
 
-	DEBUG_PRINT("logprior = %.6lf\n", H.LogPrior(D,h));
-	DEBUG_PRINT("loglik = %.6lf\n", H.LogLik(D,h));
-	//DEBUG_PRINT("logpost = %.6lf\n", H.LogPost(D,h));
+// proposal PMF for c_i
+// inspired by Algorithm 5 from Neal 1998: MCMC for DP mixtures
+//
+// TODO optimize the crap out of it
+std::vector<double> propP_c_i(int c_i_old, int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
+{
+    std::vector<double> cnt(H.cnt.begin(), H.cnt.end()); // TODO optimize -- no need to copy, could be done in O(1)
+    cnt[H.c[i]]--;
+
+    int z = -1;
+    double sum = 0;
+    for (int k = 0; k < cnt.size(); k++)
+    {
+        sum += cnt[k];
+        if (cnt[k] == 0 && z == -1)
+        {
+            z = k; // reuse empty bins TODO is this legit?
+        }
+    }
+
+    if (z == -1)
+    {
+        cnt.push_back(h.alpha);
+    }
+    else
+    {
+        cnt[z] = h.alpha;
+    }
+
+    std::vector<double> P(cnt.size());
+    for (int k = 0; k < cnt.size(); k++)
+    {
+        P[k] = cnt[k] / sum;
+    }
+    return P;
+}
+
+// propose c_i
+//
+int proprnd_c_i(int c_i_old, int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
+{
+    std::vector<double> P = propP_c_i(c_i_old, i, H, D, h);
+    int c_i_new = CatRnd(P) + 1;
+
+    // TODO bridges
+    return c_i_new;
+}
+
+double logprop_c_i(int c_i_new, int c_i_old, int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
+{
+    std::vector<double> P = propP_c_i(c_i_old, i, H, D, h);
+    double logP = log(P[c_i_new]);
+    return logP;
+}
 
 
-    /*
+
+// P(H|D) for updates of p
+//
+double logpost_p(double p, Hierarchy& H, const Data &D, const Hyperparams &h)
+{
+    double old_p = H.p;
+    H.p = p;
+    double logP = H.LogPost(D, h);
+    H.p = old_p;
+    return logP;
+}
+
+// P(H|D) for updates of q
+//
+double logpost_q(double q, Hierarchy& H, const Data &D, const Hyperparams &h)
+{
+    double old_q = H.q;
+    H.q = q;
+    double logP = H.LogPost(D, h);
+    H.q = old_q;
+    return logP;
+}
+
+// P(H|D) for updates of tp
+//
+double logpost_tp(double tp, Hierarchy& H, const Data &D, const Hyperparams &h)
+{
+    double old_tp = H.tp;
+    H.tp = tp;
+    double logP = H.LogPost(D, h);
+    H.tp = old_tp;
+    return logP;
+}
+
+// P(H|D) for updates of hp
+//
+double logpost_hp(double hp, Hierarchy& H, const Data &D, const Hyperparams &h)
+{
+    double old_hp = H.hp;
+    H.hp = hp;
+    double logP = H.LogPost(D, h);
+    H.hp = old_hp;
+    return logP;
+}
+
+
+
+
+
+
+
+
+
+
+std::vector<Hierarchy*> 
+sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin, const int lag, Hierarchy &H)
+{
+    std::vector<double> post;
+    std::vector<Hierarchy*> samples;
+
+    // Roberts & Rosenthal (2009)
     for (int n = 0; n < nsamples * lag + burnin; n++)
     {
         for (int i = 0; i < D.G.N; i++)
@@ -61,8 +180,9 @@ void sample(const Data &D, const Hyperparams &h, const int nsamples, const int b
     }
 
     return samples;
-    */
 }
+
+
 
 
 using namespace matlab::mex;
@@ -219,8 +339,8 @@ public:
     H.Print();
 
 
-    //std::vector<Hierarchy*> samples = sample(D, h, nsamples, burnin, lag, H);
-    sample(D, h, nsamples, burnin, lag, H);
+    std::vector<Hierarchy*> samples = sample(D, h, nsamples, burnin, lag, H);
+    //sample(D, h, nsamples, burnin, lag, H);
 
 
     // read up on https://www.mathworks.com/help/matlab/apiref/matlab.data.arrayfactory.html?searchHighlight=createarray&s_tid=doc_srchtitle#bvn7dve-1
