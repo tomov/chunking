@@ -3,8 +3,6 @@ clear all;
 close all;
 %[data, Ts] = load_data('exp/results', 246); % for exp_v2_3 (subway 10 unlearn)
 
-% TODO cleanup first
-
 h = init_hyperparams;
 nsamples = 100;
 burnin = 1;
@@ -27,21 +25,29 @@ nexts = [
 ];
 
 % from model_all_data
-D = init_Ds_from_data('exp/results/exp_v2_3_subway10_unlearn');
+D = init_Ds_from_data('exp/results/exp_v2_3_subway10_unlearn', true);
 D_full = D;
+% TODO rm & uncomment above
+save tmp.mat;
+%load tmp.mat;
 
 for subj = 1:length(D) % for each subject
     D(subj).tasks.s = [];
     D(subj).tasks.g = [];
+    for i = 1:D(subj).G.N
+        D(subj).r{i} = [];
+    end
+    subj
 
     [samples, post] = sample(D(subj), h, nsamples, burnin, lag);
     H(subj) = samples(end);
 
     t = 1;
     for i = 1:length(index)
+        i
         while t < index(i)
-            D(subj).task.s = [D(subj).task.s D_full(subj).tasks.s(t)];
-            D(subj).task.g = [D(subj).task.g D_full(subj).tasks.g(t)];
+            D(subj).tasks.s = [D(subj).tasks.s D_full(subj).tasks.s(t)];
+            D(subj).tasks.g = [D(subj).tasks.g D_full(subj).tasks.g(t)];
             t = t + 1;
         end
         

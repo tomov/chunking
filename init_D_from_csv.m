@@ -1,5 +1,9 @@
-function D = init_D_from_csv(filename)
+function D = init_D_from_csv(filename, test_phase_too)
     assert(endsWith(filename, '.csv'));
+
+    if ~exist('test_phase_too', 'var')
+        test_phase_too = false;
+    end
 
     D.G.N = 0;
     D.tasks.s = [];
@@ -28,9 +32,12 @@ function D = init_D_from_csv(filename)
                 end
         end
 
-        if ~strcmp(phase, 'training_1')
+        if ~strcmp(phase, 'training_1') 
+            if ~strcmp(phase, 'test_1') && ~test_phase_too
+                % TODO this is a hack for model_exp_v2_3
+                break;
+            end
             % TODO 2nd half
-            break;
         end
 
         s = T.start(i);

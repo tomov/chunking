@@ -1,4 +1,9 @@
-function D = init_Ds_from_data(dirname)
+function D = init_Ds_from_data(dirname, test_phase_too)
+
+
+    if ~exist('test_phase_too', 'var')
+        test_phase_too = false;
+    end
 
     files = dir(dirname);
     idx = 1;
@@ -7,7 +12,7 @@ function D = init_Ds_from_data(dirname)
             continue;
         end
 
-        D(idx) = init_D_from_csv(fullfile(dirname, files(i).name));
+        D(idx) = init_D_from_csv(fullfile(dirname, files(i).name), test_phase_too);
         idx = idx + 1;
     end
 
