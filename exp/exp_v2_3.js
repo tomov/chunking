@@ -432,8 +432,8 @@ function redraw() {
     for (var i = 0; i < 4; i++) {
         if (exp.adj[cur - 1][i] <= 0) {
             //adj_names.push("&#11044;");
-            //adj_names.push("&#x25CF;"); // smaller circle
-            adj_names.push(" "); // nothing!  
+            adj_names.push("&#x25CF;"); // smaller circle
+            //adj_names.push(" "); // nothing!  
         } else {
             //adj_names.push(exp.names[exp.adj[cur - 1][i] - 1]);
             adj_names.push(arrows[i]);
