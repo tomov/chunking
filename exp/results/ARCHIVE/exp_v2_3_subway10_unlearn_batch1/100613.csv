@@ -1,0 +1,4 @@
+group, subj_id, stage, trial, start, goal, path, length, RTs, keys, valid_keys, RT_tot, timestamp, datetime
+A,100613,train,1,4,5,4 3 2 3 4 5,6,14528 908 1146 361 216 1861,40 40 38 38 38 32,1 2 3 4 5,19020,1551400451.734,Thu Feb 28 2019 18:34:11 GMT-0600 (Central Standard Time)
+A,100613,train,2,10,7,10 1 2 3 4 5 6 7,8,1010 1166 1358 502 880 1077 974 1877,39 39 38 38 38 37 37 32,1 2 3 4 5 6 7,8844,1551400466.589,Thu Feb 28 2019 18:34:26 GMT-0600 (Central Standard Time)
+A,100613,train,3,7,9,7 8 9,3,2865 832 1669,40 40 32,1 2,5366,1551400478.016,Thu Feb 28 2019 18:34:38 GMT-0600 (Central Standard Time)
