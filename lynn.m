@@ -7,7 +7,7 @@ rng default;
 
 sem = @(x) std(x) / sqrt(length(x));
 
-if ~exist('N', 'var')
+if ~exist('N', 'var') || isempty(N)
     N = 78; % participants
 end
 if ~exist('h', 'var')
