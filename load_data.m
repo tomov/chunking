@@ -11,7 +11,7 @@ function [data, Ts, f_chunk, durs, RT_all, RT_new] = load_data(dirname, expected
     if ~exist('use_cutoff', 'var')
         use_cutoff = true;
     end
-    %bad_dirname = 'exp/results/bad';
+    bad_dirname = 'exp/results/exp_v2_3_subway10_unlearn/exclude';
 
     %dirname = 'exp/results/subway10_map';  % expected = 81 <---------- MONEY
     %dirname = 'exp/results/subway6';  % expected = 83
