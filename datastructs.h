@@ -9,6 +9,8 @@
 #include <cmath>
 #include <boost/math/distributions.hpp>
 
+// TODO separate into .h and .cpp
+
 // see https://en.cppreference.com/w/cpp/numeric/random/uniform_real_distribution
 // for random number generation
 std::random_device rd;  //Will be used to obtain a seed for the random number engine
@@ -76,7 +78,6 @@ int CatRnd(const std::vector<double> &p)
 using namespace matlab::mex;
 using namespace matlab::data;
 
-// TODO put in .h file
 class Data
 {
     public:
@@ -193,7 +194,6 @@ Data::~Data()
 }
 
 
-// TODO move to .h file
 class Hyperparams
 {
     public:

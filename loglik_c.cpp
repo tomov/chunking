@@ -1,6 +1,6 @@
 // compile with:
 //
-// mex sample_c.cpp printmex.cpp -I/usr/local/boost-1.64.0/include/
+// mex loglik_c.cpp printmex.cpp -I/usr/local/boost-1.64.0/include/
 //
 // see https://stackoverflow.com/questions/16127060/what-is-the-default-location-for-boost-library-when-installed-using-macport-on-m
 // and https://www.mathworks.com/matlabcentral/answers/7955-using-boost-libraries-with-mex-function-in-matlab
@@ -36,7 +36,10 @@
 
 #include "mex.hpp"
 #include "mexAdapter.hpp"
+
 #include "printmex.h"
+#define DEBUG 0 // <-- uncomment to print debug stuff; must be right after printmex.h
+
 #include "datastructs.h"
 
 
@@ -106,8 +109,8 @@ public:
     
     checkArguments (outputs,inputs);
 
-    // check D
-    StructArray const matlabStructArrayD = inputs[0];
+    // check D TODO dedupe with sample_c.cpp
+    StructArray const matlabStructArrayD = inputs[1];
     checkStructureElements(matlabStructArrayD, "D", fieldNamesD, fieldTypesD);
 
     size_t total_num_of_elements = matlabStructArrayD.getNumberOfElements();
@@ -146,97 +149,55 @@ public:
     Data D(matlabStructArrayD);
 
     // check h
-    StructArray const matlabStructArrayHyperparams = inputs[1];
+    StructArray const matlabStructArrayHyperparams = inputs[2];
     checkStructureElements(matlabStructArrayHyperparams, "h", fieldNamesh, fieldTypesh);
 
     // init h
     Hyperparams h(matlabStructArrayHyperparams);
 
-    // check nsamples
-    int nsamples = 10000; // default
-    if (inputs.size() > 2)
-    {
-        const TypedArray<double> _nsamples = inputs[2];
-        nsamples = _nsamples[0];
-    }
-    DEBUG_PRINT("nsamples = %d\n", nsamples);
-
-    // check burnin
-    int burnin = 1; // default
-    if (inputs.size() > 3)
-    {
-        const TypedArray<double> _burnin = inputs[3];
-        burnin = _burnin[0];
-    }
-    DEBUG_PRINT("burnin = %d\n", burnin);
-
-    // check lag
-    int lag = 1; // default
-    if (inputs.size() > 4)
-    {
-        const TypedArray<double> _lag = inputs[4];
-        lag = _lag[0];
-    }
-    DEBUG_PRINT("lag = %d\n", lag);
-
-    // check H
+    // init & check H TODO dedupe with sample_c.cpp
     Hierarchy H(D.G.N);
-    if (inputs.size() > 5)
+
+    StructArray const matlabStructArrayH = inputs[0];
+    checkStructureElements(matlabStructArrayH, "H", fieldNamesH, fieldTypesH);
+
+    const TypedArray<double> _c = matlabStructArrayH[0]["c"];
+    if (_c.getNumberOfElements() != D.G.N)
     {
-        StructArray const matlabStructArrayH = inputs[5];
-        checkStructureElements(matlabStructArrayH, "H", fieldNamesH, fieldTypesH);
-
-        const TypedArray<double> _c = matlabStructArrayH[0]["c"];
-        if (_c.getNumberOfElements() != D.G.N)
-        {
-            displayError("H.c should have D.G.N elements");
-        }
-
-        const TypedArray<double> _theta = matlabStructArrayH[0]["theta"];
-        // TODO this is wrong; needs to be max(c)
-        // also, wtf try to pass Hout as input argument -> Busy
-        //if (_theta.getNumberOfElements() != D.G.N)
-        //{
-        //    displayError("H.theta should have D.G.N elements");
-        //}
-
-        const TypedArray<double> _mu = matlabStructArrayH[0]["mu"];
-        if (_mu.getNumberOfElements() != D.G.N)
-        {
-            displayError("H.mu should have D.G.N elements");
-        }
-
-        H.InitFromMATLAB(matlabStructArrayH);
+        displayError("H.c should have D.G.N elements");
     }
-    else
+
+    const TypedArray<double> _theta = matlabStructArrayH[0]["theta"];
+    // TODO this is wrong; needs to be max(c)
+    // also, wtf try to pass Hout as input argument -> Busy
+    //if (_theta.getNumberOfElements() != D.G.N)
+    //{
+    //    displayError("H.theta should have D.G.N elements");
+    //}
+
+    const TypedArray<double> _mu = matlabStructArrayH[0]["mu"];
+    if (_mu.getNumberOfElements() != D.G.N)
     {
-        H.InitFromPrior(D, h);
+        displayError("H.mu should have D.G.N elements");
     }
+
+    H.InitFromMATLAB(matlabStructArrayH);
 
     H.Print();
 
 
-    //std::vector<Hierarchy*> samples = sample(D, h, nsamples, burnin, lag, H);
-    sample(D, h, nsamples, burnin, lag, H);
+
+    // compute Loglik
+    //
+    double logp = H.LogLik(D, h);
 
 
     // read up on https://www.mathworks.com/help/matlab/apiref/matlab.data.arrayfactory.html?searchHighlight=createarray&s_tid=doc_srchtitle#bvn7dve-1
     ArrayFactory factory;   
 
-    // see https://www.mathworks.com/help/matlab/matlab_external/create-struct-arrays-1.html
-    StructArray resultH = factory.createStructArray({ 1,1 }, MexFunction::fieldNamesH ); // dims, fieldNames
+    Array result = factory.createScalar<double>(logp);
 
-    //resultH[0]["c"] = factory.createArray<int>({1, (size_t)H.N}, (const int*)H.c, (const int*)(H.c + H.N)); // double is the default in MATLAB; having int here introduces complications...
-    std::vector<double> c(H.c, H.c + H.N);
-    resultH[0]["c"] = factory.createArray<std::vector<double>::iterator, double>({1, (size_t)H.N}, c.begin(), c.end());
-    resultH[0]["p"] = factory.createScalar<double>(H.p);
-    resultH[0]["q"] = factory.createScalar<double>(H.q);
-    resultH[0]["tp"] = factory.createScalar<double>(H.tp);
-    resultH[0]["hp"] = factory.createScalar<double>(H.hp);
-    resultH[0]["theta"] = factory.createArray<std::vector<double>::iterator, double>({1, H.theta.size()}, H.theta.begin(), H.theta.end());
-    resultH[0]["mu"] = factory.createArray<double>({1, (size_t)H.N}, (const double*)H.mu, (const double*)(H.mu + H.N));
-
-    outputs[0] = resultH;
+    outputs[0] = result;
   }
 
 
@@ -297,42 +258,30 @@ public:
   // check function arguments
   // 
   void checkArguments(ArgumentList outputs, ArgumentList inputs) {
-      if (inputs.size() < 2)
+      if (inputs.size() < 3)
       {
-        displayError("Specify at least D and h as input arguments.");
+        displayError("Specify H, D and h as input arguments.");
       }
-      if (inputs.size() > 6)
+      if (inputs.size() > 3)
       {
         displayError("Too many input arguments.");
       }
-      if (outputs.size() > 2)
+      if (outputs.size() > 1)
       {
         displayError("Too many outputs specified.");
       }
 
       if (inputs[0].getType() != ArrayType::STRUCT)
       {
-        displayError("D must be a structure.");
+        displayError("H must be a structure.");
       }
       if (inputs[1].getType() != ArrayType::STRUCT)
       {
+        displayError("D must be a structure.");
+      }
+      if (inputs[2].getType() != ArrayType::STRUCT)
+      {
         displayError("h must be a structure.");
-      }
-      if (inputs.size() > 2 && inputs[2].getType() != ArrayType::DOUBLE)
-      {
-        displayError("nsamples must be a number.");
-      }
-      if (inputs.size() > 3 && inputs[3].getType() != ArrayType::DOUBLE)
-      {
-        displayError("burnin must be a number.");
-      }
-      if (inputs.size() > 4 && inputs[4].getType() != ArrayType::DOUBLE)
-      {
-        displayError("lag must be a number.");
-      }
-      if (inputs.size() > 5 && inputs[5].getType() != ArrayType::STRUCT)
-      {
-        displayError("H must be a structure.");
       }
   }
 };
