@@ -65,6 +65,9 @@ void sample(const Data &D, const Hyperparams &h, const int nsamples, const int b
 }
 
 
+using namespace matlab::mex;
+using namespace matlab::data;
+
 
 class MexFunction : public Function {
 private:

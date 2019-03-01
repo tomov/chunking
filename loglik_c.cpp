@@ -43,30 +43,6 @@
 #include "datastructs.h"
 
 
-//std::vector<Hierarchy*> 
-void sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin, const int lag, const Hierarchy &H)
-{
-    //std::vector<double> post;
-    //std::vector<Hierarchy*> samples;
-
-	DEBUG_PRINT("logprior = %.6lf\n", H.LogPrior(D,h));
-	DEBUG_PRINT("loglik = %.6lf\n", H.LogLik(D,h));
-	//DEBUG_PRINT("logpost = %.6lf\n", H.LogPost(D,h));
-
-
-    /*
-    for (int n = 0; n < nsamples * lag + burnin; n++)
-    {
-        for (int i = 0; i < D.G.N; i++)
-        {
-            // TODO
-        }
-    }
-
-    return samples;
-    */
-}
-
 
 
 class MexFunction : public Function {
