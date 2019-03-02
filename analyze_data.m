@@ -12,7 +12,8 @@
 %[data, Ts] = load_data('exp/results/subway9', 81); % for subway 10 repro TODO change phase = 2!
 
 %[data, Ts] = load_data('exp/results/exp_v2_3_subway10_unlearn/', 246); % for exp_v2_3 (subway 10 unlearn)
-[data, Ts] = load_data('exp/results/', 246); % for exp_v2_3 (subway 10 unlearn)
+[data, Ts] = load_data('exp/results/ARCHIVE/exp_v2_3_subway10_unlearn_batch3/', 246, false); % for exp_v2_3 (subway 10 unlearn)
+%[data, Ts] = load_data('exp/results/exp_', 246, false); % for exp_v2_3 (subway 10 unlearn)
 %load data.mat
 
 %data = data(durs < 50, :);
