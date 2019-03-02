@@ -57,8 +57,9 @@ double logpost_c_i(int c_i, int i, Hierarchy& H, const Data &D, const Hyperparam
 // proposal PMF for c_i
 // inspired by Algorithm 5 from Neal 1998: MCMC for DP mixtures
 //
+// notice proposal distr q(x'|x) = q(x') i.e. it's independent of previous cluster assignment => implements Independent Metropolis-Hastings
 // TODO optimize the crap out of it
-std::vector<double> propP_c_i(int c_i_old, int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
+std::vector<double> propP_c_i(int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
 {
     std::vector<double> cnt(H.cnt.begin(), H.cnt.end()); // TODO optimize -- no need to copy, could be done in O(1)
     cnt[H.c[i]]--;
@@ -93,18 +94,20 @@ std::vector<double> propP_c_i(int c_i_old, int i, const Hierarchy& H, const Data
 
 // propose c_i
 //
-int proprnd_c_i(int c_i_old, int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
+int proprnd_c_i(int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
 {
-    std::vector<double> P = propP_c_i(c_i_old, i, H, D, h);
+    std::vector<double> P = propP_c_i(i, H, D, h);
     int c_i_new = CatRnd(P) + 1;
 
     // TODO bridges
     return c_i_new;
 }
 
+// proposal distribution; note that it's symmetric b/c it doesn't really depend on c_i_old
+//
 double logprop_c_i(int c_i_new, int c_i_old, int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
 {
-    std::vector<double> P = propP_c_i(c_i_old, i, H, D, h);
+    std::vector<double> P = propP_c_i(i, H, D, h);
     double logP = log(P[c_i_new]);
     return logP;
 }
@@ -175,7 +178,27 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
     {
         for (int i = 0; i < D.G.N; i++)
         {
-            // TODO
+            int c_i_new = proprnd_c_i(H.c[i], i, H, D, h);
+            //
+            // A = min(1, [f(x') / q(x'|x)] / [f(x) / q(x|x')]
+            // where f = target distr, q = proposal distr, x' = proposal
+            //
+            int c_i_old = H.c[i];
+            H.c[i] = c_i_new;
+            double logpost_new = H.LogPost(D, h); // f(x')
+            H.c[i] = c_i_old;
+
+            double logpost_old = H.LogPost(D, h); // f(x)
+
+            double logprop_new = logprop_c_i(c_i_new, c_i_old, i, H, D, h); // q(x'|x)
+
+            double logprop_old = logprop_c_i(c_i_old, c_i_new, i, H, D, h); // q(x|x')
+
+            double logA = min(log(1), (logpost_new - logprop_new) - (logpost_old - logprop_old));
+            double A = exp(logA);
+
+            double U = UnifRnd();
+            f
         }
     }
 

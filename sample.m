@@ -112,7 +112,8 @@ end
 % proposal PMF for c_i
 % inspired by Algorithm 5 from Neal 1998: MCMC for DP mixtures
 %
-function P = propP_c_i(c_i_old, i, H, D, h)
+% notice proposal distr q(x'|x) = q(x') i.e. it's independent of previous cluster assignment => implements Independent Metropolis-Hastings
+function P = propP_c_i(i, H, D, h)
     cnt = get_H_cnt(H, D);
     cnt(H.c(i)) = cnt(H.c(i)) - 1;
     z = find(cnt == 0); % reuse empty bins TODO is this legit?
@@ -127,14 +128,14 @@ end
 % propose c_i
 %
 function c_i_new = proprnd_c_i(c_i_old, i, H, D, h)
-    P = propP_c_i(c_i_old, i, H, D, h);
+    P = propP_c_i(i, H, D, h);
     c_i_new = find(mnrnd(1, P));
 
     % TODO bridges
 end
 
 function [logP, P] = logprop_c_i(c_i_new, c_i_old, i, H, D, h) % TODO merge w/ proprnd
-    P = propP_c_i(c_i_old, i, H, D, h);
+    P = propP_c_i(i, H, D, h);
     logP = log(P(c_i_new));
 end
 
