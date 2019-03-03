@@ -229,10 +229,10 @@ errorbar(ms, sems, 'linestyle', 'none', 'color', 'black');
 plot([0 6], [0.5 0.5], '--', 'color', [0.5 0.5 0.5])
 plot([3.5 3.5], [0 0.7], '-', 'color', [0.5 0.5 0.5])
 hold off;
-ylabel('p(HBFS direction)');
+ylabel('p(go to 5)');
 xticks(1:6);
 xticklabels(index);
-xlabel('trial #');
+xlabel('trial # (probe)');
 title(sprintf('human N = %d', length(data)));
 
 
