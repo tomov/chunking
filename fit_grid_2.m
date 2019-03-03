@@ -4,7 +4,7 @@ N = [];
 h = init_hyperparams;
 nsamples = 10000;
 
-for alpha = 1 : 0.5 : 20
+for alpha = 3 : 0.5 : 20
     h.alpha = alpha;
     disp(h)
     tic

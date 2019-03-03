@@ -103,9 +103,9 @@ int proprnd_c_i(int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
     return c_i_new;
 }
 
-// proposal distribution; note that it's symmetric b/c it doesn't really depend on c_i_old
+// proposal distribution; note that it doesn't really depend on c_i_old
 //
-double logprop_c_i(int c_i_new, int c_i_old, int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
+double logprop_c_i(int c_i_new, int /*c_i_old*/, int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
 {
     std::vector<double> P = propP_c_i(i, H, D, h);
     double logP = log(P[c_i_new]);
@@ -184,10 +184,11 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             // where f = target distr, q = proposal distr, x' = proposal
             //
             int c_i_old = H.c[i];
-            H.c[i] = c_i_new;
-            double logpost_new = H.LogPost(D, h); // f(x')
-            H.c[i] = c_i_old;
 
+            H.c[i] = c_i_new;
+            double logpost_new = H.LogPost(D, h); // f(x') TODO can probs speed up, but connectivity messes things up
+
+            H.c[i] = c_i_old;
             double logpost_old = H.LogPost(D, h); // f(x)
 
             double logprop_new = logprop_c_i(c_i_new, c_i_old, i, H, D, h); // q(x'|x)
@@ -198,7 +199,16 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             double A = exp(logA);
 
             double U = UnifRnd();
-            f
+            if (U < A)
+            { 
+                // accept
+                H.c[i] = c_i_new;
+            }
+            else
+            {
+                // reject
+                H.c[i] = c_i_old; // TODO redundant
+            }
         }
     }
 
