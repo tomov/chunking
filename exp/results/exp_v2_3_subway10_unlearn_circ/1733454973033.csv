@@ -1,0 +1,2 @@
+group, subj_id, stage, trial, start, goal, path, length, RTs, keys, valid_keys, RT_tot, timestamp, datetime
+A,1733454973033,train,1,4,5,4 3 2 1 10 1 2 3 4 5,10,1148 964 1147 1517 875 900 1576 1007 732 1408 347 960 926 1834,40 40 40 39 39 39 37 37 37 37 38 38 38 32,1 2 4 5 7 8 11 12 13,15341,1551534920.69,Sat Mar 02 2019 05:55:20 GMT-0800 (Pacific Standard Time)

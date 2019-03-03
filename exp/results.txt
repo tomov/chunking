@@ -186,3 +186,20 @@ exp_v2_1.html in master (subway 10 no adj, no assoc)
     ARCHIVE/exp_v2_1_batch_2 <------------ 90%, 100+ hits!
 
     in exp_v2_1_subway_noadj_noassoc
+
+exp_v2_3.html in master (subway 10 unlearn, fucked -- arrows only...)
+
+    [Toyota] momchil subway 10 unlearn exp_v2_3 (dc20f4732c3e87b2e5b974d346475510d9c08e11)
+    ARCHIVE/exp_v2_3_subway10_unlearn_batch1 
+
+    in exp_v2_3_subway10_unlearn 
+
+exp_v2_3.html in master (subway 10 unlearn, fucked -- arrows and circles, yes!)
+
+    [Toyota] momchil subway 10 unlearn exp_v2_3 (ff8b9c72bc7206aee39cde003ace1fd8d5bf6573)
+    ARCHIVE/exp_v2_3_subway10_unlearn_batch2
+
+    [Toyota] momchil subway 10 unlearn exp_v2_3 (1a48634e266ccd9ef5519ecda9d5e60f4b4e82cc)
+    ARCHIVE/exp_v2_3_subway10_unlearn_batch3
+
+    merged in exp_v2_3_subway10_unlearn_circ
