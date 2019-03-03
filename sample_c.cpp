@@ -64,24 +64,27 @@ std::vector<double> propP_c_i(int i, const Hierarchy& H, const Data &D, const Hy
     std::vector<double> cnt(H.cnt.begin(), H.cnt.end()); // TODO optimize -- no need to copy, could be done in O(1)
     cnt[H.c[i]]--;
 
-    int z = -1;
+    std::vector<int> z;
     double sum = 0;
     for (int k = 0; k < cnt.size(); k++)
     {
         sum += cnt[k];
-        if (cnt[k] == 0 && z == -1)
+        if (cnt[k] == 0)
         {
-            z = k; // reuse empty bins TODO is this legit?
+            z.push_back(k); // reuse empty bins -- notice this is legit b/c we're not reusing parameters; empty bin = new cluster; in fact, we have to take care of that in case c_i_old was the only one by itelf
         }
     }
 
-    if (z == -1)
+    if (z.empty())
     {
         cnt.push_back(h.alpha);
     }
     else
     {
-        cnt[z] = h.alpha;
+        for (int i = 0; i < z.size(); i++)
+        {
+            cnt[z[i]] = h.alpha / z.size(); // notice all the empty bins have equal probability = alpha, but that's fine b/c it doesn't matter which one we use as the new cluster; we just have to make sure their total probability is not too high, otherwise effective alpha is greater
+        }
     }
 
     std::vector<double> P(cnt.size());

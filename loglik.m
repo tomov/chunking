@@ -48,7 +48,6 @@ function logp = loglik(H, D, h)
     % (hierarchical) edges
     N = max(H.c);
     E = get_H_E(H, D); % TODO prior or likelihood? who knows..
-    E
     cnt = get_H_cnt(H, D);
     for k = 1:N
         if cnt(k) > 0
