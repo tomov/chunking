@@ -1,6 +1,9 @@
 // compile with:
 //
 // mex sample_c.cpp printmex.cpp -I/usr/local/boost-1.64.0/include/
+// 
+// for debugging (mxAssert):
+// mex -g sample_c.cpp printmex.cpp -I/usr/local/boost-1.64.0/include/
 //
 // see https://stackoverflow.com/questions/16127060/what-is-the-default-location-for-boost-library-when-installed-using-macport-on-m
 // and https://www.mathworks.com/matlabcentral/answers/7955-using-boost-libraries-with-mex-function-in-matlab
@@ -36,8 +39,10 @@
 
 #include "mex.hpp"
 #include "mexAdapter.hpp"
+
 #include "printmex.h"
 #include "datastructs.h"
+
 #include <cmath>
 
 
@@ -62,7 +67,9 @@ double logpost_c_i(int c_i, int i, Hierarchy& H, const Data &D, const Hyperparam
 std::vector<double> propP_c_i(int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
 {
     std::vector<double> cnt(H.cnt.begin(), H.cnt.end()); // TODO optimize -- no need to copy, could be done in O(1)
-    cnt[H.c[i]]--;
+    assertThis(H.c[i] - 1 < cnt.size());
+    assertThis(cnt[H.c[i] - 1] > 0);
+    cnt[H.c[i] - 1]--; // careful with off-by-one!
 
     std::vector<int> z;
     double sum = 0;
@@ -100,7 +107,7 @@ std::vector<double> propP_c_i(int i, const Hierarchy& H, const Data &D, const Hy
 int proprnd_c_i(int /*c_i_old*/, int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
 {
     std::vector<double> P = propP_c_i(i, H, D, h);
-    int c_i_new = CatRnd(P) + 1;
+    int c_i_new = CatRnd(P) + 1; // careful with off-by-one!
 
     // TODO bridges
     return c_i_new;
@@ -189,9 +196,11 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             int c_i_old = H.c[i];
 
             H.c[i] = c_i_new;
+            H.PopulateCnt(); // TODO optimize !!
             double logpost_new = H.LogPost(D, h); // f(x') TODO can probs speed up, but connectivity messes things up
 
             H.c[i] = c_i_old;
+            H.PopulateCnt(); // TODO optimize !!
             double logpost_old = H.LogPost(D, h); // f(x)
 
             double logprop_new = logprop_c_i(c_i_new, c_i_old, i, H, D, h); // q(x'|x)
@@ -206,15 +215,16 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             { 
                 // accept
                 H.c[i] = c_i_new;
+                H.PopulateCnt(); // TODO optimize !!
             }
             else
             {
                 // reject
-                H.c[i] = c_i_old; // TODO redundant
+                assertThis(H.c[i] == c_i_old);
             }
         }
 
-        samples.push_back(new Hierarchy(H));
+        //samples.push_back(new Hierarchy(H));
     }
 
     return samples;
@@ -385,8 +395,20 @@ public:
     ArrayFactory factory;   
 
     // see https://www.mathworks.com/help/matlab/matlab_external/create-struct-arrays-1.html
-    StructArray resultH = factory.createStructArray({ 1, samples.size() }, MexFunction::fieldNamesH ); // dims, fieldNames
+    //StructArray resultH = factory.createStructArray({ 1, samples.size() }, MexFunction::fieldNamesH ); // dims, fieldNames
+    StructArray resultH = factory.createStructArray({ 1, 1 }, MexFunction::fieldNamesH ); // dims, fieldNames
 
+    std::vector<double> c(H.c, H.c + H.N);
+    resultH[0]["c"] = factory.createArray<std::vector<double>::iterator, double>({1, (size_t)H.N}, c.begin(), c.end());
+    resultH[0]["p"] = factory.createScalar<double>(H.p);
+    resultH[0]["q"] = factory.createScalar<double>(H.q);
+    resultH[0]["tp"] = factory.createScalar<double>(H.tp);
+    resultH[0]["hp"] = factory.createScalar<double>(H.hp);
+    resultH[0]["theta"] = factory.createArray<std::vector<double>::iterator, double>({1, H.theta.size()}, H.theta.begin(), H.theta.end());
+    resultH[0]["mu"] = factory.createArray<double>({1, (size_t)H.N}, (const double*)H.mu, (const double*)(H.mu + H.N));
+
+
+    /*
     for (int i = 0; i < samples.size(); i++)
     {
         Hierarchy *sample = samples[i];
@@ -404,6 +426,7 @@ public:
         // IMPORTANT!! free memory; otherwise memory leak => MATLAB hangs
         delete sample;
     }
+    */
 
     outputs[0] = resultH;
   }

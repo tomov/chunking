@@ -1,6 +1,7 @@
 // Hierarchy, Data, and Hyperparams classes
 //
 #include "printmex.h"
+
 #include <string>
 #include <memory>
 #include <random>
@@ -60,6 +61,7 @@ double NormRnd(double mu, double sigma)
 
 double NormPDF(double x, double mu, double sigma)
 {
+    DEBUG_PRINT("NormPDF(%lf, %lf)\n", mu, sigma);
     boost::math::normal_distribution<double> dist(mu, sigma);
     return boost::math::pdf(dist, x);
 }
@@ -387,6 +389,8 @@ void Hierarchy::InitFromPrior(const Data &D, const Hyperparams &h)
 
     for (int i = 0; i < D.G.N; i++)
     {
+        assertThis(this->c[i] - 1 >= 0, "this->c[i] - 1 >= 0, InitFromPrior");
+        assertThis(this->c[i] - 1 < this->theta.size(), "this->c[i] - 1 < this->theta.size(), InitFromPrior");
         this->mu[i] = NormRnd(this->theta[this->c[i] - 1], h.std_mu);
     }
 }
@@ -436,18 +440,19 @@ Hierarchy::~Hierarchy()
 
 double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
 {
-    assert(D.G.N == this->N);
+    assertThis(D.G.N == this->N, "D.G.N == this->N, LogPrior");
 
     double logP = 0;
 
     // cluster assignments
     //
     std::vector<int> cnt(this->cnt.size()); // temporary count
+    assertThis(this->c[0] - 1 < cnt.size(), "this->c[0] - 1 < cnt.size()");
     cnt[this->c[0] - 1] = 1;
     for (int i = 1; i < this->N; i++)
     {
         int c = this->c[i];
-        assert(c <= this->cnt.size());
+        assertThis(c - 1 < this->cnt.size(), "c - 1 < this->cnt.size()");
         if (cnt[c - 1] == 0)
         {
             logP += log(h.alpha) - log(i + h.alpha);
@@ -466,10 +471,11 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
 
     // cluster rewards
     //
-    assert(this->cnt.size() == this->theta.size());
+    assertThis(this->cnt.size() == this->theta.size(), "this->cnt.size() == this->theta.size()");
     for (int k = 0; k < this->theta.size(); k++)
     {
         // TODO optimize with norm dist objects for each k for H
+        DEBUG_PRINT("theta [%d] = %.4lf\n", k, this->theta[k]);
         logP += log(NormPDF(this->theta[k], h.theta_mean, h.std_theta));
     }
 
@@ -477,6 +483,8 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
     //
     for (int i = 0; i < this->N; i++)
     {
+        assertThis(this->c[i] - 1 >= 0, "this->c[i] - 1 >= 0");
+        assertThis(this->c[i] - 1 < this->theta.size(), "this->c[i] - 1 < this->theta.size()");
         logP += log(NormPDF(this->mu[i], this->theta[this->c[i] - 1], h.std_mu));
     }
 
@@ -492,7 +500,7 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
 
 double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
 {
-    assert(D.G.N == this->N);
+    assertThis(D.G.N == this->N, "D.G.N == this->N, LogLik");
 
     double logP = 0;
 
