@@ -232,6 +232,7 @@ class Hierarchy
 {
     public:
         Hierarchy(int _N);
+        Hierarchy(const Hierarchy &H); // copy constructor
         ~Hierarchy();
 
         void InitFromMATLAB(StructArray const matlabStructArrayH);
@@ -390,12 +391,38 @@ void Hierarchy::InitFromPrior(const Data &D, const Hyperparams &h)
     }
 }
 
+
 Hierarchy::Hierarchy(int _N)
 {
     N = _N;
     c = new int[N];
     mu = new double[N];
 }
+
+
+Hierarchy::Hierarchy(const Hierarchy &H)
+{
+    N = H.N;
+    cnt = H.cnt;
+    theta = H.theta;
+    p = H.p;
+    q = H.q;
+    hp = H.hp;
+    tp = H.tp;
+
+    c = new int[N];
+    for (int i = 0; i < this->N; i++)
+    {
+        c[i] = H.c[i];
+    }
+
+    mu = new double[N];
+    for (int i = 0; i < this->N; i++)
+    {
+        mu[i] = H.mu[i];
+    }
+}
+
 
 
 Hierarchy::~Hierarchy()
