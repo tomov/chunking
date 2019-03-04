@@ -1,5 +1,9 @@
 // Hierarchy, Data, and Hyperparams classes
 //
+
+#ifndef DATA_STRUCTS_H 
+#define DATA_STRUCTS_H
+
 #include "printmex.h"
 
 #include <string>
@@ -665,12 +669,14 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
 
     // state rewards
     //
+    /*
     for (int i = 0; i < this->N; i++)
     {
         assertThis(this->c[i] - 1 >= 0, "this->c[i] - 1 >= 0");
         assertThis(this->c[i] - 1 < this->theta.size(), "this->c[i] - 1 < this->theta.size()");
         logP += log(NormPDF(this->mu[i], this->theta[this->c[i] - 1], h.std_mu));
     }
+    */
 
     // prevent -Infs = impossible events; equivalent to using a Gaussian + uniform mixture
     //
@@ -870,3 +876,5 @@ double Hierarchy::LogPost(const Data &D, const Hyperparams &h) const
     double logP = this->LogPrior(D, h) + this->LogLik(D, h);
     return logP;
 }
+
+#endif
