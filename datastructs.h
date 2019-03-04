@@ -18,6 +18,8 @@ std::random_device rd;  //Will be used to obtain a seed for the random number en
 //std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
 std::mt19937 gen(0); // for reproducibility
 
+const double EPS = 1e-9;
+
 // random draw U ~ Unif(a, b)
 // see https://en.cppreference.com/w/cpp/numeric/random/uniform_real_distribution
 // 
@@ -237,15 +239,23 @@ class Hierarchy
         Hierarchy(const Hierarchy &H); // copy constructor
         ~Hierarchy();
 
+        bool Equals(const Hierarchy& H) const;
         void InitFromMATLAB(StructArray const matlabStructArrayH);
         void InitFromPrior(const Data &D, const Hyperparams &h);
         void PopulateCnt();
 
-        void Print();
+        void Print() const;
 
         double LogPrior(const Data &D, const Hyperparams &h) const;
         double LogLik(const Data &D, const Hyperparams &h) const;
         double LogPost(const Data &D, const Hyperparams &h) const;
+
+        double LogPost_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h);
+        void Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h);
+        void Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int /*out*/ &c_i_old, double /*out*/ theta_old)
+        void Undo_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int c_i_old, double theta_old);
+        
+        void Sanity();
 
         int N;
         int *c;
@@ -258,6 +268,155 @@ class Hierarchy
         std::vector<double> theta;
         double *mu;
 };
+
+// P(H|D) for updates of c_i
+// i.e. with new c's up to c_i, the candidate c_i, then old c's after (and old rest of H)
+//
+double LogPost_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h) // notice it's not const b/c it temporarily changes H for efficiency
+{
+    Hierarchy H(*this); // TODO DEBUg only
+
+    int c_i_old;
+    double theta_old;
+    this->Update_c_i(c_i_new, i, D, h, c_i_old, theta_old);
+
+    double logP = this->LogPost(D, h); // TODO much more efficiently, maybe
+
+    this->Undo(c_i_new, i, D, h, c_i_old, theta_old);
+
+    assertThis(this->Equals(H), "this->Equals(H)");
+    this->Sanity();
+}
+
+
+// set c[i] = c_i_new and update stuff accordingly
+void Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h)
+{
+    int c_i_old;
+    double theta; // dummies
+    Update_c_i(c_i_new, i, D, h);
+}
+
+// set c[i] = c_i_new and update stuff accordingly
+// also returns stuff that can redo the op
+// careful with off-by-one everywhere
+// 
+void Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int /*out*/ &c_i_old, double /*out*/ theta_old)
+{
+    c_i_old = H.c[i];
+
+    assertThis(c_i_old - 1 >= 0, "c_i_old - 1 >= 0, Update_c_i");
+    assertThis(c_i_old - 1 < this->cnt.size(), "c_i_old - 1 < this->cnt.size(), Update_c_i");
+    assertThis(this->cnt[c_i_old - 1] > 0, "this->cnt[c_i_old - 1] > 0, Update_c_i");
+    this->cnt[c_i_old - 1]--;
+
+    assertThis(c_i_new - 1 >= 0, "c_i_new - 1 >= 0, Update_c_i");
+    assertThis(c_i_new - 1 <= this->cnt.size(), "c_i_new - 1 <= this->cnt.size(), Update_c_i"); // note we allow equality
+    // creating new cluster
+    if (c_i_new - 1 == this->cnt.size())
+    {
+        this->cnt.push_back(0);
+        this->theta.push_back(nan());
+    }
+
+    this->cnt[c_i_new - 1]++;
+
+    theta_old = this->theta[c_i_new - 1];
+    if (this->cnt[c_i_new - 1] == 1)
+    {
+        // created a new cluster, so create a new theta -- note that we could be reusing an old one, so we take care to save the theta in case we need to undo this, e.g. when computing the MCMC updates
+        this->theta[c_i_new - 1] = NormRnd(h.theta_mean, h.std_theta); // InitFromPrior
+    }
+
+    this->Sanity(); // TODO DEBUG only
+}
+
+// undo Update_c_i; notice we go in reverse order
+// careful with off-by-one everywhere
+//
+void Undo_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int c_i_old, double theta_old)
+{
+    assertThis(c_i_new - 1 >= 0, "c_i_new - 1 >= 0, Undo_c_i");
+    assertThis(c_i_new - 1 < this->cnt.size(), "c_i_new - 1 < this->cnt.size(), Undo_c_i"); // notice strict < here
+    if (this->cnt[c_i_new - 1] == 1)
+    {
+        this->theta[c_i_new - 1] = theta_old;
+    }
+
+    assertThis(this->cnt[c_i_new - 1] > 0, "this->cnt[c_i_new - 1] > 0, Undo_c_i");
+    this->cnt[c_i_new - 1]--;
+
+    if (c_i_new === this->cnt.size())
+    {
+        this->cnt.pop_back();
+        this->theta.pop_back();
+    }
+
+    assertThis(c_i_old - 1 >= 0, "c_i_old - 1 >= 0, Undo_c_i");
+    assertThis(c_i_old - 1 < this->cnt.size(), "c_i_old - 1 < this->cnt.size(), Undo_c_i");
+    this->cnt[c_i_old - 1]++;
+
+    this->c[i] = c_i_old;
+}
+
+
+// TODO DEBUG only
+void Sanity()
+{
+    assertThis(D.G.N == this->N, "D.G.N == this->N, Sanity");
+    assertThis(this->cnt.size() == this->theta.size(), "this->cnt.size() == this->theta.size(), Sanity");
+
+    int K = *std::max_element(this->c, this->c + N); // # of clusters
+    assert(this->cnt.size() == K, "this->cnt.size() == K, Sanity");
+
+    std::vector<int> cnt(this->cnt.size());
+    for (int i = 0; i < D.G.N; i++)
+    {
+        assertThis(this->cnt[c_i_old - 1] > 0, "this->cnt[c_i_old - 1] > 0, Update_c_i");
+        cnt[this->c[i] - 1]++;
+    }
+
+    int sum = 0;
+    for (int k = 0; k < K; k++)
+    {
+        sum += this->cnt[k];
+        assertThis(this->cnt[k] == cnt[k], "this->cnt[k] == cnt[k], Sanity");
+        assertThis(!isnan(this->theta[k]), "!isnan(this->theta[k])");
+    }
+    assertThis(sum == this->N, "sum == this->N, Sanity");
+
+    for (int i = 0; i < D.G.N; i++)
+    {
+        assertThis(this->c[i] - 1 >= 0, "this->c[i] - 1 >= 0, Sanity");
+        assertThis(this->c[i] - 1 < this->theta.size(), "this->c[i] - 1 < this->theta.size(), Sanity");
+        assertThis(this->c[i] - 1 < this->cnt.size(), "this->c[i] - 1 < this->cnt.size(), Sanity");
+    }
+}
+
+
+bool Equals(const Hierarchy& H) const
+{
+    if (this->N != H.N) return false;
+    if (fabs(this->p - H.p) > EPS) return false;
+    if (fabs(this->q - H.q) > EPS) return false;
+    if (fabs(this->tp - H.tp) > EPS) return false;
+    if (fabs(this->hp - H.hp) > EPS) return false;
+
+    for (int i = 0; i < this->N; i++)
+    {
+        if (this->c[i] != H.c[i]) return false;
+        if (fabs(this->mu[i] - H.mu[i]) > EPS) return false;
+    }
+
+    for (int k = 0; k < this->cnt.size(); k++)
+    {
+        if (this->cnt[k] != H.cnt[k]) return false;
+        if (fabs(this->theta[k] - H.theta[k]) > EPS) return false;
+    }
+
+    return true;
+}
+
 
 // populate cluster cnt counts from cluster assignments c
 //

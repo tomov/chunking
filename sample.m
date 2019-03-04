@@ -74,6 +74,8 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag, H)
 
 		logprop_thetamu = @(p_new, p_old) logprop_unbounded(p_new, p_old, H, D, h);
 
+        % TODO BUG FIXME thetas for new clusters...
+
 		% thetas
         for k = 1:length(H.c)
             proprnd_thetak = @(p_old) proprnd_unbounded(p_old, H, D, h);

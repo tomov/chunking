@@ -195,12 +195,8 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             //
             int c_i_old = H.c[i];
 
-            H.c[i] = c_i_new;
-            H.PopulateCnt(); // TODO optimize !!
-            double logpost_new = H.LogPost(D, h); // f(x') TODO can probs speed up, but connectivity messes things up
+            double logpost_new = H.LogPost_c_i(c_i_new, i, D, h); // f(x') TODO can probs speed up, but connectivity messes things up
 
-            H.c[i] = c_i_old;
-            H.PopulateCnt(); // TODO optimize !!
             double logpost_old = H.LogPost(D, h); // f(x)
 
             double logprop_new = logprop_c_i(c_i_new, c_i_old, i, H, D, h); // q(x'|x)
@@ -214,8 +210,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             if (U < A)
             { 
                 // accept
-                H.c[i] = c_i_new;
-                H.PopulateCnt(); // TODO optimize !!
+                H.Update_c_i(c_i_new, i, D, h);
             }
             else
             {
