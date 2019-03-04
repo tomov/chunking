@@ -219,7 +219,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             }
         }
 
-        //samples.push_back(new Hierarchy(H));
+        samples.push_back(new Hierarchy(H));
     }
 
     return samples;
@@ -390,9 +390,9 @@ public:
     ArrayFactory factory;   
 
     // see https://www.mathworks.com/help/matlab/matlab_external/create-struct-arrays-1.html
-    //StructArray resultH = factory.createStructArray({ 1, samples.size() }, MexFunction::fieldNamesH ); // dims, fieldNames
-    StructArray resultH = factory.createStructArray({ 1, 1 }, MexFunction::fieldNamesH ); // dims, fieldNames
 
+    /*
+    StructArray resultH = factory.createStructArray({ 1, 1 }, MexFunction::fieldNamesH ); // dims, fieldNames
     std::vector<double> c(H.c, H.c + H.N);
     resultH[0]["c"] = factory.createArray<std::vector<double>::iterator, double>({1, (size_t)H.N}, c.begin(), c.end());
     resultH[0]["p"] = factory.createScalar<double>(H.p);
@@ -401,9 +401,10 @@ public:
     resultH[0]["hp"] = factory.createScalar<double>(H.hp);
     resultH[0]["theta"] = factory.createArray<std::vector<double>::iterator, double>({1, H.theta.size()}, H.theta.begin(), H.theta.end());
     resultH[0]["mu"] = factory.createArray<double>({1, (size_t)H.N}, (const double*)H.mu, (const double*)(H.mu + H.N));
+    */
 
 
-    /*
+    StructArray resultH = factory.createStructArray({ 1, samples.size() }, MexFunction::fieldNamesH ); // dims, fieldNames
     for (int i = 0; i < samples.size(); i++)
     {
         Hierarchy *sample = samples[i];
@@ -421,7 +422,6 @@ public:
         // IMPORTANT!! free memory; otherwise memory leak => MATLAB hangs
         delete sample;
     }
-    */
 
     outputs[0] = resultH;
   }
