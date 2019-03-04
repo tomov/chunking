@@ -197,6 +197,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
 
             double logpost_new = H.LogPost_c_i(c_i_new, i, D, h); // f(x') TODO can probs speed up, but connectivity messes things up
 
+            /*
             double logpost_old = H.LogPost(D, h); // f(x)
 
             double logprop_new = logprop_c_i(c_i_new, c_i_old, i, H, D, h); // q(x'|x)
@@ -217,6 +218,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
                 // reject
                 assertThis(H.c[i] == c_i_old);
             }
+            */
         }
 
         //samples.push_back(new Hierarchy(H));

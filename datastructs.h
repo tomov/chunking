@@ -341,9 +341,6 @@ void Hierarchy::Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams 
 //
 void Hierarchy::Undo_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int c_i_old, double theta_old)
 {
-    this->Print();
-    DEBUG_PRINT(" undo_c_i -- c_i_new = %d, i = %d; c_i_old = %d\n", c_i_new, i, c_i_old);
-
     assertThis(c_i_new - 1 >= 0, "c_i_new - 1 >= 0, Undo_c_i");
     assertThis(c_i_new - 1 < this->cnt.size(), "c_i_new - 1 < this->cnt.size(), Undo_c_i"); // notice strict < here
     if (this->cnt[c_i_new - 1] == 1)
@@ -354,12 +351,15 @@ void Hierarchy::Undo_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h
     assertThis(this->cnt[c_i_new - 1] > 0, "this->cnt[c_i_new - 1] > 0, Undo_c_i");
     this->cnt[c_i_new - 1]--;
 
-    if (c_i_new == this->cnt.size() && this->cnt[c_i_new - 1] == 0)
+    if (c_i_new == this->cnt.size() && isnan(theta_old))
     {
         // we added a new cluster -> remove it
         this->cnt.pop_back();
         this->theta.pop_back();
     }
+
+    DEBUG_PRINT(" undo_c_i -- c_i_new = %d, i = %d; c_i_old = %d\n", c_i_new, i, c_i_old);
+    this->Print();
 
     assertThis(c_i_old - 1 >= 0, "c_i_old - 1 >= 0, Undo_c_i");
     assertThis(c_i_old - 1 < this->cnt.size(), "c_i_old - 1 < this->cnt.size(), Undo_c_i");
@@ -384,7 +384,7 @@ void Hierarchy::Sanity()
     assertThis(this->cnt.size() == this->theta.size(), "this->cnt.size() == this->theta.size(), Sanity");
 
     int K = *std::max_element(this->c, this->c + N); // # of clusters
-    assertThis(this->cnt.size() == K, "this->cnt.size() == K, Sanity");
+    assertThis(this->cnt.size() >= K, "this->cnt.size() >= K, Sanity");
 
     std::vector<int> cnt(this->cnt.size());
     for (int i = 0; i < this->N; i++)
