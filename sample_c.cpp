@@ -257,26 +257,100 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             }
         }
 
-        // update probabilities
+        // update H.p 
         //
-        double p_new = proprnd_p(H.p, H, D, h);
-        double p_old = H.p;
-
-        double logpost_new = logpost_p(p_new, H, D, h);
-        double logpost_old = H.LogPost(D, h); // TODO calculate once only
-
-        double logprop_new = logprop_p(p_new, p_old, H, D, h);
-        double logprop_old = logprop_p(p_old, p_new, H, D, h);
-
-        if (MetropolisHastingsFlip(logpost_new, logpost_old, logprop_new, logprop_old))
-        { 
-            // accept
-            H.p = p_new;
-        }
-        else
         {
-            // reject
-            assertThis(fabs(H.p - p_old) < EPS);
+            double p_new = proprnd_p(H.p, H, D, h);
+            double p_old = H.p;
+
+            double logpost_new = logpost_p(p_new, H, D, h);
+            double logpost_old = H.LogPost(D, h); // TODO calculate once only
+
+            double logprop_new = logprop_p(p_new, p_old, H, D, h);
+            double logprop_old = logprop_p(p_old, p_new, H, D, h);
+
+            if (MetropolisHastingsFlip(logpost_new, logpost_old, logprop_new, logprop_old))
+            { 
+                // accept
+                H.p = p_new;
+            }
+            else
+            {
+                // reject
+                assertThis(fabs(H.p - p_old) < EPS);
+            }
+        }
+
+        // update H.q TODO refactor
+        //
+        {
+            double q_new = proprnd_p(H.q, H, D, h);
+            double q_old = H.q;
+
+            double logpost_new = logpost_q(q_new, H, D, h);
+            double logpost_old = H.LogPost(D, h); // TODO calculate once only
+
+            double logprop_new = logprop_p(q_new, q_old, H, D, h);
+            double logprop_old = logprop_p(q_old, q_new, H, D, h);
+
+            if (MetropolisHastingsFlip(logpost_new, logpost_old, logprop_new, logprop_old))
+            { 
+                // accept
+                H.q = q_new;
+            }
+            else
+            {
+                // reject
+                assertThis(fabs(H.q - q_old) < EPS);
+            }
+        }
+
+        // update H.hp TODO refactor
+        //
+        {
+            double hp_new = proprnd_p(H.hp, H, D, h);
+            double hp_old = H.hp;
+
+            double logpost_new = logpost_hp(hp_new, H, D, h);
+            double logpost_old = H.LogPost(D, h); // TODO calculate once only
+
+            double logprop_new = logprop_p(hp_new, hp_old, H, D, h);
+            double logprop_old = logprop_p(hp_old, hp_new, H, D, h);
+
+            if (MetropolisHastingsFlip(logpost_new, logpost_old, logprop_new, logprop_old))
+            { 
+                // accept
+                H.hp = hp_new;
+            }
+            else
+            {
+                // reject
+                assertThis(fabs(H.hp - hp_old) < EPS);
+            }
+        }
+
+        // update H.tp TODO refactor
+        //
+        {
+            double tp_new = proprnd_p(H.tp, H, D, h);
+            double tp_old = H.tp;
+
+            double logpost_new = logpost_tp(tp_new, H, D, h);
+            double logpost_old = H.LogPost(D, h); // TODO calculate once only
+
+            double logprop_new = logprop_p(tp_new, tp_old, H, D, h);
+            double logprop_old = logprop_p(tp_old, tp_new, H, D, h);
+
+            if (MetropolisHastingsFlip(logpost_new, logpost_old, logprop_new, logprop_old))
+            { 
+                // accept
+                H.tp = tp_new;
+            }
+            else
+            {
+                // reject
+                assertThis(fabs(H.tp - tp_old) < EPS);
+            }
         }
 
 
