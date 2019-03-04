@@ -171,7 +171,7 @@ double logpost_hp(double hp, Hierarchy& H, const Data &D, const Hyperparams &h)
 
 
 
-// draw proposals for p; random walk 
+// draw proposals for p; random walk, bounded between 0 and 1
 // TODO rm useless params; from below too
 //
 double proprnd_p(double p_old, const Hierarchy &H, const Data &D, const Hyperparams &h)
@@ -196,6 +196,48 @@ double logprop_p(double p_new, double p_old, const Hierarchy &H, const Data &D, 
     double logP = log(NormPDF(p_new, p_old, 0.1)) - log(Z);
     return logP;
 }
+
+
+// P(H|D) for updates of theta
+//
+double logpost_theta(double theta_k, int k, Hierarchy& H, const Data &D, const Hyperparams &h)
+{
+    double theta_old = H.theta[k];
+    H.theta[k] = theta_k;
+    double logP = H.LogPost(D, h);
+    H.theta[k] = theta_old;
+    return logP;
+}
+
+// P(H|D) for updates of mu
+// TODO optimize all the logposts....
+//
+double logpost_mu(double mu_i, int i, Hierarchy& H, const Data &D, const Hyperparams &h)
+{
+    double mu_old = H.mu[i];
+    H.mu[i] = mu_i;
+    double logP = H.LogPost(D, h);
+    H.mu[i] = mu_old;
+    return logP;
+}
+
+
+// proposals for mu, theta; random walk
+//
+double proprnd_unbounded(double p_old, const Hierarchy &H, const Data &D, const Hyperparams &h)
+{
+    double p_new = NormRnd(p_old, 1); // TODO const TODO adaptive
+    return p_new;
+}
+
+// unbounded proposal f'n
+// 
+double logprop_unbounded(double p_new, double p_old, const Hierarchy &H, const Data &D, const Hyperparams &h)
+{
+    double logP = log(NormPDF(p_new, p_old, 1)); // TODO const TODO adaptive
+    return logP;
+}
+
 
 
 
@@ -353,8 +395,60 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             }
         }
 
+        // update thetas
+        //
+        for (int k = 0; k < H.theta.size(); k++)
+        {
+            double theta_k_new = proprnd_unbounded(H.theta[k], H, D, h);
+            double theta_k_old = H.theta[k];
+
+            double logpost_new = logpost_theta(theta_k_new, k, H, D, h);
+            double logpost_old = H.LogPost(D, h); // TODO optim
+
+            double logprop_new = logprop_unbounded(theta_k_new, theta_k_old, H, D, h);
+            double logprop_old = logprop_unbounded(theta_k_old, theta_k_new, H, D, h);
+
+            if (MetropolisHastingsFlip(logpost_new, logpost_old, logprop_new, logprop_old))
+            { 
+                // accept
+                H.theta[k] = theta_k_new;
+            }
+            else
+            {
+                // reject
+                assertThis(fabs(H.theta[k] - theta_k_old) < EPS);
+            }
+        }
+
+        // update mus
+        //
+        for (int i = 0; i < H.N; i++)
+        {
+            double mu_i_new = proprnd_unbounded(H.mu[i], H, D, h);
+            double mu_i_old = H.mu[i];
+
+            double logpost_new = logpost_mu(mu_i_new, i, H, D, h);
+            double logpost_old = H.LogPost(D, h); // TODO optim
+
+            double logprop_new = logprop_unbounded(mu_i_new, mu_i_old, H, D, h);
+            double logprop_old = logprop_unbounded(mu_i_old, mu_i_new, H, D, h);
+
+            if (MetropolisHastingsFlip(logpost_new, logpost_old, logprop_new, logprop_old))
+            { 
+                // accept
+                H.mu[i] = mu_i_new;
+            }
+            else
+            {
+                // reject
+                assertThis(fabs(H.mu[i] - mu_i_old) < EPS);
+            }
+        }
+
+        // TODO bridges
 
         samples.push_back(new Hierarchy(H));
+        // TODO post
     }
 
     return samples;
