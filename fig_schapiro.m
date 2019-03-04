@@ -5,7 +5,7 @@ clear all;
 %load('schapiro_alpha=2_nsamples=20.mat');
 
 load('schapiro_alpha=2_nsamples=100.mat');
-%load schapiro_N=31_alpha=2.0000_nsamples=1000.mat  % <-- sample_c
+load schapiro_N=31_alpha=2.0000_nsamples=1000.mat  % <-- sample_c
 %load schapiro_N=32_alpha=2.0000_nsamples=1000.mat  % <-- sample repros!!!!
 
 figure('pos', [100 100 1000 600] * 3/4);
