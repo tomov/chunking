@@ -260,9 +260,9 @@ bool MetropolisHastingsFlip(double logpost_new, double logpost_old, double logpr
 
 
 std::vector<Hierarchy*> 
-sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin, const int lag, Hierarchy &H)
+sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin, const int lag, Hierarchy &H, std::vector<double> /*out*/ &post)
 {
-    std::vector<double> post;
+    post.clear();
     std::vector<Hierarchy*> samples;
 
     // Roberts & Rosenthal (2009)
@@ -448,7 +448,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
         // TODO bridges
 
         samples.push_back(new Hierarchy(H));
-        // TODO post
+        post.push_back(H.LogPost(D, h)); // TODO optim
     }
 
     return samples;
@@ -611,7 +611,8 @@ public:
     H.Print();
 
 
-    std::vector<Hierarchy*> samples = sample(D, h, nsamples, burnin, lag, H);
+    std::vector<double> post;
+    std::vector<Hierarchy*> samples = sample(D, h, nsamples, burnin, lag, H, post);
     //sample(D, h, nsamples, burnin, lag, H);
 
 
@@ -633,6 +634,8 @@ public:
     */
 
 
+    // return H = the samples
+    //
     StructArray resultH = factory.createStructArray({ 1, samples.size() }, MexFunction::fieldNamesH ); // dims, fieldNames
     for (int i = 0; i < samples.size(); i++)
     {
@@ -653,6 +656,13 @@ public:
     }
 
     outputs[0] = resultH;
+
+    // return post = the log posterior
+    //
+    assertThis(samples.size() == post.size(), "samples.size() == post.size()");
+    Array resultP = factory.createArray<std::vector<double>::iterator, double>({1, post.size()}, post.begin(), post.end());
+
+    outputs[1] = resultP;
   }
 
 

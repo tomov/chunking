@@ -22,7 +22,7 @@ function logp = logprior(H, D, h)
 
 
     % cluster rewards
-    for k = 1:length(H.c) % TODO bug? max(H.c)?
+    for k = 1:length(H.theta)
         % account for impact of theta on posterior
         % below probability is Pr that the particular value of theta was
         % drawn given that it was drawn from a normal dist w mu = 0, var =
