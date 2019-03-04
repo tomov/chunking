@@ -189,7 +189,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
         for (int i = 0; i < D.G.N; i++)
         {
             int c_i_new = proprnd_c_i(H.c[i], i, H, D, h);
-            //
+
             // A = min(1, [f(x') / q(x'|x)] / [f(x) / q(x|x')]
             // where f = target distr, q = proposal distr, x' = proposal
             //
@@ -197,14 +197,13 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
 
             double logpost_new = H.LogPost_c_i(c_i_new, i, D, h); // f(x') TODO can probs speed up, but connectivity messes things up
 
-            /*
             double logpost_old = H.LogPost(D, h); // f(x)
 
             double logprop_new = logprop_c_i(c_i_new, c_i_old, i, H, D, h); // q(x'|x)
 
             double logprop_old = logprop_c_i(c_i_old, c_i_new, i, H, D, h); // q(x|x')
 
-            double logA = std::min(log(1), (logpost_new - logprop_new) - (logpost_old - logprop_old));
+            double logA = std::min(log(1), (logpost_new - logprop_new) - (logpost_old - logprop_old)); // note logs
             double A = exp(logA);
 
             double U = UnifRnd();
@@ -218,7 +217,6 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
                 // reject
                 assertThis(H.c[i] == c_i_old);
             }
-            */
         }
 
         //samples.push_back(new Hierarchy(H));

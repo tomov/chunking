@@ -296,7 +296,7 @@ void Hierarchy::Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams 
 {
     int c_i_old;
     double theta; // dummies
-    Update_c_i(c_i_new, i, D, h);
+    Update_c_i(c_i_new, i, D, h, c_i_old, theta);
 }
 
 // set c[i] = c_i_new and update stuff accordingly
