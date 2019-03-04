@@ -12,6 +12,7 @@
 
 // TODO separate into .h and .cpp
 
+
 // see https://en.cppreference.com/w/cpp/numeric/random/uniform_real_distribution
 // for random number generation
 std::random_device rd;  //Will be used to obtain a seed for the random number engine
@@ -377,16 +378,17 @@ void Hierarchy::Undo_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h
 }
 
 
-// TODO DEBUG only
 void Hierarchy::Sanity(const Data &D, const Hyperparams &h)
 {
+#if DEBUG == 1
     assertThis(D.G.N == this->N, "D.G.N == this->N, Sanity");
     this->Sanity();
+#endif
 }
 
-// TODO DEBUG only
 void Hierarchy::Sanity()
 {
+#if DEBUG == 1
     assertThis(this->cnt.size() == this->theta.size(), "this->cnt.size() == this->theta.size(), Sanity");
 
     int K = *std::max_element(this->c, this->c + N); // # of clusters
@@ -413,6 +415,7 @@ void Hierarchy::Sanity()
         assertThis(this->c[i] - 1 < this->theta.size(), "this->c[i] - 1 < this->theta.size(), Sanity");
         assertThis(this->c[i] - 1 < this->cnt.size(), "this->c[i] - 1 < this->cnt.size(), Sanity");
     }
+#endif
 }
 
 
