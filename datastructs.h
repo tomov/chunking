@@ -63,7 +63,6 @@ double NormRnd(double mu, double sigma)
 
 double NormPDF(double x, double mu, double sigma)
 {
-    DEBUG_PRINT("NormPDF(%lf, %lf)\n", mu, sigma);
     boost::math::normal_distribution<double> dist(mu, sigma);
     return boost::math::pdf(dist, x);
 }
@@ -252,9 +251,10 @@ class Hierarchy
 
         double LogPost_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h);
         void Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h);
-        void Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int /*out*/ &c_i_old, double /*out*/ theta_old)
+        void Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int /*out*/ &c_i_old, double /*out*/ &theta_old);
         void Undo_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int c_i_old, double theta_old);
         
+        void Sanity(const Data &D, const Hyperparams &h);
         void Sanity();
 
         int N;
@@ -272,7 +272,7 @@ class Hierarchy
 // P(H|D) for updates of c_i
 // i.e. with new c's up to c_i, the candidate c_i, then old c's after (and old rest of H)
 //
-double LogPost_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h) // notice it's not const b/c it temporarily changes H for efficiency
+double Hierarchy::LogPost_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h) // notice it's not const b/c it temporarily changes H for efficiency
 {
     Hierarchy H(*this); // TODO DEBUg only
 
@@ -282,15 +282,17 @@ double LogPost_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h) // n
 
     double logP = this->LogPost(D, h); // TODO much more efficiently, maybe
 
-    this->Undo(c_i_new, i, D, h, c_i_old, theta_old);
+    this->Undo_c_i(c_i_new, i, D, h, c_i_old, theta_old);
 
     assertThis(this->Equals(H), "this->Equals(H)");
-    this->Sanity();
+    this->Sanity(D, h);
+
+    return logP;
 }
 
 
 // set c[i] = c_i_new and update stuff accordingly
-void Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h)
+void Hierarchy::Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h)
 {
     int c_i_old;
     double theta; // dummies
@@ -301,9 +303,10 @@ void Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h)
 // also returns stuff that can redo the op
 // careful with off-by-one everywhere
 // 
-void Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int /*out*/ &c_i_old, double /*out*/ theta_old)
+void Hierarchy::Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int /*out*/ &c_i_old, double /*out*/ &theta_old)
 {
-    c_i_old = H.c[i];
+    c_i_old = this->c[i];
+    this->c[i] = c_i_new;
 
     assertThis(c_i_old - 1 >= 0, "c_i_old - 1 >= 0, Update_c_i");
     assertThis(c_i_old - 1 < this->cnt.size(), "c_i_old - 1 < this->cnt.size(), Update_c_i");
@@ -316,7 +319,7 @@ void Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int /*o
     if (c_i_new - 1 == this->cnt.size())
     {
         this->cnt.push_back(0);
-        this->theta.push_back(nan());
+        this->theta.push_back(nan(""));
     }
 
     this->cnt[c_i_new - 1]++;
@@ -328,14 +331,19 @@ void Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int /*o
         this->theta[c_i_new - 1] = NormRnd(h.theta_mean, h.std_theta); // InitFromPrior
     }
 
-    this->Sanity(); // TODO DEBUG only
+    DEBUG_PRINT(" update_c_i -- c_i_new = %d, i = %d; c_i_old = %d\n", c_i_new, i, c_i_old);
+    this->Print();
+    this->Sanity(D, h); // TODO DEBUG only
 }
 
 // undo Update_c_i; notice we go in reverse order
 // careful with off-by-one everywhere
 //
-void Undo_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int c_i_old, double theta_old)
+void Hierarchy::Undo_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int c_i_old, double theta_old)
 {
+    this->Print();
+    DEBUG_PRINT(" undo_c_i -- c_i_new = %d, i = %d; c_i_old = %d\n", c_i_new, i, c_i_old);
+
     assertThis(c_i_new - 1 >= 0, "c_i_new - 1 >= 0, Undo_c_i");
     assertThis(c_i_new - 1 < this->cnt.size(), "c_i_new - 1 < this->cnt.size(), Undo_c_i"); // notice strict < here
     if (this->cnt[c_i_new - 1] == 1)
@@ -346,8 +354,9 @@ void Undo_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int c_i_o
     assertThis(this->cnt[c_i_new - 1] > 0, "this->cnt[c_i_new - 1] > 0, Undo_c_i");
     this->cnt[c_i_new - 1]--;
 
-    if (c_i_new === this->cnt.size())
+    if (c_i_new == this->cnt.size() && this->cnt[c_i_new - 1] == 0)
     {
+        // we added a new cluster -> remove it
         this->cnt.pop_back();
         this->theta.pop_back();
     }
@@ -357,22 +366,29 @@ void Undo_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h, int c_i_o
     this->cnt[c_i_old - 1]++;
 
     this->c[i] = c_i_old;
+
+    this->Sanity(D, h); // TODO DEBUG only
 }
 
 
 // TODO DEBUG only
-void Sanity()
+void Hierarchy::Sanity(const Data &D, const Hyperparams &h)
 {
     assertThis(D.G.N == this->N, "D.G.N == this->N, Sanity");
+    this->Sanity();
+}
+
+// TODO DEBUG only
+void Hierarchy::Sanity()
+{
     assertThis(this->cnt.size() == this->theta.size(), "this->cnt.size() == this->theta.size(), Sanity");
 
     int K = *std::max_element(this->c, this->c + N); // # of clusters
-    assert(this->cnt.size() == K, "this->cnt.size() == K, Sanity");
+    assertThis(this->cnt.size() == K, "this->cnt.size() == K, Sanity");
 
     std::vector<int> cnt(this->cnt.size());
-    for (int i = 0; i < D.G.N; i++)
+    for (int i = 0; i < this->N; i++)
     {
-        assertThis(this->cnt[c_i_old - 1] > 0, "this->cnt[c_i_old - 1] > 0, Update_c_i");
         cnt[this->c[i] - 1]++;
     }
 
@@ -385,7 +401,7 @@ void Sanity()
     }
     assertThis(sum == this->N, "sum == this->N, Sanity");
 
-    for (int i = 0; i < D.G.N; i++)
+    for (int i = 0; i < this->N; i++)
     {
         assertThis(this->c[i] - 1 >= 0, "this->c[i] - 1 >= 0, Sanity");
         assertThis(this->c[i] - 1 < this->theta.size(), "this->c[i] - 1 < this->theta.size(), Sanity");
@@ -394,7 +410,7 @@ void Sanity()
 }
 
 
-bool Equals(const Hierarchy& H) const
+bool Hierarchy::Equals(const Hierarchy& H) const
 {
     if (this->N != H.N) return false;
     if (fabs(this->p - H.p) > EPS) return false;
@@ -473,9 +489,11 @@ void Hierarchy::InitFromMATLAB(StructArray const matlabStructArrayH)
     }
 
     this->PopulateCnt();
+
+    this->Sanity();
 }
 
-void Hierarchy::Print()
+void Hierarchy::Print() const
 {
     DEBUG_PRINT("H.c = [");
     for (int i = 0; i < this->N; i++)
@@ -552,6 +570,8 @@ void Hierarchy::InitFromPrior(const Data &D, const Hyperparams &h)
         assertThis(this->c[i] - 1 < this->theta.size(), "this->c[i] - 1 < this->theta.size(), InitFromPrior");
         this->mu[i] = NormRnd(this->theta[this->c[i] - 1], h.std_mu);
     }
+
+    this->Sanity(D, h);
 }
 
 
@@ -590,11 +610,8 @@ Hierarchy::Hierarchy(const Hierarchy &H)
 
 Hierarchy::~Hierarchy()
 {
-    DEBUG_PRINT("deleting c for %p\n", this);
     delete [] c;
-    DEBUG_PRINT("deleting mu for %p\n", this);
     delete [] mu;
-    DEBUG_PRINT("deleted all! for %p\n", this);
 }
 
 double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
@@ -634,7 +651,6 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
     for (int k = 0; k < this->theta.size(); k++)
     {
         // TODO optimize with norm dist objects for each k for H
-        DEBUG_PRINT("theta [%d] = %.4lf\n", k, this->theta[k]);
         logP += log(NormPDF(this->theta[k], h.theta_mean, h.std_theta));
     }
 
@@ -694,7 +710,6 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
         }
     }
 
-	DEBUG_PRINT("at 1 -> %.6lf\n", logP);
 
     // transitive closures
     // TODO optimize the crap out of this
@@ -742,8 +757,6 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
         }
     }
 
-	DEBUG_PRINT("at 2 -> %.6lf\n", logP);
-
     // get_H_E
     int K = this->cnt.size();
     int E[K][K];
@@ -754,7 +767,6 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
         {
             if (this->c[i] != this->c[j] && D.G.E[i][j])
             {
-                DEBUG_PRINT("hierarchical edge (%d %d)\n", this->c[i], this->c[j]);
                 E[this->c[i] - 1][this->c[j] - 1] = 1;
                 E[this->c[j] - 1][this->c[i] - 1] = 1;
             }
@@ -764,7 +776,6 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
     // (hierarchical) edges
     // TODO sample them too, or marginalize over them
     //
-    DEBUG_PRINT(" this->hp = %.4lf\n", this->hp);
     for (int k = 0; k < K; k++)
     {
         if (this->cnt[k] == 0)
@@ -780,17 +791,13 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
             if (E[k][l])
             {
                 logP += log(this->hp);
-                DEBUG_PRINT(" %.4lf for edge (%d %d)\n", log(this->hp), k + 1, l + 1);
             }
             else
             {
                 logP += log(1 - this->hp);
-                DEBUG_PRINT(" %.4lf for edge -(%d %d)\n", log(1 - this->hp), k + 1, l + 1);
             }
         }
     }
-
-	DEBUG_PRINT("at 3 -> %.6lf\n", logP);
 
     // bridges
     //
@@ -814,7 +821,6 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
         }
     }
 
-	DEBUG_PRINT("at 4 -> %.6lf\n", logP);
 
     // tasks
     //
