@@ -352,7 +352,7 @@ void Hierarchy::Undo_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h
     assertThis(c_i_new - 1 < this->cnt.size(), "c_i_new - 1 < this->cnt.size(), Undo_c_i"); // notice strict < here
     if (this->cnt[c_i_new - 1] == 1)
     {
-        this->theta[c_i_new - 1] = theta_old;
+        //this->theta[c_i_new - 1] = theta_old;
     }
 
     assertThis(this->cnt[c_i_new - 1] > 0, "this->cnt[c_i_new - 1] > 0, Undo_c_i");
@@ -361,8 +361,8 @@ void Hierarchy::Undo_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h
     if (c_i_new == this->cnt.size() && isnan(theta_old))
     {
         // we added a new cluster -> remove it
-        this->cnt.pop_back();
-        this->theta.pop_back();
+        //this->cnt.pop_back();
+        //this->theta.pop_back();
     }
 
     DEBUG_PRINT(" undo_c_i -- c_i_new = %d, i = %d; c_i_old = %d\n", c_i_new, i, c_i_old);

@@ -10,7 +10,7 @@ if ~exist('N', 'var') || isempty(N)
 end
 if ~exist('h', 'var')
     h = init_hyperparams;
-    h.alpha = 2;
+    h.alpha = 10;
 end
 if ~exist('nsamples', 'var')
     nsamples = 1000;
@@ -38,7 +38,7 @@ comm_trans = [
 for s = 1:N % for each simulated subject
     fprintf('subject %d\n', s);
 
-    [H, P] = sample(D, h, nsamples);
+    [H, P] = sample_c(D, h, nsamples);
     H_all{s} = H;
     P_all{s} = P;
 
