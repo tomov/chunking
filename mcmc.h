@@ -28,10 +28,17 @@ double logpost_c_i(int c_i, int i, Hierarchy& H, const Data &D, const Hyperparam
 // TODO optimize the crap out of it
 std::vector<double> propP_c_i(int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
 {
-    std::vector<double> cnt(H.cnt.begin(), H.cnt.end()); // TODO optimize -- no need to copy, could be done in O(1)
+    std::vector<double> cnt(H.cnt.begin(), H.cnt.end()); // TODO optimize -- no need to copy, could be done in O(1) 
     assertThis(H.c[i] - 1 < cnt.size());
     assertThis(cnt[H.c[i] - 1] > 0);
     cnt[H.c[i] - 1]--; // careful with off-by-one!
+
+    DEBUG_PRINT("cnt = [");
+    for (int k = 0; k < cnt.size(); k++)
+    {
+        DEBUG_PRINT("%lf ", cnt[k]);
+    }
+    DEBUG_PRINT("]\n");
 
     std::vector<int> z;
     for (int k = 0; k < cnt.size(); k++)

@@ -295,7 +295,7 @@ double Hierarchy::LogPost_c_i(int c_i_new, int i, const Data &D, const Hyperpara
 
     this->Undo_c_i(c_i_new, i, D, h, c_i_old, theta_old);
 
-    assertThis(this->Equals(H), "this->Equals(H)");
+    assertThis(this->Equals(H), "this->Equals(H)"); // TODO rm in prod
     this->Sanity(D, h);
 
     return logP;

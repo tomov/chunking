@@ -5,6 +5,9 @@
 function P = propP_c_i(i, H, D, h)
     cnt = get_H_cnt(H, D);
     cnt(H.c(i)) = cnt(H.c(i)) - 1;
+
+    cnt
+
     z = find(cnt == 0); % reuse empty bins -- notice this is legit b/c we're not reusing parameters; empty bin = new cluster; in fact, we have to take care of that in case c_i_old was the only one by itelf
     if isempty(z)
         cnt = [cnt h.alpha];

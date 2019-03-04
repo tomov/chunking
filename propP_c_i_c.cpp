@@ -39,7 +39,6 @@
 #include "mexAdapter.hpp"
 
 #include "printmex.h"
-#define DEBUG 0 // <-- uncomment to print debug stuff; must be right after printmex.h
 
 #include "mcmc.h"
 
@@ -170,7 +169,7 @@ public:
 
     // compute result
     //
-    std::vector<double> P = propP_c_i(i, H, D, h);
+    std::vector<double> P = propP_c_i(i - 1, H, D, h); // -1 !! very important
 
     // read up on https://www.mathworks.com/help/matlab/apiref/matlab.data.arrayfactory.html?searchHighlight=createarray&s_tid=doc_srchtitle#bvn7dve-1
     ArrayFactory factory;   
