@@ -39,7 +39,6 @@
 #include "mexAdapter.hpp"
 
 #include "printmex.h"
-#define DEBUG 0 // <-- uncomment to print debug stuff; must be right after printmex.h
 
 #include "datastructs.h"
 

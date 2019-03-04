@@ -94,7 +94,7 @@ int proprnd_c_i(int /*c_i_old*/, int i, const Hierarchy& H, const Data &D, const
 double logprop_c_i(int c_i_new, int /*c_i_old*/, int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
 {
     std::vector<double> P = propP_c_i(i, H, D, h);
-    double logP = log(P[c_i_new]);
+    double logP = log(P[c_i_new - 1]); // off by one!!
     return logP;
 }
 

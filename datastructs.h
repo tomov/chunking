@@ -291,6 +291,8 @@ double Hierarchy::LogPost_c_i(int c_i_new, int i, const Data &D, const Hyperpara
     double theta_old;
     this->Update_c_i(c_i_new, i, D, h, c_i_old, theta_old);
 
+    DEBUG_PRINT("Update_c_i: H after update\n");
+    this->Print();
     double logP = this->LogPost(D, h); // TODO much more efficiently, maybe
 
     this->Undo_c_i(c_i_new, i, D, h, c_i_old, theta_old);
@@ -462,10 +464,16 @@ void Hierarchy::PopulateCnt()
     // e.g. if we return H to MATLAB after sampling, which erases this->cnt
     // TODO it might also a bug in the MATLAB code
     //
+    // EDIT: DON'T bad -- might screw up the prior b/c it will count a bunch of useless thetas TODO look into it
     while (this->cnt.size() < this->theta.size())
     {
         this->cnt.push_back(0);
     }
+    // TODO do this!!!!!!! BUG
+    //if (this->theta.size() > K)
+    //{
+    //    this->theta.resize(K);
+    //}
 
     DEBUG_PRINT("H.cnt = [");
     for (int k = 0; k < K; k++)
@@ -672,9 +680,13 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
     assertThis(this->cnt.size() == this->theta.size(), "this->cnt.size() == this->theta.size()");
     for (int k = 0; k < this->theta.size(); k++)
     {
-        // TODO optimize with norm dist objects for each k for H
-        //DEBUG_PRINT("theta k [%d] = %.4lf\n", k, this->theta[k]);
-        logP += log(NormPDF(this->theta[k], h.theta_mean, h.std_theta));
+        // don't do for empty clusters TODO think about it more carefully TODO might be a bug in MATLAB version
+        //if (this->cnt[k] > 0) TODO BUG -- keep it commented out for now until we make it do the same stuff as the .m file
+        {
+            // TODO optimize with norm dist objects for each k for H
+            //DEBUG_PRINT("theta k [%d] = %.4lf\n", k, this->theta[k]);
+            logP += log(NormPDF(this->theta[k], h.theta_mean, h.std_theta));
+        }
     }
 
     // state rewards

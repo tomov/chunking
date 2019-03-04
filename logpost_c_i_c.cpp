@@ -39,7 +39,6 @@
 #include "mexAdapter.hpp"
 
 #include "printmex.h"
-#define DEBUG 0 // <-- uncomment to print debug stuff; must be right after printmex.h
 
 #include "datastructs.h"
 
@@ -176,7 +175,7 @@ public:
 
     // compute Logpost
     //
-    double logp = H.LogPost_c_i(c_i_new, i, D, h);
+    double logp = H.LogPost_c_i(c_i_new, i - 1, D, h); // OMG off by one on i, but not on c_i_new!
 
 
     // read up on https://www.mathworks.com/help/matlab/apiref/matlab.data.arrayfactory.html?searchHighlight=createarray&s_tid=doc_srchtitle#bvn7dve-1
