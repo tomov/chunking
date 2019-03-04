@@ -67,6 +67,12 @@ double NormPDF(double x, double mu, double sigma)
     return boost::math::pdf(dist, x);
 }
 
+double NormCDF(double x, double mu, double sigma)
+{
+    boost::math::normal_distribution<double> dist(mu, sigma);
+    return boost::math::cdf(dist, x);
+}
+
 // random draw X ~ Cat(p), where p is a vector of (unnormalized) categorical probabilities
 // see http://www.cplusplus.com/reference/random/discrete_distribution/
 //
@@ -842,8 +848,6 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
         logP -= log(denom);
     }
 
-	DEBUG_PRINT("at 5 -> %.6lf\n", logP);
-
     // rewards
     //
     for (int i = 0; i < this->N; i++)
@@ -853,8 +857,6 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
             logP += log(NormPDF(D.rewards[i][o], this->mu[i], h.std_r));
         }
     }
-
-	DEBUG_PRINT("at 6 -> %.6lf\n", logP);
 
     return logP;
 }

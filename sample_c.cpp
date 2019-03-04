@@ -61,6 +61,7 @@ double logpost_c_i(int c_i, int i, Hierarchy& H, const Data &D, const Hyperparam
 
 // proposal PMF for c_i
 // inspired by Algorithm 5 from Neal 1998: MCMC for DP mixtures
+// TODO use algorithm 7 instead -- this one just adds everyone to a single component and it sucks
 //
 // notice proposal distr q(x'|x) = q(x') i.e. it's independent of previous cluster assignment => implements Independent Metropolis-Hastings
 // TODO optimize the crap out of it
@@ -102,7 +103,7 @@ std::vector<double> propP_c_i(int i, const Hierarchy& H, const Data &D, const Hy
     return P;
 }
 
-// propose c_i
+// draw proposals for c_i
 //
 int proprnd_c_i(int /*c_i_old*/, int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
 {
@@ -113,7 +114,7 @@ int proprnd_c_i(int /*c_i_old*/, int i, const Hierarchy& H, const Data &D, const
     return c_i_new;
 }
 
-// proposal distribution; note that it doesn't really depend on c_i_old
+// proposal distribution for c_i; note that it doesn't really depend on c_i_old
 //
 double logprop_c_i(int c_i_new, int /*c_i_old*/, int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
 {
@@ -170,9 +171,48 @@ double logpost_hp(double hp, Hierarchy& H, const Data &D, const Hyperparams &h)
 
 
 
+// draw proposals for p; random walk 
+// TODO rm useless params; from below too
+//
+double proprnd_p(double p_old, const Hierarchy &H, const Data &D, const Hyperparams &h)
+{
+    while (true) // TODO can use universality of uniform inverse CDF thingy
+    {
+        double p_new = NormRnd(p_old, 0.1); // TODO const TODO adaptive
+        if (p_new <= 1 && p_new >= 0)
+        {
+            return p_new; // keep params within bounds
+
+        }
+    }
+}
+
+// proposal PDF for p
+// accounts for truncating that keeps params within bounds 
+//
+double logprop_p(double p_new, double p_old, const Hierarchy &H, const Data &D, const Hyperparams &h)
+{
+    double Z = NormCDF(1, p_old, 0.1) - NormCDF(0, p_old, 0.1); // TODO consts TODO adaptive
+    double logP = log(NormPDF(p_new, p_old, 0.1)) - log(Z);
+    return logP;
+}
 
 
 
+// logpost_new = f(x')
+// logpost_old = f(x)
+// logprop_new = q(x'|x)
+// logprop_old = q(x|x')
+//
+bool MetropolisHastingsFlip(double logpost_new, double logpost_old, double logprop_new, double logprop_old)
+{
+    double logA = std::min(log(1), (logpost_new - logprop_new) - (logpost_old - logprop_old)); // note logs
+    double A = exp(logA);
+
+    double U = UnifRnd();
+
+    return (U < A);
+}
 
 
 
@@ -184,30 +224,28 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
     std::vector<Hierarchy*> samples;
 
     // Roberts & Rosenthal (2009)
+    // Metropolis-within-Gibbs
+    //
+    // as a reminder, Metropolis-Hastings acceptance probability:
+    // A = min(1, [f(x') / q(x'|x)] / [f(x) / q(x|x')]
+    // where f = target distr, q = proposal distr, x' = proposal
+    //
     for (int n = 0; n < nsamples * lag + burnin; n++)
     {
+        // update clusters (Neal 1998: MCMC for DP mixtures)
+        //
         for (int i = 0; i < D.G.N; i++)
         {
             int c_i_new = proprnd_c_i(H.c[i], i, H, D, h);
-
-            // A = min(1, [f(x') / q(x'|x)] / [f(x) / q(x|x')]
-            // where f = target distr, q = proposal distr, x' = proposal
-            //
             int c_i_old = H.c[i];
 
             double logpost_new = H.LogPost_c_i(c_i_new, i, D, h); // f(x') TODO can probs speed up, but connectivity messes things up
-
             double logpost_old = H.LogPost(D, h); // f(x)
 
             double logprop_new = logprop_c_i(c_i_new, c_i_old, i, H, D, h); // q(x'|x)
-
             double logprop_old = logprop_c_i(c_i_old, c_i_new, i, H, D, h); // q(x|x')
 
-            double logA = std::min(log(1), (logpost_new - logprop_new) - (logpost_old - logprop_old)); // note logs
-            double A = exp(logA);
-
-            double U = UnifRnd();
-            if (U < A)
+            if (MetropolisHastingsFlip(logpost_new, logpost_old, logprop_new, logprop_old))
             { 
                 // accept
                 H.Update_c_i(c_i_new, i, D, h);
@@ -218,6 +256,29 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
                 assertThis(H.c[i] == c_i_old);
             }
         }
+
+        // update probabilities
+        //
+        double p_new = proprnd_p(H.p, H, D, h);
+        double p_old = H.p;
+
+        double logpost_new = logpost_p(p_new, H, D, h);
+        double logpost_old = H.LogPost(D, h); // TODO calculate once only
+
+        double logprop_new = logprop_p(p_new, p_old, H, D, h);
+        double logprop_old = logprop_p(p_old, p_new, H, D, h);
+
+        if (MetropolisHastingsFlip(logpost_new, logpost_old, logprop_new, logprop_old))
+        { 
+            // accept
+            H.p = p_new;
+        }
+        else
+        {
+            // reject
+            assertThis(fabs(H.p - p_old) < EPS);
+        }
+
 
         samples.push_back(new Hierarchy(H));
     }
