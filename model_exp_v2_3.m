@@ -1,8 +1,8 @@
 
-%{
 clear all;
 close all;
-%[data, Ts] = load_data('exp/results', 246); % for exp_v2_3 (subway 10 unlearn)
+%{
+[data, Ts] = load_data('exp/results/exp_v2_3_subway10_unlearn_circ', 246, false); % for exp_v2_3 (subway 10 unlearn with right stimuli)
 
 h = init_hyperparams;
 nsamples = 100;
@@ -26,11 +26,14 @@ nexts = [
 ];
 
 % from model_all_data
-D = init_Ds_from_data('exp/results/exp_v2_3_subway10_unlearn', true);
+D = init_Ds_from_data('exp/results/exp_v2_3_subway10_unlearn_circ', true);
 D_full = D;
 % TODO rm & uncomment above
 save tmp.mat;
-%load tmp.mat;
+%}
+load tmp.mat;
+
+nsamples = 100;
 
 for subj = 1:length(D) % for each subject
     D(subj).tasks.s = [];
@@ -40,7 +43,7 @@ for subj = 1:length(D) % for each subject
     end
     subj
 
-    [samples, post] = sample(D(subj), h, nsamples, burnin, lag);
+    [samples, post] = sample_c(D(subj), h, nsamples, burnin, lag);
     H(subj) = samples(end);
 
     t = 1;
@@ -56,8 +59,8 @@ for subj = 1:length(D) % for each subject
         g = goal(i);
         assert(s == D_full(subj).tasks.s(t));
         assert(g == D_full(subj).tasks.g(t));
-        
-        [samples, post] = sample(D(subj), h, nsamples, burnin, lag, H(subj));
+       
+        [samples, post] = sample_c(D(subj), h, nsamples, burnin, lag, H(subj));
         H(subj) = samples(end);
 
         [path, hpath] = hbfs(s, g, H(subj), D(subj));
@@ -65,10 +68,9 @@ for subj = 1:length(D) % for each subject
     end
 end
 
-save('model_exp_v2_3.mat');
+save('model_exp_v2_3_circ_sample_c.mat');
 
-%}
-load('model_exp_v2_3.mat');
+load('model_exp_v2_3_circ_sample_c.mat');
 %[data, Ts, ~, ~, ~, ~, exclude] = load_data('exp/results/exp_v2_3_subway10_unlearn/', 246, false); % for exp_v2_3 (subway 10 unlearn)
 %move = move(~exclude, :);
 

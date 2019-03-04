@@ -77,7 +77,7 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag, H)
         % TODO BUG FIXME thetas for new clusters...
 
 		% thetas
-        for k = 1:length(H.c)
+        for k = 1:length(max(H.c))
             proprnd_thetak = @(p_old) proprnd_unbounded(p_old, H, D, h);
             logtheta = @(theta_k) logpost_theta(theta_k, k, H, D, h);
             [theta_k, accept] = mhsample(H.theta(k), 1, 'logpdf', logtheta, 'proprnd', proprnd_thetak, 'logproppdf', logprop_thetamu);
@@ -87,7 +87,6 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag, H)
         for i = 1:D.G.N
             proprnd_mui = @(p_old) proprnd_unbounded(p_old, H, D, h);
             logmu = @(mu_i) logpost_mu(mu_i, i, H, D, h);
-            %save debug.mat;
             [mu_i, accept] = mhsample(H.mu(i), 1, 'logpdf', logmu, 'proprnd', proprnd_mui, 'logproppdf', logprop_thetamu);
             H.mu(i) = mu_i; 
         end

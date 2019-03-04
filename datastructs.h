@@ -458,6 +458,15 @@ void Hierarchy::PopulateCnt()
     {
         this->cnt[this->c[i] - 1]++;
     }
+    // pad with zeros in case there were empty clusters; this occurs
+    // e.g. if we return H to MATLAB after sampling, which erases this->cnt
+    // TODO it might also a bug in the MATLAB code
+    //
+    while (this->cnt.size() < this->theta.size())
+    {
+        this->cnt.push_back(0);
+    }
+
     DEBUG_PRINT("H.cnt = [");
     for (int k = 0; k < K; k++)
     {
@@ -664,6 +673,7 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
     for (int k = 0; k < this->theta.size(); k++)
     {
         // TODO optimize with norm dist objects for each k for H
+        //DEBUG_PRINT("theta k [%d] = %.4lf\n", k, this->theta[k]);
         logP += log(NormPDF(this->theta[k], h.theta_mean, h.std_theta));
     }
 
@@ -673,6 +683,7 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
     {
         assertThis(this->c[i] - 1 >= 0, "this->c[i] - 1 >= 0");
         assertThis(this->c[i] - 1 < this->theta.size(), "this->c[i] - 1 < this->theta.size()");
+        //DEBUG_PRINT("mu i [%d] = %.4lf\n", i, this->mu[i]);
         logP += log(NormPDF(this->mu[i], this->theta[this->c[i] - 1], h.std_mu));
     }
 

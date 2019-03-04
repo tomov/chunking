@@ -2,7 +2,7 @@
 #define PRINT_MEX_H
 
 // TODO figure out where to define DEBUG 
-#define DEBUG 1
+#define DEBUG 0
 #define DEBUG_PRINT(args ...) if (DEBUG) printThis(args)
 
 void printThis(const char* format, ...);

@@ -51,14 +51,23 @@ function D = init_D_from_csv(filename, test_phase_too)
         D.tasks.s = [D.tasks.s s];
         D.tasks.g = [D.tasks.g g];
         D.G.N = max([D.G.N s g]);
+        D.G.edges = [];
+        D.G.E = [];
 
         path = strsplit(strip(T.path{i}), ' ');
         for k = 1:length(path) - 1
             i = str2num(path{k});
             j = str2num(path{k + 1});
+            if size(D.G.E, 1) < i || size(D.G.E, 2) < j || ~D.G.E(i, j)
+                D.G.edges = [D.G.edges; i, j];
+            end
             D.G.E(i,j) = 1;
             D.G.E(j,i) = 1;
             D.G.N = max([D.G.N i j]);
         end
     end
+
+    E = zeros(D.G.N);
+    E(1:size(D.G.E,1), 1:size(D.G.E,2)) = D.G.E;
+    D.G.E = E;
 end
