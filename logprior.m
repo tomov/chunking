@@ -21,6 +21,8 @@ function logp = logprior(H, D, h)
     %logp = logp + log(betapdf(H.p,1,1)) + log(betapdf(H.q,1,1)) + log(betapdf(H.tp,1,1)) + log(betapdf(H.hp,1,1)); % TODO const; also removed b/c cluster MATLAB sucks
 
 
+    % TODO BUG these are fucked in matlab b/c of new clusters; comment out for now. they're fine in the C version
+    %{
     % cluster rewards
     for k = 1:length(H.theta)
         % account for impact of theta on posterior
@@ -34,6 +36,7 @@ function logp = logprior(H, D, h)
     for i = 1:D.G.N
         logp = logp + log(normpdf(H.mu(i), H.theta(H.c(i)), h.std_mu));
     end
+    %}
 
     % prevent -Infs = impossible events; equivalent to using a
     % Gaussian + uniform mixture

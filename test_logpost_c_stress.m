@@ -11,8 +11,9 @@ for f = 1:length(files)
 
     file
     for i = 1:1000 % length(H_all{1})
-        l1 = logpost(H_all{1}(i), D, h);
-        l2 = logpost_c(H_all{1}(i), D, h);
+        H = H_all{1}(i);
+        l1 = logpost(H, D, h);
+        l2 = logpost_c(H, D, h);
 
         assert(abs(l1 - l2) < 1e-9);
     end
