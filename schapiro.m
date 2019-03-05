@@ -111,6 +111,7 @@ for s = 1:N % for each simulated subject
 end
 
 filename = sprintf('schapiro_N=%d_alpha=%.4f_nsamples=%d.mat', N, h.alpha, nsamples);
+disp(filename);
 save(filename);
 
 %load('schapiro.mat');
