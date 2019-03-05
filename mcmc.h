@@ -57,10 +57,8 @@ std::vector<double> propP_c_i(int i, const Hierarchy& H, const Data &D, const Hy
     {
         for (int i = 0; i < z.size(); i++)
         {
-            cnt[z[i]] = h.alpha; // <-- TODO BUG this is what sample.m does; but it's wrong; but that works better b/c alpha is too small...
-            // this PLUS not deleting from H.cnt and H.theta -> so there's more chance of adding new clusters... 
-
-           // cnt[z[i]] = h.alpha / z.size(); // notice all the empty bins have equal probability = alpha, but that's fine b/c it doesn't matter which one we use as the new cluster; we just have to make sure their total probability is not too high, otherwise effective alpha is greater
+            //cnt[z[i]] = h.alpha; // <-- this is what sample.m used to do 
+            cnt[z[i]] = h.alpha / z.size(); // notice all the empty bins have equal probability = alpha, but that's fine b/c it doesn't matter which one we use as the new cluster; we just have to make sure their total probability is not too high, otherwise effective alpha is greater
         }
     }
 
@@ -266,6 +264,8 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             if (MetropolisHastingsFlip(logpost_new, logpost_old, logprop_new, logprop_old))
             { 
                 // accept
+                // TODO notice if it's a new cluster, we redraw a new theta that is different from the one
+                // we used to compute the logpost_new; that's probably okay, but not clear from Neal (1998)
                 H.Update_c_i(c_i_new, i, D, h);
             }
             else

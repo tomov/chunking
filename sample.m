@@ -50,6 +50,7 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag, H)
             logprop = @(c_i_new, c_i_old) logprop_c_i(c_i_new, c_i_old, i, H, D, h);
 
             [c_i, accept] = mhsample(H.c(i), 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
+            % TODO BUG need to update theta if new cluster
             H.c(i) = c_i;
         end
 

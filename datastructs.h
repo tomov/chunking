@@ -462,18 +462,17 @@ void Hierarchy::PopulateCnt()
     }
     // pad with zeros in case there were empty clusters; this occurs
     // e.g. if we return H to MATLAB after sampling, which erases this->cnt
-    // TODO it might also a bug in the MATLAB code
     //
-    // EDIT: DON'T bad -- might screw up the prior b/c it will count a bunch of useless thetas TODO look into it
-    while (this->cnt.size() < this->theta.size())
-    {
-        this->cnt.push_back(0);
-    }
-    // TODO do this!!!!!!! BUG
-    //if (this->theta.size() > K)
+    // EDIT: DON'T bad -- might screw up the prior b/c it will count a bunch of useless thetas
+    //while (this->cnt.size() < this->theta.size())
     //{
-    //    this->theta.resize(K);
+    //    this->cnt.push_back(0);
     //}
+    // remove thetas for empty clusters; happens b/c of MATLAB
+    if (this->theta.size() > K)
+    {
+        this->theta.resize(K);
+    }
 
     DEBUG_PRINT("H.cnt = [");
     for (int k = 0; k < K; k++)
@@ -678,12 +677,11 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
     // cluster rewards
     //
     // TODO BUG -- these are fucked in matlab b/c of new clusters; let's not deal with them for now
-    /*
     assertThis(this->cnt.size() == this->theta.size(), "this->cnt.size() == this->theta.size()");
     for (int k = 0; k < this->theta.size(); k++)
     {
         // don't do for empty clusters TODO think about it more carefully TODO might be a bug in MATLAB version
-        //if (this->cnt[k] > 0) TODO BUG -- keep it commented out for now until we make it do the same stuff as the .m file
+        if (this->cnt[k] > 0)
         {
             // TODO optimize with norm dist objects for each k for H
             //DEBUG_PRINT("theta k [%d] = %.4lf\n", k, this->theta[k]);
@@ -700,7 +698,6 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
         //DEBUG_PRINT("mu i [%d] = %.4lf\n", i, this->mu[i]);
         logP += log(NormPDF(this->mu[i], this->theta[this->c[i] - 1], h.std_mu));
     }
-    */
 
     // prevent -Infs = impossible events; equivalent to using a Gaussian + uniform mixture
     //

@@ -10,8 +10,8 @@ function P = propP_c_i(i, H, D, h)
     if isempty(z)
         cnt = [cnt h.alpha];
     else
-        cnt(z) = h.alpha; % TODO BUG WRONG -- this should be alpha / length(z) b/c we can have multiple empty bins; HOWEVER this actually ends up working in our favor b/c it is more lenient towards creating new clusters => keep it for now ; instead, use Algorithm 7 from Neal 1998
-        %cnt(z) = h.alpha / length(z); % notice all the empty bins have equal probability = alpha, but that's fine b/c it doesn't matter which one we use as the new cluster; we just have to make sure their total probability is not too high, otherwise effective alpha is greater 
+        %cnt(z) = h.alpha; % TODO BUG WRONG -- this should be alpha / length(z) b/c we can have multiple empty bins; HOWEVER this actually ends up working in our favor b/c it is more lenient towards creating new clusters => keep it for now ; instead, use Algorithm 7 from Neal 1998
+        cnt(z) = h.alpha / length(z); % notice all the empty bins have equal probability = alpha, but that's fine b/c it doesn't matter which one we use as the new cluster; we just have to make sure their total probability is not too high, otherwise effective alpha is greater 
     end
     P = cnt / sum(cnt);
 end

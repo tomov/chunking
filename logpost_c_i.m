@@ -3,6 +3,7 @@
 %
 function logp = logpost_c_i(c_i, i, H, D, h)
     H.c(i) = c_i;
+    % TODO BUG draw new theta too...
 
     %cnt = get_H_cnt(H, D);
     %H.cnt = cnt;
