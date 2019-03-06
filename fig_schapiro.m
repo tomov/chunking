@@ -1,14 +1,20 @@
-% TODO save fig in the end
+function fig_solway2(filename, do_save)
 
-clear all;
-%load('schapiro_alpha=2.mat'); % nsamples = 1000
-%load('schapiro_alpha=2_nsamples=20.mat');
+if ~exist('filename', 'var') || isempty(filename)
+    %load('schapiro_alpha=2.mat'); % nsamples = 1000
+    %load('schapiro_alpha=2_nsamples=20.mat');
 
-load('schapiro_alpha=2_nsamples=100.mat'); % <-- preprint
-load schapiro_N=30_alpha=2.0000_nsamples=1000.mat  % <-- sample_c
-%load schapiro_N=32_alpha=2.0000_nsamples=1000.mat  % <-- sample repros!!!!
+    %load('schapiro_alpha=2_nsamples=100.mat'); % <-- preprint
+    load schapiro_N=30_alpha=2.0000_nsamples=1000.mat  % <-- sample_c
+else
+    load(filename);
+end
 
-figure('pos', [100 100 1000 600] * 3/4);
+if ~exist('do_save', 'var')
+    do_save = false;
+end
+
+figure('pos', [10 1200 1000 600] * 3/4);
 fontsize = 13;
 axisfontsize = 10;
 lettersize = 20;
@@ -149,10 +155,12 @@ text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 
 
 % save figure
-h = gcf;
-%set(h, 'PaperPositionMode', 'auto');
-set(h, 'PaperOrientation', 'landscape');
-%print('figures/schapiro.pdf', '-dpdf');
+if do_save
+    h = gcf;
+    %set(h, 'PaperPositionMode', 'auto');
+    set(h, 'PaperOrientation', 'landscape');
+    print('figures/schapiro.pdf', '-dpdf');
+end
 
 
 % stats

@@ -865,10 +865,12 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
     for (int i = 0; i < D.tasks.size(); i++)
     {
         int s = D.tasks[i].s;
+        assertThis(s > 0 && s <= this->N, "s > 0 && s <= this->N");
         logP += log(1) - log(this->N);
 
         int g = D.tasks[i].g;
-        if (this->c[s] == this->c[g])
+        assertThis(g > 0 && g <= this->N, "g > 0 && g <= this->N");
+        if (this->c[s - 1] == this->c[g - 1]) // off by one!
         {
             logP += log(1);
         }
@@ -876,7 +878,7 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
         {
             logP += log(this->tp);
         }
-        double denom = this->cnt[this->c[s] - 1] + (this->N - this->cnt[this->c[s] - 1]) * this->tp;
+        double denom = this->cnt[this->c[s - 1] - 1] * 1 + (this->N - this->cnt[this->c[s - 1] - 1]) * this->tp; // careful with double off-by-ones
         logP -= log(denom);
     }
 

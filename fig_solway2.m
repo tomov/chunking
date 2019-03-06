@@ -1,10 +1,20 @@
-clear all;
-%load('solway2.mat');
-%load('solway2_alpha=5_nsamples=1000.mat'); % <-- preprint
-load solway2_N=10_alpha=5.0000_nsamples=1000.mat  % <-- sample repros!!!!
-%load('solway2_alpha=2_nsamples=100.mat');
+function fig_solway2(filename, do_save)
 
-figure('pos', [100 100 1000 600] * 3/4);
+if ~exist('filename', 'var') || isempty(filename)
+    %load('solway2.mat');
+    %load('solway2_alpha=5_nsamples=1000.mat'); % <-- preprint
+    load solway2_N=10_alpha=5.0000_nsamples=1000.mat  % <-- sample_c
+    %load('solway2_alpha=2_nsamples=100.mat');
+else
+    load(filename);
+end
+
+if ~exist('do_save', 'var')
+    do_save = false;
+end
+
+
+figure('pos', [2000 1200 1000 600] * 3/4);
 fontsize = 13;
 axisfontsize = 10;
 lettersize = 20;
@@ -142,10 +152,12 @@ text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 
 
 % save figure
-h = gcf;
-%set(h, 'PaperPositionMode', 'auto');
-set(h, 'PaperOrientation', 'landscape');
-%print('figures/solway2.pdf', '-dpdf');
+if do_save
+    h = gcf;
+    %set(h, 'PaperPositionMode', 'auto');
+    set(h, 'PaperOrientation', 'landscape');
+    print('figures/solway2.pdf', '-dpdf');
+end
 
 
 % stats

@@ -8,6 +8,8 @@ function D = init_D_from_csv(filename, test_phase_too)
     D.G.N = 0;
     D.tasks.s = [];
     D.tasks.g = [];
+    D.G.E = [];
+    D.G.edges = [];
 
     T = readtable(filename, 'Delimiter', ',');
 
@@ -48,11 +50,12 @@ function D = init_D_from_csv(filename, test_phase_too)
         if iscell(g)
             g = str2num(g{1});
         end
-        D.tasks.s = [D.tasks.s s];
-        D.tasks.g = [D.tasks.g g];
+
+        if s > 0 && g > 0  % b/c of mixed free/forced choice trials (free choice trials)
+            D.tasks.s = [D.tasks.s s];
+            D.tasks.g = [D.tasks.g g];
+        end
         D.G.N = max([D.G.N s g]);
-        D.G.edges = [];
-        D.G.E = [];
 
         path = strsplit(strip(T.path{i}), ' ');
         for k = 1:length(path) - 1
@@ -70,4 +73,8 @@ function D = init_D_from_csv(filename, test_phase_too)
     E = zeros(D.G.N);
     E(1:size(D.G.E,1), 1:size(D.G.E,2)) = D.G.E;
     D.G.E = E;
+
+    for i = 1:D.G.N
+        D.r{i} = [];
+    end
 end

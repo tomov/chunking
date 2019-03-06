@@ -1,5 +1,5 @@
 % simulate experiment 1 from schapiro 2013
-function schapiro(N, h, nsamples, take_map)
+function filename = schapiro(N, h, nsamples, take_map)
 
 rng default;
 
@@ -48,6 +48,7 @@ for s = 1:N % for each simulated subject
         map_H{s} = H;
     else
         H = H(end); % last one
+        map_H{s} = H; % TODO b/c of fig...
     end
 
     paths = random_walks(D, nwalks, D.G.N-1); % random walks
@@ -110,7 +111,11 @@ for s = 1:N % for each simulated subject
     other_p_hamil(s) = other_press_hamil / (other_press_hamil + other_nopress_hamil);
 end
 
-filename = sprintf('schapiro_N=%d_alpha=%.4f_nsamples=%d.mat', N, h.alpha, nsamples);
+if take_map
+    filename = sprintf('schapiro_N=%d_alpha=%.4f_nsamples=%d_MAP.mat', N, h.alpha, nsamples);
+else
+    filename = sprintf('schapiro_N=%d_alpha=%.4f_nsamples=%d_last.mat', N, h.alpha, nsamples);
+end
 disp(filename);
 save(filename);
 

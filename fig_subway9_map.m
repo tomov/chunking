@@ -9,7 +9,8 @@ lettersize = 20;
 ii = 2;
 jj = 1:4;
 
-modelfile = 'model_all_data_20samples_MAP_2alpha.mat';
+modelfile = 'model_all_data_20samples_MAP_2alpha.mat'; % <--- preprint
+%modelfile = 'model_all_data_samples=40_MAP_alpha=2.0000.mat'; % <-- sample_c
 
 % A: graph
 %

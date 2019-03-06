@@ -1,7 +1,7 @@
 % simulate RT experiment from Lynn et al. 2018
 
 
-function lynn(N, h, nsamples, take_map)
+function filename = lynn(N, h, nsamples, take_map)
 
 rng default;
 
@@ -49,6 +49,7 @@ for subj = 1:N % for each simulated subject
         map_H{subj} = H;
     else
         H = H(end); % last one
+        map_H{subj} = H; % TODO b/c of fig...
     end
 
     cross = [];
@@ -74,8 +75,12 @@ for subj = 1:N % for each simulated subject
 end
 
 
-filename = sprintf('lynn_N=%d_alpha=%.4f_nsamples=%d.mat', N, h.alpha, nsamples);
-filename
+if take_map
+    filename = sprintf('lynn_N=%d_alpha=%.4f_nsamples=%d_MAP.mat', N, h.alpha, nsamples);
+else
+    filename = sprintf('lynn_N=%d_alpha=%.4f_nsamples=%d_last.mat', N, h.alpha, nsamples);
+end
+disp(filename);
 save(filename);
 
 %load('lynn.mat');

@@ -1,6 +1,6 @@
 % simulate experiment 2 from solway 2014
 
-function solway2(N, h, nsamples, take_map)
+function filename = solway2(N, h, nsamples, take_map)
 
 
 rng default;
@@ -41,6 +41,7 @@ for subj = 1:N % for each simulated subject
         map_H{subj} = H;
     else
         H = H(end); % last one
+        map_H{subj} = H; % TODO b/c of fig...
     end
 
     H = populate_H(H, D); % fill up bridges
@@ -70,7 +71,12 @@ for subj = 1:N % for each simulated subject
     p(subj) = mean(loc(subj, corr(subj,:)) == 10);
 end
 
-filename = sprintf('solway2_N=%d_alpha=%.4f_nsamples=%d.mat', N, h.alpha, nsamples);
+if take_map
+    filename = sprintf('solway2_N=%d_alpha=%.4f_nsamples=%d_MAP.mat', N, h.alpha, nsamples);
+else
+    filename = sprintf('solway2_N=%d_alpha=%.4f_nsamples=%d_last.mat', N, h.alpha, nsamples);
+end
+disp(filename);
 save(filename);
 
 %load('solway2.mat');

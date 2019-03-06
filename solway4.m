@@ -1,6 +1,6 @@
 % simulate experiment 4 from solway 2014
 
-function solway4(N, h, nsamples, take_map)
+function filename = solway4(N, h, nsamples, take_map)
 
 rng default;
 
@@ -57,6 +57,7 @@ for subj = 1:N % for each simulated subject
         map_H{subj} = H;
     else
         H = H(end); % last one
+        map_H{subj} = H; % TODO b/c of fig...
     end
 
     for t = 1:size(tasks,1)
@@ -65,7 +66,12 @@ for subj = 1:N % for each simulated subject
     end
 end
 
-filename = sprintf('solway4_N=%d_alpha=%.4f_nsamples=%d.mat', N, h.alpha, nsamples);
+if take_map
+    filename = sprintf('solway4_N=%d_alpha=%.4f_nsamples=%d_MAP.mat', N, h.alpha, nsamples);
+else
+    filename = sprintf('solway4_N=%d_alpha=%.4f_nsamples=%d_last.mat', N, h.alpha, nsamples);
+end
+disp(filename)
 save(filename);
 
 %load('solway4.mat');

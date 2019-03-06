@@ -1,8 +1,17 @@
-clear all;
-%load('lynn_alpha=2_nsamples=1000.mat'); % <--- preprint
-load lynn_N=78_alpha=5.0000_nsamples=1000.mat  % <-- sample_c
+function fig_lynn(filename, do_save)
 
-figure('pos', [100 100 1000 600] * 3/4);
+if ~exist('filename', 'var') || isempty(filename)
+    %load('lynn_alpha=2_nsamples=1000.mat'); % <--- preprint
+    load lynn_N=78_alpha=5.0000_nsamples=1000.mat  % <-- sample_c
+else
+    load(filename);
+end
+
+if ~exist('do_save', 'var')
+    do_save = false;
+end
+
+figure('pos', [1000 500 1000 600] * 3/4);
 fontsize = 13;
 axisfontsize = 10;
 lettersize = 20;
@@ -117,10 +126,12 @@ text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 
 
 % save figure
-h = gcf;
-%set(h, 'PaperPositionMode', 'auto');
-set(h, 'PaperOrientation', 'landscape');
-%print('figures/lynn.pdf', '-dpdf');
+if do_save
+    h = gcf;
+    %set(h, 'PaperPositionMode', 'auto');
+    set(h, 'PaperOrientation', 'landscape');
+    print('figures/lynn.pdf', '-dpdf');
+end
 
 
 % stats
