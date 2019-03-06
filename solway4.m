@@ -45,7 +45,7 @@ clear move;
 for subj = 1:N % for each simulated subject
     fprintf('subject %d\n', subj);
 
-    [H, P] = sample(D, h, nsamples);
+    [H, P] = sample_c(D, h, nsamples);
     H_all{subj} = H;
     P_all{subj} = P;
     %H = H_all{subj};

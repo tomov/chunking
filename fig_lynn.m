@@ -1,5 +1,6 @@
 clear all;
-load('lynn_alpha=2_nsamples=1000.mat');
+%load('lynn_alpha=2_nsamples=1000.mat'); % <--- preprint
+load lynn_N=78_alpha=5.0000_nsamples=1000.mat  % <-- sample_c
 
 figure('pos', [100 100 1000 600] * 3/4);
 fontsize = 13;
@@ -119,7 +120,7 @@ text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-print('figures/lynn.pdf', '-dpdf');
+%print('figures/lynn.pdf', '-dpdf');
 
 
 % stats

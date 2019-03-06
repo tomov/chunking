@@ -676,7 +676,8 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
 
     // cluster rewards
     //
-    // TODO BUG -- these are fucked in matlab b/c of new clusters; let's not deal with them for now
+    // TODO uncomment after repro
+    /*
     assertThis(this->cnt.size() == this->theta.size(), "this->cnt.size() == this->theta.size()");
     for (int k = 0; k < this->theta.size(); k++)
     {
@@ -698,6 +699,7 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
         //DEBUG_PRINT("mu i [%d] = %.4lf\n", i, this->mu[i]);
         logP += log(NormPDF(this->mu[i], this->theta[this->c[i] - 1], h.std_mu));
     }
+    */
 
     // prevent -Infs = impossible events; equivalent to using a Gaussian + uniform mixture
     //

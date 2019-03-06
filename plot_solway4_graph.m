@@ -35,7 +35,7 @@ hold on;
 h = plot_H(H, D);
 set(h, 'XData', x);
 set(h, 'YData', y);
-labelnode(h, 1:D.G.N, '');
+%labelnode(h, 1:D.G.N, '');
 for i = 1:D.G.N
     if H.c(i) == 1
         highlight(h, i, 'nodecolor', [80 150 114]/255);

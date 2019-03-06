@@ -37,7 +37,7 @@ A(logical(eye(size(A)))) = 0; % never self-transition
 for subj = 1:N % for each simulated subject
     fprintf('subject %d\n', subj);
 
-    [H, P] = sample(D, h, nsamples);
+    [H, P] = sample_c(D, h, nsamples);
     H_all{subj} = H;
     P_all{subj} = P;
     %H = H_all{subj};
@@ -75,6 +75,7 @@ end
 
 
 filename = sprintf('lynn_N=%d_alpha=%.4f_nsamples=%d.mat', N, h.alpha, nsamples);
+filename
 save(filename);
 
 %load('lynn.mat');

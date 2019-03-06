@@ -275,6 +275,9 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             }
         }
 
+        // TODO everywhere do not recompute the entire logpost; only local change
+        // BUT do sanity check first
+
         // update H.p 
         //
         {
@@ -371,6 +374,8 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             }
         }
 
+        // TODO do
+        /*
         // update thetas
         //
         for (int k = 0; k < H.theta.size(); k++)
@@ -420,6 +425,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
                 assertThis(fabs(H.mu[i] - mu_i_old) < EPS);
             }
         }
+        */
 
         // TODO bridges
 

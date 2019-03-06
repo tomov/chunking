@@ -12,7 +12,7 @@ if ~exist('N', 'var') || isempty(N)
 end
 if ~exist('h', 'var')
     h = init_hyperparams;
-    h.alpha = 2;
+    h.alpha = 5;
 end
 if ~exist('nsamples', 'var')
     nsamples = 1000;
@@ -29,7 +29,7 @@ D = init_D_from_txt('solway2.txt');
 for subj = 1:N % for each simulated subject
     fprintf('subject %d\n', subj);
 
-    [H, P] = sample(D, h, nsamples);
+    [H, P] = sample_c(D, h, nsamples);
     H_all{subj} = H;
     P_all{subj} = P;
     %H = H_all{subj};
@@ -49,10 +49,11 @@ for subj = 1:N % for each simulated subject
         s = datasample(1:9, 1);
         g = datasample(11:19, 1);
         [path,~,~,b] = hbfs(s, g, H, D);
+        b = unique(b); % single-node clusters cause duplicates TODO strange that it wasn't an issue the first time around (preprint)
         b = b(2:end-1); % all bridge nodes on hierarchical path (exclude s and g)
 
         if isempty(b)
-            b = path(2); % if no bridges on path, pick next node on path as "first that comes to mind"
+            b = path(2); % if no bridges on path (i.e. s and g in same cluster), pick next node on path as "first that comes to mind"
         end
 
         spath = bfs(s, g, D.G.E); % find actual shortest path

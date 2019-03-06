@@ -1,5 +1,6 @@
 clear all;
-load('solway4_alpha=2_10000.mat');
+%load('solway4_alpha=2_10000.mat'); % <--- preprint
+load solway4_N=35_alpha=2.0000_nsamples=10000.mat  % <-- sample repros!!!!
 
 figure('pos', [100 100 1000 600] * 3/4);
 fontsize = 13;
@@ -170,7 +171,7 @@ text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-print('figures/solway4.pdf', '-dpdf');
+%print('figures/solway4.pdf', '-dpdf');
 
 % stats
 %
