@@ -8,9 +8,14 @@ init_all_plots;
 h = init_hyperparams;
 h.alpha = 1;
 nsamples = 10000;
+take_map = false;
 
 %filename = sprintf('model_all_data_%dsamples_MAP_%dalpha.mat', nsamples, h.alpha);
-filename = sprintf('model_all_data_samples=%d_alpha=%.4f_last.mat', nsamples, h.alpha);
+if take_map
+    filename = sprintf('model_all_data_samples=%d_alpha=%.4f_MAP.mat', nsamples, h.alpha);
+else
+    filename = sprintf('model_all_data_samples=%d_alpha=%.4f_last.mat', nsamples, h.alpha);
+end
 filename
 
 sem = @(x) std(x) / sqrt(length(x));
@@ -39,15 +44,18 @@ for i = 1:length(pl)
             end
             toc
         end
-        pl(i).H{j} = H;
-        pl(i).P{j} = P;
+        pl(i).H{j} = H(:,end);
+        pl(i).P{j} = P(:,end);
 
         s = pl(i).starts(j);
         g = pl(i).goals(j);
         clear move;
         for k = 1:length(D)
-            [~,I] = maxk(P(k,:), 1); % MAP H
-            %I = length(P(k,:)); % last H
+            if take_map
+                [~,I] = maxk(P(k,:), 1); % MAP H
+            else
+                I = length(P(k,:)); % last H
+            end
             [path, hpath] = hbfs(s, g, H(k,I(1)), D(k));
             move(k) = path(2);
         end
@@ -77,7 +85,7 @@ for i = 1:length(pl)
 end
 
 filename
-save(filename);
+save(filename, '-v7.3');
 
 
 plot_all_data;
