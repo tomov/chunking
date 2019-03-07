@@ -25,6 +25,10 @@ function H = init_H(D, h)
    % H.r((1:D.G.N)) = normrnd(H.mu(H.c((1:D.G.N))), 0);
     H.p = betarnd(1,1); % TODO const 
     H.q = betarnd(1,1); % TODO const 
+
+	% NEW
+    H.tp = betarnd(1,1); % TODO const 
+    H.hp = betarnd(1,1); % TODO const 
 end
 
 

@@ -25,13 +25,15 @@ choices = [];
 for s = 1:N % for each simulated subject
     fprintf('subject %d\n', s);
 
-    [H, P] = sample_agni(D, h, nsamples);
+    [H, P] = sample_c(D, h, nsamples);
     H_all{s} = H;
     P_all{s} = P;
 
     [~,I] = max(P); % MAP H
     H = H(I);
     map_H{s} = H;
+
+    H
 
     [path, hpath] = hbfs(6, 1, H, D);
 

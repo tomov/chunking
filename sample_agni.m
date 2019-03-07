@@ -114,7 +114,15 @@ end
 % P(H|D) up to proportionality constant
 %
 function logp = logpost(H, D, h)
-    logp = loglik_agni(H, D, h) + logprior_agni(H, D, h);
+    H_shit.c = H.c;
+    H_shit.p = H.p;
+    H_shit.q = H.q;
+    H_shit.tp = H.tp;
+    H_shit.hp = H.hp;
+    H_shit.theta = H.theta;
+    H_shit.mu = H.mu;
+    logp = loglik_c(H,D,h) + logprior_c(H,D,h);
+    %logp = loglik_agni(H, D, h) + logprior_agni(H, D, h);
 end
 
 % Update H.c(i) and counts

@@ -32,3 +32,19 @@ for i = 1:length(H)
     assert(abs(l1 - l2) < 1e-9);
 end
 %}
+
+for i = 1:length(H_all{1})
+    H = H_all{1}(i);
+    l1 = loglik_agni(H, D, h);
+
+    H_shit.c = H.c;
+    H_shit.p = H.p;
+    H_shit.q = H.q;
+    H_shit.tp = H.tp;
+    H_shit.hp = H.hp;
+    H_shit.theta = H.theta;
+    H_shit.mu = H.mu;
+    l2 = loglik_c(H_shit, D, h);
+
+    assert(abs(l1 - l2) < 1e-9);
+end

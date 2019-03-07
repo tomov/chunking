@@ -41,6 +41,7 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag, H)
     if ~exist('H', 'var') || isempty(H)
         H = init_H(D, h);
     end
+    %H = populate_H(H, D); %agni
 
     % Roberts & Rosenthal (2009)
     for n = 1:nsamples * lag + burnin
@@ -52,6 +53,7 @@ function [samples, post] = sample(D, h, nsamples, burnin, lag, H)
             [c_i, accept] = mhsample(H.c(i), 1, 'logpdf', logp, 'proprnd', proprnd, 'logproppdf', logprop);
             % TODO BUG need to update theta if new cluster
             H.c(i) = c_i;
+        %    H = populate_H(H, D); %agni
         end
 
         logp = @(p) logpost_p(p, H, D, h);
