@@ -6,22 +6,36 @@ rng default;
 
 sem = @(x) std(x) / sqrt(length(x));
 
+
 N = 32; % participants
 h = init_hyperparams();
-nsamples = 100;
+h.alpha = 1;
+nsamples = 10000;
+take_map = false;
+
 D = init_D_from_txt('mines.txt');
 
+if take_map
+    filename = sprintf('mines_alpha=%d_nsamples=%d_MAP.mat', h.alpha, nsamples);
+else
+    filename = sprintf('mines_alpha=%d_nsamples=%d_last.mat', h.alpha, nsamples);
+end
+filename
 
 choices = [];
 for s = 1:N % for each simulated subject
     fprintf('subject %d\n', s);
 
-    [H, P] = sample(D, h, nsamples);
+    [H, P] = sample_c(D, h, nsamples);
     H_all{s} = H;
     P_all{s} = P;
 
-    [~,I] = max(P); % MAP H
-    H = H(I);
+    if take_map
+        [~,I] = max(P); % MAP H
+        H = H(I);
+    else
+        H = H(end);
+    end
     map_H{s} = H;
 
     for i = 1:D.G.N
@@ -49,5 +63,4 @@ fprintf('right-tailed binomial test m = %.3f, n = %d, p = %.4f\n', m, n, p);
 
 
 
-filename = sprintf('mines_alpha=%d_nsamples=%d.mat', h.alpha, nsamples);
 save(filename);

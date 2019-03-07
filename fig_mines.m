@@ -6,7 +6,8 @@ fontsize = 13;
 axisfontsize = 10;
 lettersize = 20;
 
-modelfile = 'mines_alpha=2_nsamples=1000.mat';
+%modelfile = 'mines_alpha=2_nsamples=1000.mat'; % <--- preprint
+modelfile = 'mines_alpha=1_nsamples=10000_last.mat';
 
 % A: graph
 %

@@ -8,9 +8,9 @@ sem = @(x) std(x) / sqrt(length(x));
 
 N = 95; % participants
 h = init_hyperparams();
-h.alpha = 2;
-nsamples = 1000;
-take_map = true;
+h.alpha = 1;
+nsamples = 10000;
+take_map = false;
 
 if take_map
     filename = sprintf('mines10_alpha=%d_nsamples=%d_MAP.mat', h.alpha, nsamples);
@@ -29,8 +29,12 @@ for s = 1:N % for each simulated subject
     H_all{s} = H;
     P_all{s} = P;
 
-    [~,I] = max(P); % MAP H
-    H = H(I);
+    if take_map
+        [~,I] = max(P); % MAP H
+        H = H(I);
+    else
+        H = H(end);
+    end
     map_H{s} = H;
 
     H

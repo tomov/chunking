@@ -20,7 +20,7 @@ filename
 
 sem = @(x) std(x) / sqrt(length(x));
 
-for i = 5:length(pl)
+for i = 1:length(pl)
     for j = 1:length(pl(i).dirnames)
 
         if ~isnan(pl(i).m(j))
