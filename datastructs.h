@@ -341,7 +341,8 @@ void Hierarchy::Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams 
     if (this->cnt[c_i_new - 1] == 1)
     {
         // created a new cluster, so create a new theta -- note that we could be reusing an old one, so we take care to save the theta in case we need to undo this, e.g. when computing the MCMC updates
-        this->theta[c_i_new - 1] = NormRnd(h.theta_mean, h.std_theta); // InitFromPrior
+        //this->theta[c_i_new - 1] = NormRnd(h.theta_mean, h.std_theta); // InitFromPrior 
+        this->theta[c_i_new - 1] = this->mu[i]; // sort-of empirical prior TODO is this legit? 
     }
 
     DEBUG_PRINT(" update_c_i -- c_i_new = %d, i = %d; c_i_old = %d\n", c_i_new, i, c_i_old);
@@ -677,7 +678,6 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
     // cluster rewards
     //
     // TODO uncomment after repro
-    /*
     assertThis(this->cnt.size() == this->theta.size(), "this->cnt.size() == this->theta.size()");
     for (int k = 0; k < this->theta.size(); k++)
     {
@@ -686,7 +686,20 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
         {
             // TODO optimize with norm dist objects for each k for H
             //DEBUG_PRINT("theta k [%d] = %.4lf\n", k, this->theta[k]);
-            logP += log(NormPDF(this->theta[k], h.theta_mean, h.std_theta));
+            double p = log(NormPDF(this->theta[k], h.theta_mean, h.std_theta));
+            if (isinf(p))
+            {
+                // prevent -Infs = impossible events; equivalent to using a
+                // Gaussian + uniform mixture
+                // do it in a "soft" way so MCMC can recover one by one
+                //
+                logP += 1e-100;
+            }
+            else
+            {
+                logP += p;
+            }
+            DEBUG_PRINT("N(theta[%d]): logp += %e = %e\n", k + 1, p, logP);
         }
     }
 
@@ -697,16 +710,23 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
         assertThis(this->c[i] - 1 >= 0, "this->c[i] - 1 >= 0");
         assertThis(this->c[i] - 1 < this->theta.size(), "this->c[i] - 1 < this->theta.size()");
         //DEBUG_PRINT("mu i [%d] = %.4lf\n", i, this->mu[i]);
-        logP += log(NormPDF(this->mu[i], this->theta[this->c[i] - 1], h.std_mu));
+        double p = log(NormPDF(this->mu[i], this->theta[this->c[i] - 1], h.std_mu));
+        if (isinf(p))
+        {
+            // prevent -Infs = impossible events; equivalent to using a
+            // Gaussian + uniform mixture
+            // do it in a "soft" way so MCMC can recover one by one
+            //
+            logP += 1e-100;
+        }
+        else
+        {
+            logP += p;
+        }
+        DEBUG_PRINT("N(mu[%d], theta[%d]): logp += %e = %e\n", i+1, this->c[i], p, logP);
     }
-    */
 
-    // prevent -Infs = impossible events; equivalent to using a Gaussian + uniform mixture
-    //
-    if (isinf(logP))
-    {
-        logP = 1e-100;
-    }
+    assertThis(!isinf(logP), "!isinf(logP) in LogPrior");
 
     return logP;
 }
@@ -888,9 +908,24 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
     {
         for (int o = 0; o < D.rewards[i].size(); o++)
         {
-            logP += log(NormPDF(D.rewards[i][o], this->mu[i], h.std_r));
+            // Pr(r = x | rest of H)
+            double p = log(NormPDF(D.rewards[i][o], this->mu[i], h.std_r));
+            if (isinf(p))
+            {
+                // prevent -Infs = impossible events; equivalent to using a
+                // Gaussian + uniform mixture
+                // do it in a "soft" way so MCMC can recover one by one
+                //
+                logP += 1e-100;
+            }
+            else
+            {
+                logP += p;
+            }
         }
     }
+
+    assertThis(!isinf(logP), "!isinf(logP) in LogLik");
 
     return logP;
 }

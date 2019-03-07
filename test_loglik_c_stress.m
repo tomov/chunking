@@ -18,6 +18,8 @@
 %    end
 %end
 
+% test tasks
+%{
 load model_all_data_samples=40_MAP_alpha=2.0000.mat;
 
 H = pl(2).H{4}(1,:);
@@ -29,3 +31,4 @@ for i = 1:length(H)
 
     assert(abs(l1 - l2) < 1e-9);
 end
+%}

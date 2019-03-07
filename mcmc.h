@@ -375,29 +375,31 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
         }
 
         // TODO do
-        /*
         // update thetas
         //
         for (int k = 0; k < H.theta.size(); k++)
         {
-            double theta_k_new = proprnd_unbounded(H.theta[k], H, D, h);
-            double theta_k_old = H.theta[k];
-
-            double logpost_new = logpost_theta(theta_k_new, k, H, D, h);
-            double logpost_old = H.LogPost(D, h); // TODO optim
-
-            double logprop_new = logprop_unbounded(theta_k_new, theta_k_old, H, D, h);
-            double logprop_old = logprop_unbounded(theta_k_old, theta_k_new, H, D, h);
-
-            if (MetropolisHastingsFlip(logpost_new, logpost_old, logprop_new, logprop_old))
-            { 
-                // accept
-                H.theta[k] = theta_k_new;
-            }
-            else
+            if (H.cnt[k] > 0)
             {
-                // reject
-                assertThis(fabs(H.theta[k] - theta_k_old) < EPS);
+                double theta_k_new = proprnd_unbounded(H.theta[k], H, D, h);
+                double theta_k_old = H.theta[k];
+
+                double logpost_new = logpost_theta(theta_k_new, k, H, D, h);
+                double logpost_old = H.LogPost(D, h); // TODO optim
+
+                double logprop_new = logprop_unbounded(theta_k_new, theta_k_old, H, D, h);
+                double logprop_old = logprop_unbounded(theta_k_old, theta_k_new, H, D, h);
+
+                if (MetropolisHastingsFlip(logpost_new, logpost_old, logprop_new, logprop_old))
+                { 
+                    // accept
+                    H.theta[k] = theta_k_new;
+                }
+                else
+                {
+                    // reject
+                    assertThis(fabs(H.theta[k] - theta_k_old) < EPS);
+                }
             }
         }
 
@@ -425,7 +427,6 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
                 assertThis(fabs(H.mu[i] - mu_i_old) < EPS);
             }
         }
-        */
 
         // TODO bridges
 

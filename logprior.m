@@ -24,28 +24,40 @@ function logp = logprior(H, D, h)
 
     % TODO BUG these are fucked in matlab b/c of new clusters; comment out for now. they're fine in the C version
     % cluster rewards
-    %{
     for k = 1:length(H.theta)
         % account for impact of theta on posterior
         % below probability is Pr that the particular value of theta was
         % drawn given that it was drawn from a normal dist w mu = 0, var =
         % 100 ; Pr(theta_k = x | rest of H) = normpdf(x; 0, 100)
-        if cnt(H.c(i)) > 0
+        if k <= length(cnt) && cnt(k) > 0
             % skip empty clusters -- they don't count
-            logp = logp + log(normpdf(H.theta(k), h.theta_mean, h.std_theta));
+            p = log(normpdf(H.theta(k), h.theta_mean, h.std_theta));
+            if isinf(p)
+                % prevent -Infs = impossible events; equivalent to using a
+                % Gaussian + uniform mixture
+                % do it in a "soft" way so MCMC can recover one by one
+                logp = logp + 1e-100;
+            else
+                logp = logp + p;
+            end
+            %fprintf('N(theta[%d]): logp += %e = %e\n', k, p, logp);
         end
     end
    
     % state rewards 
     for i = 1:D.G.N
-        logp = logp + log(normpdf(H.mu(i), H.theta(H.c(i)), h.std_mu));
+        p = log(normpdf(H.mu(i), H.theta(H.c(i)), h.std_mu));
+        if isinf(p)
+            % prevent -Infs = impossible events; equivalent to using a
+            % Gaussian + uniform mixture
+            % do it in a "soft" way so MCMC can recover one by one
+            logp = logp + 1e-100;
+        else
+            logp = logp + p;
+        end
+        %fprintf('N(mu[%d], theta[%d]): logp += %e = %e\n', i, H.c(i), p, logp);
     end
-    %}
 
-    % prevent -Infs = impossible events; equivalent to using a
-    % Gaussian + uniform mixture
-    if isinf(logp)
-        logp = -1e100;
-    end
+    assert(~isinf(logp));
 end
 

@@ -2,7 +2,7 @@
 figure;
 
 col = [];
-for i = 1:length(pl)
+for i = 5:length(pl)
     subplot(length(pl), 1, i);
 
     m = pl(i).m ./ pl(i).n;

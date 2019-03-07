@@ -10,6 +10,7 @@ function D = init_D_from_csv(filename, test_phase_too)
     D.tasks.g = [];
     D.G.E = [];
     D.G.edges = [];
+    D.r = {};
 
     T = readtable(filename, 'Delimiter', ',');
 
@@ -17,8 +18,8 @@ function D = init_D_from_csv(filename, test_phase_too)
     %D.name = num2str(T.subj_id(1));
 
     phase = 'training_1';
-    for i = 1:size(T,1)
-        stage = strip(T.stage{i});
+    for t = 1:size(T,1)
+        stage = strip(T.stage{t});
         switch phase
             case 'training_1'
                 if strcmp(stage, 'test')
@@ -42,8 +43,8 @@ function D = init_D_from_csv(filename, test_phase_too)
             % TODO 2nd half
         end
 
-        s = T.start(i);
-        g = T.goal(i);
+        s = T.start(t);
+        g = T.goal(t);
         if iscell(s)
             s = str2num(s{1});
         end
@@ -57,7 +58,7 @@ function D = init_D_from_csv(filename, test_phase_too)
         end
         D.G.N = max([D.G.N s g]);
 
-        path = strsplit(strip(T.path{i}), ' ');
+        path = strsplit(strip(T.path{t}), ' ');
         for k = 1:length(path) - 1
             i = str2num(path{k});
             j = str2num(path{k + 1});
@@ -68,13 +69,26 @@ function D = init_D_from_csv(filename, test_phase_too)
             D.G.E(j,i) = 1;
             D.G.N = max([D.G.N i j]);
         end
+
+        if any(strcmp('reward',T.Properties.VariableNames))
+            last = str2num(path{end});
+            if length(D.r) < last
+                D.r{last} = [T.reward(t)];
+            else
+                D.r{last} = [D.r{last} T.reward(t) / 10]; % !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! we divide by 10 to make it compatible w/ other experiments
+            end
+        end
+
     end
 
     E = zeros(D.G.N);
     E(1:size(D.G.E,1), 1:size(D.G.E,2)) = D.G.E;
     D.G.E = E;
 
-    for i = 1:D.G.N
+    for i = length(D.r)+1:D.G.N
+        % pad it up
         D.r{i} = [];
     end
+    assert(length(D.r) == D.G.N);
+
 end

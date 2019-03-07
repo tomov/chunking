@@ -95,19 +95,24 @@ function logp = loglik(H, D, h)
 
     %fprintf('at 5 -> %.6f\n', logp);
 
-
     % rewards
     for i = 1:D.G.N
         for obs = 1:length(D.r{i})
-            % Pr(r = x | rest of H)
-            logp = logp + log(normpdf( D.r{i}(obs), H.mu(i), h.std_r ));
+            p = log(normpdf( D.r{i}(obs), H.mu(i), h.std_r ));
+            if isinf(p)
+                % prevent -Infs = impossible events; equivalent to using a
+                % Gaussian + uniform mixture
+                % do it in a "soft" way so MCMC can recover one by one
+                logp = logp + 1e-100;
+            else
+                % Pr(r = x | rest of H)
+                logp = logp + p;
+            end
         end
     end
 
     %fprintf('at 6 -> %.6f\n', logp);
     
-    if isinf(logp)
-        logp = -1e100;
-    end
+    assert(~isinf(logp));
 end
 

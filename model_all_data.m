@@ -7,20 +7,20 @@ init_all_plots;
 
 h = init_hyperparams;
 h.alpha = 1;
-nsamples = 10000;
-take_map = false;
+nsamples = 1000;
+take_map = true;
 
 %filename = sprintf('model_all_data_%dsamples_MAP_%dalpha.mat', nsamples, h.alpha);
 if take_map
-    filename = sprintf('model_all_data_samples=%d_alpha=%.4f_MAP.mat', nsamples, h.alpha);
+    filename = sprintf('model_E6_samples=%d_alpha=%.4f_MAP.mat', nsamples, h.alpha);
 else
-    filename = sprintf('model_all_data_samples=%d_alpha=%.4f_last.mat', nsamples, h.alpha);
+    filename = sprintf('model_E6_samples=%d_alpha=%.4f_last.mat', nsamples, h.alpha);
 end
 filename
 
 sem = @(x) std(x) / sqrt(length(x));
 
-for i = 1:length(pl)
+for i = 5:length(pl)
     for j = 1:length(pl(i).dirnames)
 
         if ~isnan(pl(i).m(j))

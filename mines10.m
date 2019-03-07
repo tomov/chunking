@@ -8,7 +8,16 @@ sem = @(x) std(x) / sqrt(length(x));
 
 N = 95; % participants
 h = init_hyperparams();
+h.alpha = 2;
 nsamples = 1000;
+take_map = true;
+
+if take_map
+    filename = sprintf('mines10_alpha=%d_nsamples=%d_MAP.mat', h.alpha, nsamples);
+else
+    filename = sprintf('mines10_alpha=%d_nsamples=%d_last.mat', h.alpha, nsamples);
+end
+
 D = init_D_from_txt('mines10.txt');
 
 
@@ -47,5 +56,5 @@ fprintf('right-tailed binomial test m = %.3f, n = %d, p = %.4f\n', m, n, p);
 
 
 
-filename = sprintf('mines10_alpha=%d_nsamples=%d.mat', h.alpha, nsamples);
+filename
 save(filename);
