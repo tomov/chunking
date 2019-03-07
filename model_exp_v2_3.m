@@ -1,13 +1,9 @@
 
 clear all;
 close all;
-%{
-[data, Ts] = load_data('exp/results/exp_v2_3_subway10_unlearn_circ', 246, false); % for exp_v2_3 (subway 10 unlearn with right stimuli)
 
-h = init_hyperparams;
-nsamples = 100;
-burnin = 1;
-lag = 1;
+%[data, Ts] = load_data('exp/results/exp_v2_3_subway10_unlearn_circ', 246, false); % for exp_v2_3 (subway 10 unlearn with right stimuli)
+
 
 % from analyze_data
 % for exp_v2_3 subway 10 unlearn 
@@ -30,10 +26,16 @@ D = init_Ds_from_data('exp/results/exp_v2_3_subway10_unlearn_circ', true);
 D_full = D;
 % TODO rm & uncomment above
 save tmp.mat;
-%}
-load tmp.mat;
+%load tmp.mat;
 
-nsamples = 100;
+h = init_hyperparams;
+h.alpha = 1;
+nsamples = 10000;
+burnin = 1;
+lag = 1;
+
+filename = sprintf('model_exp_v2_3_circ_samples=%d_alpha=%.4f_last.mat', nsamples, h.alpha);
+disp(filename);
 
 for subj = 1:length(D) % for each subject
     D(subj).tasks.s = [];
@@ -63,14 +65,20 @@ for subj = 1:length(D) % for each subject
         [samples, post] = sample_c(D(subj), h, nsamples, burnin, lag, H(subj));
         H(subj) = samples(end);
 
+        %{
+        [~,I] = max(post); % MAP H
+        H(subj) = samples(I);
+        %}
+
         [path, hpath] = hbfs(s, g, H(subj), D(subj));
         move(subj, i) = path(2) == nexts(i,1);
     end
 end
 
-save('model_exp_v2_3_circ_sample_c.mat');
+disp(filename);
+save(filename);
 
-load('model_exp_v2_3_circ_sample_c.mat');
+%load(filename);
 %[data, Ts, ~, ~, ~, ~, exclude] = load_data('exp/results/exp_v2_3_subway10_unlearn/', 246, false); % for exp_v2_3 (subway 10 unlearn)
 %move = move(~exclude, :);
 

@@ -24,6 +24,7 @@ function logp = logprior(H, D, h)
 
     % TODO BUG these are fucked in matlab b/c of new clusters; comment out for now. they're fine in the C version
     % cluster rewards
+    %{
     for k = 1:length(H.theta)
         % account for impact of theta on posterior
         % below probability is Pr that the particular value of theta was
@@ -39,6 +40,7 @@ function logp = logprior(H, D, h)
     for i = 1:D.G.N
         logp = logp + log(normpdf(H.mu(i), H.theta(H.c(i)), h.std_mu));
     end
+    %}
 
     % prevent -Infs = impossible events; equivalent to using a
     % Gaussian + uniform mixture
