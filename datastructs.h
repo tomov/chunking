@@ -471,10 +471,10 @@ void Hierarchy::PopulateCnt()
     //}
     // remove thetas for empty clusters; happens b/c of MATLAB
     // agni
-    //if (this->theta.size() > K)
-    //{
-    //    this->theta.resize(K);
-    //}
+    if (this->theta.size() > K)
+    {
+        this->theta.resize(K);
+    }
 
     DEBUG_PRINT("H.cnt = [");
     for (int k = 0; k < K; k++)
@@ -683,12 +683,11 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
     for (int k = 0; k < this->theta.size(); k++)
     {
         // don't do for empty clusters TODO think about it more carefully TODO might be a bug in MATLAB version
-        //if (this->cnt[k] > 0) // agni
+        //if (this->cnt[k] > 0) // agni <------------- OMG IT'S THIS!!!!! that screws up mines10 ...
         {
             // TODO optimize with norm dist objects for each k for H
             //DEBUG_PRINT("theta k [%d] = %.4lf\n", k, this->theta[k]);
             double p = log(NormPDF(this->theta[k], h.theta_mean, h.std_theta));
-            /*
             if (isinf(p))
             {
                 // prevent -Infs = impossible events; equivalent to using a
@@ -701,8 +700,7 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
             {
                 logP += p;
             }
-            */
-            logP += p; // agni
+            //logP += p; // agni
 
             DEBUG_PRINT("N(theta[%d]): logp += %e = %e\n", k + 1, p, logP);
         }
@@ -717,7 +715,6 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
         //DEBUG_PRINT("mu i [%d] = %.4lf\n", i, this->mu[i]);
         double p = log(NormPDF(this->mu[i], this->theta[this->c[i] - 1], h.std_mu));
 
-        /*
         if (isinf(p))
         {
             // prevent -Infs = impossible events; equivalent to using a
@@ -730,17 +727,16 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
         {
             logP += p;
         }
-        */
-        logP += p; // agni
+        //logP += p; // agni
 
         DEBUG_PRINT("N(mu[%d], theta[%d]): logp += %e = %e\n", i+1, this->c[i], p, logP);
     }
 
-    // assertThis(!isinf(logP), "!isinf(logP) in LogPrior");
-    if (isinf(logP))
-    {
-        logP = 1e-100; // agni
-    }
+    assertThis(!isinf(logP), "!isinf(logP) in LogPrior");
+    //if (isinf(logP))
+    //{
+    //    logP = 1e-100; // agni
+    //}
 
     return logP;
 }
@@ -849,7 +845,6 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
     // TODO sample them too, or marginalize over them
     //
     // agni
-    /*
     for (int k = 0; k < K; k++)
     {
         if (this->cnt[k] == 0)
@@ -872,12 +867,10 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
             }
         }
     }
-    */
 
     // bridges
     //
     // agni
-    /* 
     for (int k = 0; k < K; k++)
     {
         if (this->cnt[k] == 0)
@@ -901,6 +894,7 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
 
     // tasks
     //
+    // agni
     for (int i = 0; i < D.tasks.size(); i++)
     {
         int s = D.tasks[i].s;
@@ -920,7 +914,6 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
         double denom = this->cnt[this->c[s - 1] - 1] * 1 + (this->N - this->cnt[this->c[s - 1] - 1]) * this->tp; // careful with double off-by-ones
         logP -= log(denom);
     }
-    */
 
     // rewards
     //
@@ -930,7 +923,6 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
         {
             // Pr(r = x | rest of H)
             double p = log(NormPDF(D.rewards[i][o], this->mu[i], h.std_r));
-            /*
             if (isinf(p))
             {
                 // prevent -Infs = impossible events; equivalent to using a
@@ -943,16 +935,15 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
             {
                 logP += p;
             }
-            */
-            logP += p; // agni
+            //logP += p; // agni
         }
     }
 
-    //assertThis(!isinf(logP), "!isinf(logP) in LogLik");
-    if (isinf(logP))
-    {
-        logP = 1e-100; // agni
-    }
+    assertThis(!isinf(logP), "!isinf(logP) in LogLik");
+    //if (isinf(logP))
+    //{
+    //    logP = 1e-100; // agni
+    //}
 
     return logP;
 }
