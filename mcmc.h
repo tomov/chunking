@@ -430,8 +430,11 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
 
         // TODO bridges
 
-        samples.push_back(new Hierarchy(H));
-        post.push_back(H.LogPost(D, h)); // TODO optim
+        if (n >= burnin && n % lag == 0)
+        {
+            samples.push_back(new Hierarchy(H));
+            post.push_back(H.LogPost(D, h)); // TODO optim
+        }
     }
 
     return samples;

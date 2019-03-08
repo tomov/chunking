@@ -4,8 +4,6 @@
 #ifndef DATA_STRUCTS_H 
 #define DATA_STRUCTS_H
 
-#include "printmex.h"
-
 #include <string>
 #include <memory>
 #include <random>
@@ -13,6 +11,9 @@
 #include <cstdlib>
 #include <cmath>
 #include <boost/math/distributions.hpp>
+
+#include "helpermex.h"
+#include "printmex.h"
 
 // TODO separate into .h and .cpp
 
@@ -95,6 +96,12 @@ using namespace matlab::data;
 class Data
 {
     public:
+        // types -- see https://www.mathworks.com/help/matlab/apiref/matlab.data.arraytype.html
+        static const std::vector<std::string> fieldNames;
+        static const std::vector<ArrayType> fieldTypes;
+
+        static void check(StructArray const &matlabStructArrayD, std::shared_ptr<matlab::engine::MATLABEngine> matlabPtr);
+
         Data(StructArray const matlabStructArrayD);
         ~Data();
 
@@ -112,9 +119,14 @@ class Data
         
         struct Graph
         {
+            static const std::vector<std::string> fieldNames; // D.G
+            static const std::vector<ArrayType> fieldTypes;
+
             int **E;
+            int **hidden_E;
             int N;
             std::vector<Edge> edges;
+            std::vector<Edge> hidden_edges;
             std::vector<int> *adj;
         };
 
@@ -124,6 +136,48 @@ class Data
         std::vector<double> *rewards;
 };
 
+const std::vector<std::string> Data::fieldNames = {"name", "G", "tasks", "r"};
+const std::vector<ArrayType> Data::fieldTypes = {ArrayType::CHAR, ArrayType::STRUCT, ArrayType::STRUCT, ArrayType::CELL};
+
+const std::vector<std::string> Data::Graph::fieldNames = {"N", "E", "edges", "hidden_E", "hidden_edges"}; // D.G
+const std::vector<ArrayType> Data::Graph::fieldTypes = {ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE};
+
+void Data::check(StructArray const &matlabStructArrayD, std::shared_ptr<matlab::engine::MATLABEngine> matlabPtr)
+{
+    checkStructureElements(matlabStructArrayD, "D", Data::fieldNames, Data::fieldTypes, matlabPtr);
+
+    size_t total_num_of_elements = matlabStructArrayD.getNumberOfElements();
+    for (size_t i=0; i<total_num_of_elements; i++) 
+    {
+        // check D.G
+        const StructArray structFieldG = matlabStructArrayD[i]["G"];
+        checkStructureElements(structFieldG, "D.G", Data::Graph::fieldNames, Data::Graph::fieldTypes, matlabPtr);
+
+        const TypedArray<double> _N = structFieldG[0]["N"];
+        const TypedArray<double> _E = structFieldG[0]["E"];
+        int N = (int)_N[0];
+        if (_E.getNumberOfElements() != N * N)
+        {
+            displayError("D.G.E must have D.G.N^2 elements.", matlabPtr);
+        }
+
+        // check D.tasks
+        const StructArray matlabStructArrayTasks = matlabStructArrayD[i]["tasks"];
+        const TypedArray<double> _s = matlabStructArrayTasks[0]["s"];
+        const TypedArray<double> _g = matlabStructArrayTasks[0]["g"];
+        if (_s.getNumberOfElements() != _g.getNumberOfElements())
+        {
+            displayError("D.tasks.s and D.tasks.g must have the same number of elements.", matlabPtr);
+        }
+
+        // check D.r
+        const CellArray matlabStructArrayRewards = matlabStructArrayD[i]["r"];
+        if (matlabStructArrayRewards.getNumberOfElements() != N)
+        {
+            displayError("D.r should have D.N elements", matlabPtr);
+        }
+    }
+}
 
 // TODO pass entryIndex and use instead of [0]
 Data::Data(StructArray const matlabStructArrayD)
@@ -136,6 +190,8 @@ Data::Data(StructArray const matlabStructArrayD)
     const TypedArray<double> _N = matlabStructArrayG[0]["N"];
     const TypedArray<double> _E = matlabStructArrayG[0]["E"];
     const TypedArray<double> _edges = matlabStructArrayG[0]["edges"];
+    const TypedArray<double> _hidden_E = matlabStructArrayG[0]["hidden_E"];
+    const TypedArray<double> _hidden_edges = matlabStructArrayG[0]["hidden_edges"];
 
     G.N = (int)_N[0];
 	DEBUG_PRINT("G.N = %d\n", G.N);
@@ -161,6 +217,30 @@ Data::Data(StructArray const matlabStructArrayD)
         int v = _edges[i][1];
         G.edges.push_back(Edge(u, v));
         DEBUG_PRINT("G.edge %d %d\n", u, v);
+    }
+
+	DEBUG_PRINT("G.hidden_E = \n");
+    G.hidden_E = new int*[G.N];
+    G.adj = new std::vector<int>[G.N];
+    for (int i = 0; i < G.N; i++)
+    {
+        G.hidden_E[i] = new int[G.N];
+        for (int j = 0; j < G.N; j++)
+        {
+            G.hidden_E[i][j] = (int)_hidden_E[i][j];
+            // important for connectivity that hidden edges are not present in E
+            assertThis(!G.hidden_E[i][j] || !G.E[i][j], "!G.hidden_E[i][j] || !G.E[i][j]");
+            DEBUG_PRINT("%d ", G.hidden_E[i][j]);
+        }
+        DEBUG_PRINT("\n");
+    }
+
+    for (int i = 0; i < _hidden_edges.getDimensions()[0]; i++)
+    {
+        int u = _hidden_edges[i][0];
+        int v = _hidden_edges[i][1];
+        G.hidden_edges.push_back(Edge(u, v));
+        DEBUG_PRINT("G.hidden_edge %d %d\n", u, v);
     }
 
     // convert tasks  
@@ -201,6 +281,7 @@ Data::~Data()
     for (int i = 0; i < G.N; i++)
     {
         delete [] G.E[i];
+        delete [] G.hidden_E[i];
     }
     delete [] G.E;
     delete [] G.adj;
@@ -211,6 +292,11 @@ Data::~Data()
 class Hyperparams
 {
     public:
+        static const std::vector<std::string> fieldNames; // h
+        static const std::vector<ArrayType> fieldTypes;
+
+        static void check(StructArray const &matlabStructArrayHyperparams, std::shared_ptr<matlab::engine::MATLABEngine> matlabPtr);
+
         Hyperparams(StructArray const matlabStructArrayHyperparams);
 
         double alpha;
@@ -219,6 +305,14 @@ class Hyperparams
         double std_mu;
         double std_r;
 };
+
+const std::vector<std::string> Hyperparams::fieldNames = {"alpha", "std_theta", "theta_mean", "std_mu", "std_r"}; // h
+const std::vector<ArrayType> Hyperparams::fieldTypes = {ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE};
+
+void Hyperparams::check(StructArray const &matlabStructArrayHyperparams, std::shared_ptr<matlab::engine::MATLABEngine> matlabPtr)
+{
+    checkStructureElements(matlabStructArrayHyperparams, "h", Hyperparams::fieldNames, Hyperparams::fieldTypes, matlabPtr);
+}
 
 Hyperparams::Hyperparams(StructArray const matlabStructArrayHyperparams)
 {
@@ -245,6 +339,12 @@ Hyperparams::Hyperparams(StructArray const matlabStructArrayHyperparams)
 class Hierarchy
 {
     public:
+        // types -- see https://www.mathworks.com/help/matlab/apiref/matlab.data.arraytype.html
+        static const std::vector<std::string> fieldNames; // H
+        static const std::vector<ArrayType> fieldTypes;
+
+        static void check(StructArray const &matlabStructArrayH, const Data &D, std::shared_ptr<matlab::engine::MATLABEngine> matlabPtr);
+
         Hierarchy(int _N);
         Hierarchy(const Hierarchy &H); // copy constructor
         ~Hierarchy();
@@ -279,6 +379,35 @@ class Hierarchy
         std::vector<double> theta;
         double *mu;
 };
+
+const std::vector<std::string> Hierarchy::fieldNames = {"c", "p", "q", "tp", "hp", "theta", "mu"}; // H
+const std::vector<ArrayType> Hierarchy::fieldTypes = {ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE};
+
+void Hierarchy::check(StructArray const &matlabStructArrayH, const Data &D, std::shared_ptr<matlab::engine::MATLABEngine> matlabPtr)
+{
+    checkStructureElements(matlabStructArrayH, "H", Hierarchy::fieldNames, Hierarchy::fieldTypes, matlabPtr);
+
+    const TypedArray<double> _c = matlabStructArrayH[0]["c"];
+    if (_c.getNumberOfElements() != D.G.N)
+    {
+        displayError("H.c should have D.G.N elements", matlabPtr);
+    }
+
+    const TypedArray<double> _theta = matlabStructArrayH[0]["theta"];
+    // TODO this is wrong; needs to be max(c)
+    // also, wtf try to pass Hout as input argument -> Busy
+    //if (_theta.getNumberOfElements() != D.G.N)
+    //{
+    //    displayError("H.theta should have D.G.N elements");
+    //}
+
+    const TypedArray<double> _mu = matlabStructArrayH[0]["mu"];
+    if (_mu.getNumberOfElements() != D.G.N)
+    {
+        displayError("H.mu should have D.G.N elements", matlabPtr);
+    }
+
+}
 
 // P(H|D) for updates of c_i
 // i.e. with new c's up to c_i, the candidate c_i, then old c's after (and old rest of H)

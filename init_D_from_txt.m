@@ -7,6 +7,10 @@ function D = init_D_from_txt(filename)
     N = A(1); M = A(2);
     D.G.N = N;
     D.G.E = zeros(N, N); % TODO sparse?
+    D.G.edges = [];
+    D.G.hidden_E = zeros(N, N); % TODO sparse?
+    D.G.hidden_edges = [];
+
     for k = 1:M
         A = freadline(f, '%d %d');
         i = A(1); j = A(2);
@@ -49,11 +53,30 @@ function D = init_D_from_txt(filename)
         D.r{i} = [D.r{i} A(2)];
     end
 
+    % hidden edges
+    %
+    A = freadline(f, '%d');
+    if ~isempty(A)
+        U = A(1);
+        for u = 1:U
+            A = freadline(f, '%d %d');
+            i = A(1);
+            j = A(2);
+            D.G.hidden_edges = [D.G.hidden_edges; i j];
+            D.G.hidden_E(i,j) = 1;
+            D.G.hidden_E(j,i) = 1;
+        end
+    end
+
     fclose(f);
 end
 
 function A = freadline(f, spec)
     line = fgets(f);
-    A = sscanf(line, spec);
+    if line == -1
+        A = [];
+    else
+        A = sscanf(line, spec);
+    end
 end
 

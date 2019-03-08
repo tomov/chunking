@@ -41,6 +41,8 @@
 #include "mexAdapter.hpp"
 
 #include "mcmc.h"
+// important -- needs to come after mcmc.h; otherwise boost libraries complain
+#include "helpermex.h"
 
 
 using namespace matlab::mex;
@@ -51,19 +53,6 @@ class MexFunction : public Function {
 private:
     std::shared_ptr<matlab::engine::MATLABEngine> matlabPtr;
 
-    // types -- see https://www.mathworks.com/help/matlab/apiref/matlab.data.arraytype.html
-    const std::vector<std::string> fieldNamesH = {"c", "p", "q", "tp", "hp", "theta", "mu"}; // H
-    const std::vector<ArrayType> fieldTypesH = {ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE};
-
-    const std::vector<std::string> fieldNamesD = {"name", "G", "tasks", "r"}; // D
-    const std::vector<ArrayType> fieldTypesD = {ArrayType::CHAR, ArrayType::STRUCT, ArrayType::STRUCT, ArrayType::CELL};
-
-    const std::vector<std::string> fieldNamesG = {"N", "E", "edges"}; // D.G
-    const std::vector<ArrayType> fieldTypesG = {ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE};
-
-    const std::vector<std::string> fieldNamesh = {"alpha", "std_theta", "theta_mean", "std_mu", "std_r"}; // h
-    const std::vector<ArrayType> fieldTypesh = {ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE};
-
 public:
   /* Constructor for the class. */
   MexFunction()
@@ -73,67 +62,26 @@ public:
   
   void displayError(std::string errorMessage)
   {
-    ArrayFactory factory;
-    matlabPtr->feval(matlab::engine::convertUTF8StringToUTF16String("error"),
-            0, std::vector<Array>({
-      factory.createScalar(errorMessage) }));
+      ::displayError(errorMessage, matlabPtr);
   }
-  
-  
+
   /* This is the gateway routine for the MEX-file. */
   void 
   operator()(ArgumentList outputs, ArgumentList inputs) { 
-    std::srand(0); // for reproducibility
     
     checkArguments (outputs,inputs);
 
-    // check D
+    // D
     StructArray const matlabStructArrayD = inputs[0];
-    checkStructureElements(matlabStructArrayD, "D", fieldNamesD, fieldTypesD);
-
-    size_t total_num_of_elements = matlabStructArrayD.getNumberOfElements();
-    for (size_t i=0; i<total_num_of_elements; i++) 
-    {
-        // check D.G
-        const StructArray structFieldG = matlabStructArrayD[i]["G"];
-        checkStructureElements(structFieldG, "D.G", fieldNamesG, fieldTypesG);
-
-        const TypedArray<double> _N = structFieldG[0]["N"];
-        const TypedArray<double> _E = structFieldG[0]["E"];
-        int N = (int)_N[0];
-        if (_E.getNumberOfElements() != N * N)
-        {
-            displayError("D.G.E must have D.G.N^2 elements.");
-        }
-
-        // check D.tasks
-        const StructArray matlabStructArrayTasks = matlabStructArrayD[i]["tasks"];
-        const TypedArray<double> _s = matlabStructArrayTasks[0]["s"];
-        const TypedArray<double> _g = matlabStructArrayTasks[0]["g"];
-        if (_s.getNumberOfElements() != _g.getNumberOfElements())
-        {
-            displayError("D.tasks.s and D.tasks.g must have the same number of elements.");
-        }
-
-        // check D.r
-        const CellArray matlabStructArrayRewards = matlabStructArrayD[i]["r"];
-        if (matlabStructArrayRewards.getNumberOfElements() != N)
-        {
-            displayError("D.r should have D.N elements");
-        }
-    }
-
-    // init D
+    Data::check(matlabStructArrayD, matlabPtr);
     Data D(matlabStructArrayD);
 
-    // check h
+    // h
     StructArray const matlabStructArrayHyperparams = inputs[1];
-    checkStructureElements(matlabStructArrayHyperparams, "h", fieldNamesh, fieldTypesh);
-
-    // init h
+    Hyperparams::check(matlabStructArrayHyperparams, matlabPtr);
     Hyperparams h(matlabStructArrayHyperparams);
 
-    // check nsamples
+    // nsamples
     int nsamples = 10000; // default
     if (inputs.size() > 2)
     {
@@ -142,7 +90,7 @@ public:
     }
     DEBUG_PRINT("nsamples = %d\n", nsamples);
 
-    // check burnin
+    // burnin
     int burnin = 1; // default
     if (inputs.size() > 3)
     {
@@ -151,7 +99,7 @@ public:
     }
     DEBUG_PRINT("burnin = %d\n", burnin);
 
-    // check lag
+    // lag
     int lag = 1; // default
     if (inputs.size() > 4)
     {
@@ -160,33 +108,12 @@ public:
     }
     DEBUG_PRINT("lag = %d\n", lag);
 
-    // check H
+    // H
     Hierarchy H(D.G.N);
     if (inputs.size() > 5)
     {
         StructArray const matlabStructArrayH = inputs[5];
-        checkStructureElements(matlabStructArrayH, "H", fieldNamesH, fieldTypesH);
-
-        const TypedArray<double> _c = matlabStructArrayH[0]["c"];
-        if (_c.getNumberOfElements() != D.G.N)
-        {
-            displayError("H.c should have D.G.N elements");
-        }
-
-        const TypedArray<double> _theta = matlabStructArrayH[0]["theta"];
-        // TODO this is wrong; needs to be max(c)
-        // also, wtf try to pass Hout as input argument -> Busy
-        //if (_theta.getNumberOfElements() != D.G.N)
-        //{
-        //    displayError("H.theta should have D.G.N elements");
-        //}
-
-        const TypedArray<double> _mu = matlabStructArrayH[0]["mu"];
-        if (_mu.getNumberOfElements() != D.G.N)
-        {
-            displayError("H.mu should have D.G.N elements");
-        }
-
+        Hierarchy::check(matlabStructArrayH, D, matlabPtr);
         H.InitFromMATLAB(matlabStructArrayH);
     }
     else
@@ -222,7 +149,7 @@ public:
 
     // return H = the samples
     //
-    StructArray resultH = factory.createStructArray({ 1, samples.size() }, MexFunction::fieldNamesH ); // dims, fieldNames
+    StructArray resultH = factory.createStructArray({ 1, samples.size() }, Hierarchy::fieldNames ); // dims, fieldNames
     for (int i = 0; i < samples.size(); i++)
     {
         Hierarchy *sample = samples[i];
@@ -252,60 +179,6 @@ public:
   }
 
 
-  // check fields for any structure
-  //
-  void checkStructureElements(StructArray const & matlabStructArray, const std::string & name, const std::vector<std::string> & expectedFieldNames, const std::vector<ArrayType> & expectedFieldTypes)
-  {
-      std::ostringstream stream;
-      size_t nfields = matlabStructArray.getNumberOfFields();
-      auto fields = matlabStructArray.getFieldNames();
-      size_t total_num_of_elements = matlabStructArray.getNumberOfElements();
-      std::vector<std::string> fieldNames(fields.begin(), fields.end());
-
-      char err[100];
-
-      /* Produce error if structure has wrong number of fields. */
-      if(nfields != expectedFieldNames.size())
-      {
-          sprintf(err, "Struct %s must contain %lu fields.", name.c_str(), expectedFieldNames.size());
-          displayError(err);
-      }
-
-      for (size_t i = 0; i < expectedFieldNames.size(); i++)
-      {
-          auto it = find(fieldNames.begin(), fieldNames.end(), expectedFieldNames[i]);
-
-          /* Produce error if field is missing. */
-          if (it == fieldNames.end())
-          {
-              sprintf(err, "Struct %s must contain field '%s'.", name.c_str(), expectedFieldNames[i].c_str());
-              displayError(err);
-          }
-          else
-          {
-              for (size_t entryIndex=0; entryIndex<total_num_of_elements; entryIndex++) 
-              {
-                  const Array structField = matlabStructArray[entryIndex][expectedFieldNames[i]];
-
-                  /* Produce error if name field in structure is empty. */
-                  if (structField.isEmpty()) 
-                  {
-                      sprintf(err, "Struct %s has empty field %s on index %zu.", name.c_str(), expectedFieldNames[i].c_str(), entryIndex);
-                      displayError(err);
-                  }
-
-                  /* Produce error if name is not a valid character array. */
-                  if (structField.getType() != expectedFieldTypes[i])
-                  {
-                      sprintf(err, "Struct %s field %s on index %zu has invalid type", name.c_str(), expectedFieldNames[i].c_str(), entryIndex);
-                      displayError(err);
-                  }
-              }
-          }
-      }
-  }
-  
- 
   // check function arguments
   // 
   void checkArguments(ArgumentList outputs, ArgumentList inputs) {

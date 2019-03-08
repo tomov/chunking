@@ -6,6 +6,9 @@ function logp = loglik(H, D, h)
     logp = 0;
     for i = 1:D.G.N
         for j = 1:i-1
+            if D.G.hidden_E(i,j)
+                continue;
+            end
             if H.c(i) == H.c(j)
                 if D.G.E(i,j)
                     logp = logp + log(H.p);
