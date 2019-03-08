@@ -29,7 +29,9 @@ function logp = logprior(H, D, h)
         % below probability is Pr that the particular value of theta was
         % drawn given that it was drawn from a normal dist w mu = 0, var =
         % 100 ; Pr(theta_k = x | rest of H) = normpdf(x; 0, 100)
-        if k <= length(cnt) && cnt(k) > 0
+        %if k <= length(cnt) && cnt(k) > 0 % agni <------------- OMG IT'S THIS!!!!! that screws up mines10 ... TODO FIXME
+        if k <= length(cnt) % analogous to .resize() in populate_cnt() in C++ code; TODO see above
+
             % skip empty clusters -- they don't count
             p = log(normpdf(H.theta(k), h.theta_mean, h.std_theta));
             if isinf(p)

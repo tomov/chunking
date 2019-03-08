@@ -24,16 +24,30 @@ end
 
 % test rewards
 
+%{
 %load model_exp_6_samples=1000_alpha=1.0000_MAP.mat;
 
-%H = pl(5).H{1};
-%D = pl(5).D{1};
-D = D_all(1);
+H_all = pl(5).H{1};
+D_all = pl(5).D{1};
 
 for i = 1:length(H_all(1,:))
-    H = H_all(1,i);
+    H = H_all(i);
+    D = D_all(i);
     l1 = logpost(H, D, h);
     l2 = logpost_c(H, D, h);
+
+    assert(abs(l1 - l2) < 1e-9);
+end
+%}
+
+load model_all_data_samples=40_MAP_alpha=2.0000.mat;
+
+H = pl(2).H{4}(1,:);
+D = pl(2).D{4}(1);
+
+for i = 1:length(H)
+    l1 = logpost(H(i), D, h);
+    l2 = logpost_c(H(i), D, h);
 
     assert(abs(l1 - l2) < 1e-9);
 end
