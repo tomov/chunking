@@ -8,12 +8,8 @@ function ent = approx_entropy(H, D, h)
     M = length(H);
 
     for i = 1:M
-        logp(i) = logpost_c(H,D,h);
+        logp(i) = logpost_c(H(i),D,h);
     end
-    logp = lop - logsumexp(logp);
+    logp = logp - logsumexp(logp);
 
-    for i = 1:M
-        ent = ent + logp(i);
-    end
-
-    ent = - ent / M;
+    ent = - sum(logp) / M;

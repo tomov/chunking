@@ -882,6 +882,11 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
     {
         for (int j = 0; j < i; j++)
         {
+            if (D.G.hidden_E[i][j])
+            {
+                // hidden edge -> don't count
+                continue;
+            }
             if (this->c[i] == this->c[j])
             {
                 if (D.G.E[i][j])
