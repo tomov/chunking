@@ -808,6 +808,7 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
     // cluster rewards
     //
     // TODO uncomment after repro
+    /*
     assertThis(this->cnt.size() == this->theta.size(), "this->cnt.size() == this->theta.size()");
     for (int k = 0; k < this->theta.size(); k++)
     {
@@ -860,6 +861,7 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
 
         DEBUG_PRINT("N(mu[%d], theta[%d]): logp += %e = %e\n", i+1, this->c[i], p, logP);
     }
+    */
 
     assertThis(!isinf(logP), "!isinf(logP) in LogPrior");
     //if (isinf(logP))
