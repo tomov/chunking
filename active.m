@@ -11,8 +11,8 @@ sem = @(x) std(x) / sqrt(length(x));
 N = 40; % participants
 h = init_hyperparams();
 h.alpha = 1;
-burnin = 5000; % TODO x 10
-lag = 100; % TODO x 10
+burnin = 500; % TODO x 10
+lag = 10; % TODO x 10
 nsamples = 50;
 
 filename = sprintf('active_alpha=%d_nsamples=%d_burnin=%d_lag=%d.mat', h.alpha, nsamples);
@@ -33,7 +33,7 @@ for g = 1:length(graph_files)
     for subj = 1:N
         subj
 
-        [H, P] = sample_c(D, h, nsamples, burnin, lag);
+        H = sample_c(D, h, nsamples, burnin, lag);
         %H_all{g, subj} = H;
 
         entropy = [];
@@ -51,6 +51,8 @@ for g = 1:length(graph_files)
             D_u_v.G.E(u,v) = 1;
             D_u_v.G.E(v,u) = 1;
 
+            H_u_v = sample_c(D_u_v, h, nsamples, burnin, lag);
+
             % D, (u,v) not in E
             D_not_u_v = D;
             % unhide
@@ -61,10 +63,12 @@ for g = 1:length(graph_files)
             D_not_u_v.G.E(u,v) = 0;
             D_not_u_v.G.E(v,u) = 0;
 
+            H_not_u_v = sample_c(D_not_u_v, h, nsamples, burnin, lag);
+
             % H(H|D,a) = H(H|D,(u,v) in E) * Pr[(u,v) in E|D]
             %          + H(H|D,(u,v) not in E) * Pr[(u,v) not in E|D]
-            entropy(subj,i) = approx_entropy(H, D_u_v, h) * Pr_edge(u, v, H, D, h) + ...
-            approx_entropy(H, D_not_u_v, h) * Pr_not_edge(u, v, H, D, h);
+            entropy(subj,i) = approx_entropy(H_u_v, D_u_v, h) * Pr_edge(u, v, H, D, h) + ...
+            approx_entropy(H_not_u_v, D_not_u_v, h) * Pr_not_edge(u, v, H, D, h);
 
             %entropy(subj,:)
         end
@@ -90,4 +94,4 @@ end
 subplot(2,1,2);
 bar(m);
 hold on;
-errorbar(m, se);
+errorbar(m, se, 'linestyle', 'none');
