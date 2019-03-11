@@ -8,8 +8,13 @@ function pr = Pr_not_edge(u, v, H, D, h)
     pr = 0;
 
     for i = 1:M
-        if H(i).c(u) == H(i).c(v)
+        k = H(i).c(u);
+        l = H(i).c(v);
+        if k == l
             pr = pr + (1 - H(i).p);
+        elseif isequal(H(i).b{k,l}, [u v]) || isequal(H(i).b{k,l}, [v u])
+            % it's a bridge => edge has to be there
+            pr = pr + 0;
         else
             pr = pr + (1 - H(i).p * H(i).q);
         end

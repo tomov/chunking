@@ -8,12 +8,12 @@ rng default;
 
 sem = @(x) std(x) / sqrt(length(x));
 
-N = 40; % participants
+N = 1; % participants
 h = init_hyperparams();
 h.alpha = 2;
 burnin = 500; % TODO x 10
 lag = 10; % TODO x 10
-nsamples = 50;
+nsamples = 100;
 
 filename = sprintf('active_alpha=%d_nsamples=%d_burnin=%d_lag=%d.mat', h.alpha, nsamples);
 
@@ -23,7 +23,7 @@ graph_files = {'active_1.txt', 'active_2.txt', ...
             'active_7.txt'};
 exp_choices = [1 1 1 1 2 2 2];
 
-graph_files =  {'active.txt'};
+graph_files =  {'active_1.txt'};
 exp_choices = [1];
 
 
@@ -64,12 +64,20 @@ for g = 1:length(graph_files)
             D_not_u_v.G.E(u,v) = 0;
             D_not_u_v.G.E(v,u) = 0;
 
+            % need bridges to compute this TODO sample
+            for l = 1:length(H)
+                H(l).b = get_H_b(H(l), D);
+            end
+            Pr_u_v = Pr_edge(u, v, H, D, h);
+            Pr_not_u_v = Pr_not_edge(u, v, H, D, h);
+            H = rmfield(H, 'b'); % b/c logpost_c doesn't like it 
+
             % H(H|D,a) = H(H|D,(u,v) in E) * Pr[(u,v) in E|D]
             %          + H(H|D,(u,v) not in E) * Pr[(u,v) not in E|D]
-            entropy(subj,i) = approx_entropy(H, D_u_v, h) * Pr_edge(u, v, H, D, h) + ...
-            approx_entropy(H, D_not_u_v, h) * Pr_not_edge(u, v, H, D, h);
+            entropy(subj,i) = approx_entropy(H, D_u_v, h) * Pr_u_v + ...
+            approx_entropy(H, D_not_u_v, h) * Pr_not_u_v;
 
-            entropy(subj,:)
+            %entropy(subj,:)
         end
 
         % TODO flip randomly when indifferent
