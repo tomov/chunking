@@ -381,7 +381,7 @@ class Hierarchy
 };
 
 const std::vector<std::string> Hierarchy::fieldNames = {"c", "p", "q", "tp", "hp", "theta", "mu", "E"}; // H
-const std::vector<ArrayType> Hierarchy::fieldTypes = {ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE};
+const std::vector<ArrayType> Hierarchy::fieldTypes = {ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE, ArrayType::DOUBLE};
 
 void Hierarchy::check(StructArray const &matlabStructArrayH, const Data &D, std::shared_ptr<matlab::engine::MATLABEngine> matlabPtr)
 {
@@ -460,36 +460,39 @@ void Hierarchy::Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams 
     assertThis(this->cnt[c_i_old - 1] > 0, "this->cnt[c_i_old - 1] > 0, Update_c_i");
     this->cnt[c_i_old - 1]--;
 
+    // removed a singleton cluster TODO make theta logic similar
+    E_old.clear();
+    if (this->cnt[c_i_old - 1] == 0)
+    {
+        for (int k = 0; k < D.G.N; k++)
+        {
+            assertThis(this->E[c_i_old - 1][k] == this->E[k][c_i_old - 1], "this->E[c_i_old - 1][k] == this->E[k][c_i_old - 1]");
+            E_old.push_back(this->E[c_i_old - 1][k]);
+            this->E[c_i_old - 1][k] = -1;
+            this->E[k][c_i_old - 1] = -1;
+        }
+    }
+
     assertThis(c_i_new - 1 >= 0, "c_i_new - 1 >= 0, Update_c_i");
     assertThis(c_i_new - 1 <= this->cnt.size(), "c_i_new - 1 <= this->cnt.size(), Update_c_i"); // note we allow equality
+
     // creating new cluster
     if (c_i_new - 1 == this->cnt.size())
     {
         this->cnt.push_back(0);
         this->theta.push_back(nan(""));
-        assertThis(c_i_new - 1 < D.G.N, "c_i_new - 1 < D.G.N");
-        for (int k = 0; k < D.G.N; k++)
-        {
-            this->E[k][c_i_new - 1] = -1;
-            this->E[c_i_new - 1][k] = -1;
-        }
     }
 
     this->cnt[c_i_new - 1]++;
 
     theta_old = this->theta[c_i_new - 1];
-    E_old.clear();
-    for (int k = 0; k < D.G.N; k++)
-    {
-        assertThis(this->E[c_i_new - 1][k] == this->E[k][c_i_new - 1], "this->E[c_i_new - 1][k] == this->E[k][c_i_new - 1]");
-        E_old.push_back(this->E[c_i_new - 1][k]);
-    }
 
     if (this->cnt[c_i_new - 1] == 1)
     {
         // created a new cluster, so create a new theta -- note that we could be reusing an old one, so we take care to save the theta in case we need to undo this, e.g. when computing the MCMC updates
         //this->theta[c_i_new - 1] = NormRnd(h.theta_mean, h.std_theta); // InitFromPrior 
         this->theta[c_i_new - 1] = this->mu[i]; // sort-of empirical prior TODO is this legit? 
+        assertThis(this->cnt.size() <= D.G.N, "this->cnt.size() <= D.G.N");
         for (int k = 0; k < this->cnt.size(); k++)
         {
             if (this->cnt[k] > 0)
@@ -498,6 +501,7 @@ void Hierarchy::Update_c_i(int c_i_new, int i, const Data &D, const Hyperparams 
                 this->E[k][c_i_new - 1] = this->E[c_i_new - 1][k];
             }
         }
+        this->E[c_i_new - 1][c_i_new - 1] = 0;
     }
 
     DEBUG_PRINT(" update_c_i -- c_i_new = %d, i = %d; c_i_old = %d\n", c_i_new, i, c_i_old);
@@ -515,10 +519,12 @@ void Hierarchy::Undo_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h
     if (this->cnt[c_i_new - 1] == 1)
     {
         this->theta[c_i_new - 1] = theta_old;
+
+        assertThis(c_i_new - 1 < D.G.N, "c_i_new - 1 < D.G.N");
         for (int k = 0; k < D.G.N; k++)
         {
-            this->E[c_i_new - 1][k] = E_old[k];
-            this->E[k][c_i_new - 1] = E_old[k];
+            this->E[k][c_i_new - 1] = -1;
+            this->E[c_i_new - 1][k] = -1;
         }
     }
 
@@ -534,6 +540,16 @@ void Hierarchy::Undo_c_i(int c_i_new, int i, const Data &D, const Hyperparams &h
 
     assertThis(c_i_old - 1 >= 0, "c_i_old - 1 >= 0, Undo_c_i");
     assertThis(c_i_old - 1 < this->cnt.size(), "c_i_old - 1 < this->cnt.size(), Undo_c_i");
+    if (this->cnt[c_i_old - 1] == 0)
+    {
+        assertThis(E_old.size() == D.G.N, "E_old.size() == D.G.N");
+        for (int k = 0; k < D.G.N; k++)
+        {
+            this->E[c_i_old - 1][k] = E_old[k];
+            this->E[k][c_i_old - 1] = E_old[k];
+        }
+    }
+
     this->cnt[c_i_old - 1]++;
 
     this->c[i] = c_i_old;
@@ -588,9 +604,9 @@ void Hierarchy::Sanity()
         for (int l = 0; l <= k; l++)
         {
             assertThis(this->E[k][l] == this->E[l][k], "this->E[k][l] == this->E[l][k]");
-            if (k < this->cnt.size() && this->cnt[k] > 0)
+            if (k < this->cnt.size() && this->cnt[k] > 0 && l < this->cnt.size() && this->cnt[l] > 0)
             {
-                assertThis(this->E[k][l] != -1, "this->E[k][l] != -1");
+                assertThis(this->E[k][l] != -1, "this->E[k][l] != -1, Sanity");
             }
         }
     }
@@ -808,7 +824,7 @@ void Hierarchy::InitFromPrior(const Data &D, const Hyperparams &h)
     {
         for (int l = 0; l < k; l++)
         {
-            if (k >= this->cnt.size() || l > this->cnt.size() || this->cnt[k] == 0 || this->cnt[l] == 0)
+            if (k >= this->cnt.size() || l >= this->cnt.size() || this->cnt[k] == 0 || this->cnt[l] == 0)
             {
                 this->E[k][l] = -1;
             }
@@ -927,6 +943,7 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
     // TODO same problem as thetas -- more clusters just additionally reduces the prior???
     //
     int K = this->cnt.size();
+    assertThis(K <= D.G.N, "K <= D.G.N");
     for (int k = 0; k < K; k++)
     {
         if (this->cnt[k] == 0)
@@ -939,6 +956,7 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
             {
                 continue;
             }
+            assertThis(this->E[k][l] != -1, "this->E[k][l] != -1, LogPrior");
             if (this->E[k][l])
             {
                 logP += log(this->hp);

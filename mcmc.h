@@ -409,6 +409,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
 
         // update hierarchical edges
         //
+        assertThis(H.cnt.size() <= D.G.N, "H.cnt.size() <= D.G.N");
         for (int k = 0; k < H.cnt.size(); k++)
         {
             if (H.cnt[k] == 0)

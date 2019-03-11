@@ -23,6 +23,9 @@ graph_files = {'active_1.txt', 'active_2.txt', ...
             'active_7.txt'};
 exp_choices = [1 1 1 1 2 2 2];
 
+graph_files =  {'active.txt'};
+exp_choices = [1];
+
 
 for g = 1:length(graph_files)
 
@@ -66,7 +69,7 @@ for g = 1:length(graph_files)
             entropy(subj,i) = approx_entropy(H, D_u_v, h) * Pr_edge(u, v, H, D, h) + ...
             approx_entropy(H, D_not_u_v, h) * Pr_not_edge(u, v, H, D, h);
 
-            %entropy(subj,:)
+            entropy(subj,:)
         end
 
         % TODO flip randomly when indifferent
