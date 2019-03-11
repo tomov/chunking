@@ -11,8 +11,8 @@ sem = @(x) std(x) / sqrt(length(x));
 N = 40; % participants
 h = init_hyperparams();
 h.alpha = 2;
-burnin = 5000; % TODO x 10
-lag = 100; % TODO x 10
+burnin = 500; % TODO x 10
+lag = 10; % TODO x 10
 nsamples = 50;
 
 filename = sprintf('active_alpha=%d_nsamples=%d_burnin=%d_lag=%d.mat', h.alpha, nsamples);

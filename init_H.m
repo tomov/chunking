@@ -27,6 +27,14 @@ function H = init_H(D, h)
     for i = 1:D.G.N
         H.mu(i) = normrnd(H.theta(H.c(i)), h.std_mu);
     end
+
+    H.E = rand(D.G.N, D.G.N) < H.hp;
+    for k=1:D.G.N
+        for l=1:k-1
+            H.E(k,l) = H.E(l,k);
+        end
+        H.E(k,k) = 0;
+    end
 end
 
 

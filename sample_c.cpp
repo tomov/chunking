@@ -164,6 +164,16 @@ public:
         resultH[i]["theta"] = factory.createArray<std::vector<double>::iterator, double>({1, sample->theta.size()}, sample->theta.begin(), sample->theta.end());
         resultH[i]["mu"] = factory.createArray<double>({1, (size_t)sample->N}, (const double*)sample->mu, (const double*)(sample->mu + sample->N));
 
+        double E[sample->N][sample->N];
+        for (int k = 0; k < sample->N; k++)
+        {
+            for (int l = 0; l < sample->N; l++)
+            {
+                E[k][l] = sample->E[k][l];
+            }
+        }
+        resultH[i]["E"] = factory.createArray<double>({(size_t)sample->N, (size_t)sample->N}, (const double*)E, (const double*)(E + sample->N * sample->N));
+
         // IMPORTANT!! free memory; otherwise memory leak => MATLAB hangs
         delete sample;
     }

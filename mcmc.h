@@ -143,6 +143,39 @@ double logpost_hp(double hp, Hierarchy& H, const Data &D, const Hyperparams &h)
 }
 
 
+// draw proposals for H.E[k][l]
+//
+int proprnd_E_k_l(int E_k_l_old, const Hierarchy& H, const Data &D, const Hyperparams &h)
+{
+    if (UnifRnd() < 0.1) // TODO const
+    {
+        return !E_k_l_old;
+    }
+    return E_k_l_old;
+}
+
+int logpost_E_k_l(int E_k_l_new, int k, int l, Hierarchy& H, const Data &D, const Hyperparams &h)
+{
+    int E_k_l_old = H.E[k][l];
+    H.E[k][l] = E_k_l_new;
+    H.E[l][k] = E_k_l_new;
+    double logP = H.LogPost(D, h);
+    H.E[k][l] = E_k_l_old;
+    H.E[l][k] = E_k_l_old;
+    return logP;
+}
+
+// proposal distribution for H.E[k][l]
+//
+int logprop_E_k_l(int E_k_l_new, int E_k_l_old, const Hierarchy& H, const Data &D, const Hyperparams &h)
+{
+    if (E_k_l_new != E_k_l_old)
+    {
+        return log(0.1); // TODO const
+    }
+    return log(0.9);
+}
+
 
 // draw proposals for p; random walk, bounded between 0 and 1
 // TODO rm useless params; from below too
@@ -371,6 +404,44 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             {
                 // reject
                 assertThis(fabs(H.tp - tp_old) < EPS);
+            }
+        }
+
+        // update hierarchical edges
+        //
+        for (int k = 0; k < H.cnt.size(); k++)
+        {
+            if (H.cnt[k] == 0)
+            {
+                continue;
+            }
+            for (int l = 0; l < k; l++)
+            {
+                if (H.cnt[l] == 0)
+                {
+                    continue;
+                }
+                double E_k_l_new = proprnd_E_k_l(H.E[k][l], H, D, h);
+                double E_k_l_old = H.E[k][l];
+
+                double logpost_new = logpost_E_k_l(E_k_l_new, k, l, H, D, h);
+                double logpost_old = H.LogPost(D, h);
+
+                double logprop_new = logprop_E_k_l(E_k_l_new, E_k_l_old, H, D, h);
+                double logprop_old = logprop_E_k_l(E_k_l_old, E_k_l_new, H, D, h);
+
+                if (MetropolisHastingsFlip(logpost_new, logpost_old, logprop_new, logprop_old))
+                { 
+                    // accept
+                    H.E[k][l] = E_k_l_new;
+                    H.E[l][k] = E_k_l_new;
+                }
+                else
+                {
+                    // reject
+                    assertThis(H.E[k][l] == E_k_l_old);
+                    assertThis(H.E[l][k] == E_k_l_old);
+                }
             }
         }
 
