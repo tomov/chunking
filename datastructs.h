@@ -1028,6 +1028,7 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
     }
 
 
+    /*
     // tasks
     //
     // agni
@@ -1074,6 +1075,7 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
             //logP += p; // agni
         }
     }
+    */
 
     assertThis(!isinf(logP), "!isinf(logP) in LogLik");
     //if (isinf(logP))

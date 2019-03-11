@@ -377,6 +377,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
         // TODO do
         // update thetas
         //
+        /*
         for (int k = 0; k < H.theta.size(); k++)
         {
             if (H.cnt[k] > 0)
@@ -427,6 +428,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
                 assertThis(fabs(H.mu[i] - mu_i_old) < EPS);
             }
         }
+        */
 
         // TODO bridges
 

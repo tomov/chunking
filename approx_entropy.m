@@ -1,9 +1,5 @@
 function ent = approx_entropy(H, D, h)
 
-    % H(H|D) = - sum P(H|D) log P(H|D)
-    %     ~= - 1/M sum log p(m)
-    %
-
     ent = 0;
     M = length(H);
 
@@ -11,5 +7,7 @@ function ent = approx_entropy(H, D, h)
         logp(i) = logpost_c(H(i),D,h);
     end
     logp = logp - logsumexp(logp);
+    p = exp(logp);
+    p = p / sum(p); % just in case
 
-    ent = - sum(logp) / M;
+    ent = - sum(p .* logp);
