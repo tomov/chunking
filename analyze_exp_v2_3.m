@@ -1,6 +1,5 @@
 % analyze behavioral data from subway 10 unlearn with circles
 
-%{
 clear all;
 close all;
 
@@ -142,7 +141,8 @@ errorbar(ms, sems, 'linestyle', 'none', 'color', 'black');
 plot([0 6], [0.5 0.5], '--', 'color', [0.5 0.5 0.5])
 plot([3.5 3.5], [0 0.7], '-', 'color', [0.5 0.5 0.5])
 hold off;
-ylabel('p(go to 5)');
+assert(nexts(1,1) == 7);
+ylabel('p(go to 7)');
 xticks(1:6);
 xticklabels(index);
 xlabel('trial # (probe)');
@@ -158,7 +158,6 @@ assert(nexts(3,1) == nexts(4,1));
 p
 stats
 
-%}
 
 % stats for LEARNING -- is there a ramp?
 %

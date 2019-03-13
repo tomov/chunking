@@ -156,13 +156,12 @@ exp_v4.html in master (mines 10 map)
         ARCHIVE/mines10_map_batch2
         ARCHIVE/mines10_map_batch3
 
-    merged in mines10_map
     ...also see maybe_mines_10_wtf_idk
 
     [Toyota] momchil mines 10 map exp_v4.html (54f4f4d48342e5ccdb29c82150208b4b5f7186c9)
         ARCHIVE/mines10_map_batch4
 
-    merged in mines10_map_good
+    all merged in mines10_map (batch4 has suffix "_good")
 
 exp_v3_7.html in master (mail big)
 
