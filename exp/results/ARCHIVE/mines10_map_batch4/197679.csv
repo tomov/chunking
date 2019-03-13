@@ -1,0 +1,2 @@
+group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot, reward, timestamp, datetime
+A,197679,train,1,-1,1,1,11139 77 344 437 382 6688,38 40 38 16 16 32,19067,236,1552343564.582,Tue Mar 12 2019 01:32:44 GMT+0300 (East Africa Time)

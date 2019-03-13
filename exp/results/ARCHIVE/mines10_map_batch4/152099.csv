@@ -1,0 +1,3 @@
+group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot, reward, timestamp, datetime
+A,152099,train,8,-1,8 7 6,3,6900 1129 3927,38 37 32,11956,147,1552343421.042,Mon Mar 11 2019 17:30:21 GMT-0500 (Central Daylight Time)
+A,152099,train,4,3,4 3,2,2319 1765,40 32,4084,224,1552343426.691,Mon Mar 11 2019 17:30:26 GMT-0500 (Central Daylight Time)

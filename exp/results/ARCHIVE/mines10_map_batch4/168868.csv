@@ -1,0 +1,3 @@
+group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot, reward, timestamp, datetime
+A,168868,train,1,-1,1,1,1813,32,1813,143,1552344213.094,Tue Mar 12 2019 04:13:33 GMT+0530 (India Standard Time)
+A,168868,train,9,-1,9,1,192,32,192,140,1552344214.798,Tue Mar 12 2019 04:13:34 GMT+0530 (India Standard Time)

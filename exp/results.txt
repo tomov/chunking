@@ -159,6 +159,11 @@ exp_v4.html in master (mines 10 map)
     merged in mines10_map
     ...also see maybe_mines_10_wtf_idk
 
+    [Toyota] momchil mines 10 map exp_v4.html (54f4f4d48342e5ccdb29c82150208b4b5f7186c9)
+        ARCHIVE/mines10_map_batch4
+
+    merged in mines10_map_good
+
 exp_v3_7.html in master (mail big)
 
      [Toyota] momchil mail exp_v3_7 (26b0a710bb8217af16d62f662f33d7bc62d842cb)
@@ -194,12 +199,15 @@ exp_v2_3.html in master (subway 10 unlearn, fucked -- arrows only...)
 
     in exp_v2_3_subway10_unlearn 
 
-exp_v2_3.html in master (subway 10 unlearn, fucked -- arrows and circles, yes!)
+exp_v2_3.html in master (subway 10 unlearn, arrows and circles, yes!)
 
     [Toyota] momchil subway 10 unlearn exp_v2_3 (ff8b9c72bc7206aee39cde003ace1fd8d5bf6573)
     ARCHIVE/exp_v2_3_subway10_unlearn_batch2
 
     [Toyota] momchil subway 10 unlearn exp_v2_3 (1a48634e266ccd9ef5519ecda9d5e60f4b4e82cc)
     ARCHIVE/exp_v2_3_subway10_unlearn_batch3
+
+    [Toyota] momchil subway 10 unlearn exp_v2_3 (1a48634e266ccd9ef5519ecda9d5e60f4b4e82cc) (March 12, 2019)
+    ARCHIVE/exp_v2_3_subway10_unlearn_batch4
 
     merged in exp_v2_3_subway10_unlearn_circ

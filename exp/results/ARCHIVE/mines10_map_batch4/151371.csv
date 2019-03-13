@@ -1,0 +1,3 @@
+group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot, reward, timestamp, datetime
+A,151371,train,3,-1,3 2,2,4856 515,40 32,5371,213,1552344726.801,Mon Mar 11 2019 15:52:06 GMT-0700 (Mountain Standard Time)
+A,151371,train,7,2,7 6 7 8 9 10 1 2,8,976 1186 295 166 169 291 380 931 417,39 37 40 40 40 39 32 39 32,4811,213,1552344733.143,Mon Mar 11 2019 15:52:13 GMT-0700 (Mountain Standard Time)

@@ -1,0 +1,4 @@
+group, subj_id, stage, start, goal, path, length, RTs, keys, RT_tot, reward, timestamp, datetime
+A,146324,train,6,-1,6,1,1085,32,1085,227,1552343513.155,Mon Mar 11 2019 18:31:53 GMT-0400 (Eastern Daylight Time)
+A,146324,train,3,-1,3 4,2,988 215,38 32,1203,289,1552343515.883,Mon Mar 11 2019 18:31:55 GMT-0400 (Eastern Daylight Time)
+A,146324,train,2,-1,2 3 4,3,2872 128 120,38 38 32,3120,289,1552343520.522,Mon Mar 11 2019 18:32:00 GMT-0400 (Eastern Daylight Time)

@@ -1,0 +1,5 @@
+group, subj_id, stage, trial, start, goal, path, length, RTs, keys, valid_keys, RT_tot, timestamp, datetime
+A,1203332505813,train,1,2,3,2 3,2,16231 897,38 32,1,17128,1552415123.103,Tue Mar 12 2019 11:25:23 GMT-0700 (Pacific Daylight Time)
+A,1203332505813,train,2,4,9,4 5 6 7 8 9,6,8356 853 736 1556 537 1001,38 39 39 40 40 32,1 2 3 4 5,13039,1552415143.02,Tue Mar 12 2019 11:25:43 GMT-0700 (Pacific Daylight Time)
+A,1203332505813,train,3,2,3,2 3,2,3553 1308,38 32,1,4861,1552415156.839,Tue Mar 12 2019 11:25:56 GMT-0700 (Pacific Daylight Time)
+A,1203332505813,train,4,4,6,4 5 6,3,29516 961 1094,38 39 32,1 2,31571,1552415195.551,Tue Mar 12 2019 11:26:35 GMT-0700 (Pacific Daylight Time)
