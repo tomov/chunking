@@ -99,9 +99,9 @@ for s = 1:N % for each simulated subject
             v = path(j+1);
 
             is_cross_cluster_trans = H.c(u) ~= H.c(v);
-            % eps-greedy: flip choice w/ small prob
+            % eps-greedy: choose randomly w/ small prob
             if rand() < 1 - h.eps
-                is_cross_cluster_trans = ~is_cross_cluster_trans;
+                is_cross_cluster_trans = rand() < 0.5;
             end
 
             if ismember([u v], comm_trans, 'rows') 

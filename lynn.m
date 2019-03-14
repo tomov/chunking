@@ -90,9 +90,9 @@ for subj = 1:N % for each simulated subject
         next = datasample(next, 1);
 
         is_cross_cluster_trans = H.c(v) ~= H.c(next);
-        % eps-greedy: flip choice w/ small prob
+        % eps-greedy: choose randomly w/ small prob
         if rand() < 1 - h.eps
-            is_cross_cluster_trans = ~is_cross_cluster_trans;
+            is_cross_cluster_trans = rand() < 0.5;
         end
 
         cross = [cross is_cross_cluster_trans];

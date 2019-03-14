@@ -10,7 +10,7 @@ else
 end
 
 if ~exist('do_save', 'var')
-    do_save = false;
+    do_save = true;
 end
 
 figure('pos', [1000 500 1000 600] * 3/4);

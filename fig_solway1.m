@@ -10,7 +10,7 @@ else
 end
 
 if ~exist('do_save', 'var')
-    do_save = false;
+    do_save = true;
 end
 
 
@@ -31,7 +31,7 @@ title('Experimental Design', 'fontsize', fontsize);
 % B: Data
 %
 
-sizes = [3 3 3 2 10 12 3 1 2 1] * 2;
+sizes = [3 3 3 2 16 18 3 1 2 1] * 1.3;
 
 ax = subplot(2,3,2);
 h = plot_solway1_graph(H, D);

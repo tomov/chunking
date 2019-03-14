@@ -1,7 +1,7 @@
 clear all;
 
 
-figure('pos', [100 100 1000 600] * 3/4);
+figure('pos', [2000 1200 1000 600] * 3/4);
 fontsize = 13;
 axisfontsize = 10;
 lettersize = 20;
@@ -11,7 +11,8 @@ jj = 1;
 
 %load('model_all_data_10samples_MAP_5alpha.mat');
 %modelfile = 'model_all_data_20samples_MAP_2alpha.mat'; % preprint
-modelfile = 'model_Exp_1_thru_4_samples=10000_alpha=1.0000_last.mat';
+%modelfile = 'model_Exp_1_thru_4_samples=10000_alpha=1.0000_last.mat'; % sample_c
+modelfile = 'model_Exp_1_thru_4_samples=10000_alpha=1.0000_eps=0.6000_last.mat';
 
 % A: graph
 %

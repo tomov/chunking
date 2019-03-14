@@ -2,7 +2,6 @@
 %
 
 clear all;
-rng default;
 
 sem = @(x) std(x) / sqrt(length(x));
 
@@ -21,6 +20,7 @@ else
 end
 filename
 
+%{
 tic
 
 for s = 1:N % for each simulated subject
@@ -38,7 +38,22 @@ end
 
 toc
 
-%save(filename, '-v7.3');
+save(filename, '-v7.3');
+%}
+
+load(filename);
+
+h = init_hyperparams;
+
+init_all_plots;
+
+if take_map
+    filename = sprintf('mines_alpha=%.4f_nsamples=%d_eps=%.4f_MAP.mat', h.alpha, nsamples, h.eps);
+else
+    filename = sprintf('mines_alpha=%.4f_nsamples=%d_eps=%.4f_last.mat', h.alpha, nsamples, h.eps);
+end
+filename
+
 
 choices = [];
 for s = 1:N % for each simulated subject
@@ -51,12 +66,19 @@ for s = 1:N % for each simulated subject
     end
 
     if pred(3) > pred(7)
-        choices = [choices 1];
+        choice = 1;
         disp('yay!');
     else
-        choices = [choices 0];
+        choice = 0;
         disp('nay...');
     end
+
+    % eps-greedy: choose randomly with small prob
+    if rand() < 1 - h.eps
+        choice = rand < 0.5;
+    end
+
+    choices = [choices choice];
 end
 
 
@@ -72,4 +94,4 @@ fprintf('two-tailed binomial test c1 = %d (m = %.3f), n = %d, p = %.4f\n', c1, m
 
 
 
-%save(filename);
+save(filename);

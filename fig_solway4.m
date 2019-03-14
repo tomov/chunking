@@ -10,7 +10,7 @@ else
 end
 
 if ~exist('do_save', 'var')
-    do_save = false;
+    do_save = true;
 end
 
 

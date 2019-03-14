@@ -3,14 +3,15 @@
 clear all;
 
 
-figure('pos', [100 100 1000 600] * 3/4);
+figure('pos', [2000 500 1000 600] * 3/4);
 fontsize = 13;
 axisfontsize = 10;
 lettersize = 20;
 
 %modelfile = 'mines10_alpha=2_nsamples=1000.mat'; % <--- preprint
 %modelfile = 'mines10_alpha=1_nsamples=10000_last.mat'; <-- sample_c
-modelfile = 'mines10_alpha=1.0000_nsamples=10000_last.mat';
+%modelfile = 'mines10_alpha=1.0000_nsamples=10000_last.mat'; % sample_c
+modelfile = 'mines10_alpha=1.0000_nsamples=10000_eps=0.6000_last.mat';
 
 ii = 5;
 jj = 1;

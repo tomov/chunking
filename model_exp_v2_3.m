@@ -29,7 +29,6 @@ save tmp.mat;
 %load tmp.mat;
 
 h = init_hyperparams;
-h.alpha = 1;
 nsamples = 10000;
 burnin = 1;
 lag = 1;

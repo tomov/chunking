@@ -1,7 +1,6 @@
 clear all;
-close all;
 
-rng default;
+%rng default;
 
 init_all_plots;
 
@@ -19,6 +18,7 @@ filename
 
 sem = @(x) std(x) / sqrt(length(x));
 
+%{
 for i = 1:length(pl) - 1 % TODO not counting mines10_map; find better way (we need it for analyzing the behavioral data...)
     for j = 1:length(pl(i).dirnames)
 
@@ -56,6 +56,21 @@ end
 
 filename
 save(filename, '-v7.3');
+%}
+
+load(filename);
+
+h = init_hyperparams;
+
+init_all_plots;
+
+if take_map
+    filename = sprintf('model_Exp_1_thru_4_samples=%d_alpha=%.4f_eps=%.4f_MAP.mat', nsamples, h.alpha, h.eps);
+else
+    filename = sprintf('model_Exp_1_thru_4_samples=%d_alpha=%.4f_eps=%.4f_last.mat', nsamples, h.alpha, h.eps);
+end
+filename
+
 
 for i = 1:length(pl) - 1 % TODO not counting mines10_map; find better way (we need it for analyzing the behavioral data...)
     for j = 1:length(pl(i).dirnames)
@@ -77,6 +92,11 @@ for i = 1:length(pl) - 1 % TODO not counting mines10_map; find better way (we ne
             H = pl(i).H{j}(subj);
             [path, hpath] = hbfs(s, g, H, D(subj));
             move(subj) = path(2);
+
+            % eps-greedy: choose random neighbor w/ small prob 
+            if rand() < 1 - h.eps
+                move(subj) = datasample(find(D(subj).G.E(s,:)), 1);
+            end
         end
 
         % TODO dedupe w/ analyze_all_data.m

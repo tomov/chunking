@@ -2,23 +2,24 @@
 %
 
 clear all;
-rng default;
 
 sem = @(x) std(x) / sqrt(length(x));
 
-N = 95; % participants
+N = 174; % participants
 h = init_hyperparams();
 nsamples = 10000;
 take_map = false;
 
 if take_map
-    filename = sprintf('mines10_alpha=%.4f_nsamples=%d_MAP.mat', h.alpha, nsamples);
+    filename = sprintf('mines10_alpha=%.4f_nsamples=%d_eps=%.4f_MAP.mat', h.alpha, nsamples, h.eps);
 else
-    filename = sprintf('mines10_alpha=%.4f_nsamples=%d_last.mat', h.alpha, nsamples);
+    filename = sprintf('mines10_alpha=%.4f_nsamples=%d_eps=%.4f_last.mat', h.alpha, nsamples, h.eps);
 end
+filename
 
 D = init_D_from_txt('mines10.txt');
 
+%{
 tic
 
 for s = 1:N % for each simulated subject
@@ -37,6 +38,10 @@ end
 toc
 
 save(filename, '-v7.3');
+%}
+
+load(filename);
+
 
 choices = [];
 for s = 1:N % for each simulated subject
@@ -47,12 +52,19 @@ for s = 1:N % for each simulated subject
     [path, hpath] = hbfs(6, 1, H, D);
 
     if path(2) == 5
-        choices = [choices 1];
+        choice = 1;
         disp('yay!');
     else
-        choices = [choices 0];
+        choice = 0;
         disp('nay...');
     end
+
+    % eps-greedy: choose randomly with small prob
+    if rand() < 1 - h.eps
+        choice = rand < 0.5;
+    end
+
+    choices = [choices choice];
 end
 
 
