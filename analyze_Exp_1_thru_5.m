@@ -15,8 +15,8 @@ for i = 1:length(pl)
         end
 
         [data, Ts] = load_data(pl(i).dirnames{j}, pl(i).nrows(j));
-        pl(i).data{j} = data;
-        pl(i).Ts{j} = Ts;
+        %pl(i).data{j} = data;
+        %pl(i).Ts{j} = Ts;
 
         % TODO dedupe w/ analyze_data.m
         s = [];
@@ -73,6 +73,8 @@ for i = 1:length(pl)
     end
 end
 
+clear Ts;
+clear data;
 save(filename, '-v7.3');
 
 %load('analyze_all_data.mat');

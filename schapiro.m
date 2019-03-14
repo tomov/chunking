@@ -64,6 +64,13 @@ save(filename, '-v7.3');
 
 load(filename);
 
+if take_map
+    filename = sprintf('schapiro_N=%d_alpha=%.4f_nsamples=%d_eps=%.4f_MAP.mat', N, h.alpha, nsamples, h.eps);
+else
+    filename = sprintf('schapiro_N=%d_alpha=%.4f_nsamples=%d_eps=%.4f_last.mat', N, h.alpha, nsamples, h.eps);
+end
+filename
+
 
 for s = 1:N % for each simulated subject
     fprintf('random walks subject %d\n', s);
@@ -89,6 +96,11 @@ for s = 1:N % for each simulated subject
             u = path(j);
             v = path(j+1);
             is_cross_cluster_trans = H.c(u) ~= H.c(v);
+
+            % eps-greedy: flip choice w/ small prob
+            if rand() < 1 - h.eps
+                is_cross_cluster_trans = ~is_cross_cluster_trans;
+            end
 
             if ismember([u v], comm_trans, 'rows') 
                 % this is a community transition

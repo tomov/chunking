@@ -69,12 +69,18 @@ for subj = 1:N % for each simulated subject
             b = path(2); % if no bridges on path (i.e. s and g in same cluster), pick next node on path as "first that comes to mind"
         end
 
+        % eps-greedy: choose random node w/ small prob 
+        if rand() < 1 - h.eps
+            b = datasample(1:D.G.N, 1);
+        end
+
         spath = bfs(s, g, D.G.E); % find actual shortest path
         spath = spath(2:end-1);
 
-        loc(subj,i) = b(1); % first bridge node on path
+        loc(subj,i) = b(1); % first bridge node on path ~= "what comes to mind first" (first node considered by HBFS after s and g)
         corr(subj,i) = ismember(b(1), spath); % only count if on actual shortest path ("correct")
-        
+       
+        % generate null distribution
         for j = 1:null_iters
             null{j}(subj,i) = datasample(spath, 1);
         end

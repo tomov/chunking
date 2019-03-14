@@ -28,6 +28,7 @@ else
 end
 disp(filename);
 
+%{
 tic
 
 for s = 1:N % for each simulated subject
@@ -46,6 +47,16 @@ end
 toc;
 
 save(filename, '-v7.3');
+%}
+
+load(filename);
+
+if take_map
+    filename = sprintf('solway1_N=%d_alpha=%.4f_nsamples=%d_eps=%.4f_MAP.mat', N, h.alpha, nsamples, h.eps);
+else
+    filename = sprintf('solway1_N=%d_alpha=%.4f_nsamples=%d_eps=%.4f_last.mat', N, h.alpha, nsamples, h.eps);
+end
+filename
 
 for s = 1:N % for each simulated subject
     fprintf('pick bus stop subject %d\n', s);
@@ -70,7 +81,13 @@ for s = 1:N % for each simulated subject
         % only 1 cluster -> all nodes are fine
         b = 1:D.G.N;
     end
+
     loc(s,:) = datasample(b, 3); % pick 3 at random (with replacement)
+
+    % eps-greedy: choose randomly w/ small prob
+    if rand() < 1 - h.eps
+        loc(s,:) = datasample(1:D.G.N, 3);
+    end
 end
 
 

@@ -9,7 +9,8 @@ axisfontsize = 10;
 lettersize = 20;
 
 %modelfile = 'mines10_alpha=2_nsamples=1000.mat'; % <--- preprint
-modelfile = 'mines10_alpha=1_nsamples=10000_last.mat';
+%modelfile = 'mines10_alpha=1_nsamples=10000_last.mat'; <-- sample_c
+modelfile = 'mines10_alpha=1.0000_nsamples=10000_last.mat';
 
 ii = 5;
 jj = 1;
@@ -82,7 +83,7 @@ imshow(PICpng, 'InitialMagnification', 'fit');
 
 subplot(2,6,5);
 
-load('analyze_all_data.mat');
+load('analyze_Exp_1_thru_5.mat');
 
 i = ii;
 m = pl(i).m ./ pl(i).n;
@@ -111,6 +112,8 @@ ylabel('P(action 6 \rightarrow 5)');
 
 hold off;
 
+assert(pl(i).tests(j) == 3);
+fprintf('two-tailed binomial test c1 = %d, n = %d, p = %e\n', pl(i).m(j), pl(i).n(j), pl(i).p(j));
 
 
 title('Data', 'fontsize', fontsize);
@@ -149,13 +152,7 @@ title('Model', 'fontsize', fontsize);
 for s = 1:12
     subplot(4,6, 12 + s);
 
-    H = H_all{s};
-    D = D;
-    P = P_all{s};
-    [~,I] = max(P); % MAP H
-    H = H(I);
-    map_H{s} = H;
-    h = plot_H(map_H{s}, D);
+    h = plot_H(chosen_H{s}, D);
     set(h, 'XData', xs);
     set(h, 'YData', ys);
 

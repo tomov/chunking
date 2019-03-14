@@ -950,8 +950,9 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
 
 
     // hierarchical edges
-    // TODO same problem as thetas -- more clusters just additionally reduces the prior???
+    // TODO same problem as thetas -- more clusters just additionally reduces the prior???; screws up mines10 ...
     //
+    /*
     int K = this->cnt.size();
     ASSERT(K <= D.G.N, "K <= D.G.N");
     for (int k = 0; k < K; k++)
@@ -977,6 +978,7 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
             }
         }
     }
+    */
 
 
     // cluster rewards

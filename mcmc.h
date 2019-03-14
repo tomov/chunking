@@ -446,9 +446,9 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             }
         }
 
-        // TODO do
         // update thetas
         //
+        // TODO discuss w/ Sam
         for (int k = 0; k < H.theta.size(); k++)
         {
             if (H.cnt[k] > 0)

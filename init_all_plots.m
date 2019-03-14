@@ -76,7 +76,6 @@ pl(4).nexts = [5 5 5];
 pl(4).tests = [3 3 3]; % 1 = right tailed, 2 = left tailed, 3 = two-tailed
 
 % see mines10.m
-%{
 pl(5).m = [NaN 50];
 pl(5).ci = [NaN 10];
 pl(5).n = [NaN 100];
@@ -94,4 +93,3 @@ pl(5).starts = [6 6];
 pl(5).goals = [1 1];
 pl(5).nexts = [5 5];
 pl(5).tests = [3 3]; % 1 = right tailed, 2 = left tailed, 3 = two-tailed
-%}

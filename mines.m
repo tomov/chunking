@@ -38,7 +38,7 @@ end
 
 toc
 
-save(filename, '-v7.3');
+%save(filename, '-v7.3');
 
 choices = [];
 for s = 1:N % for each simulated subject
@@ -72,4 +72,4 @@ fprintf('two-tailed binomial test c1 = %d (m = %.3f), n = %d, p = %.4f\n', c1, m
 
 
 
-save(filename);
+%save(filename);

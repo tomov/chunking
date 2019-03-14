@@ -72,8 +72,15 @@ for subj = 1:N % for each simulated subject
     H = chosen_H{subj};
 
     for t = 1:size(tasks,1)
-        [path, hpath] = hbfs(tasks(t,1), tasks(t,2), H, D);
+        s = tasks(t,1);
+        g = tasks(t,2);
+        [path, hpath] = hbfs(s, g, H, D);
         move(subj, t) = path(2);
+
+        % eps-greedy: choose random node w/ small prob 
+        if rand() < 1 - h.eps
+            move(subj, t) = datasample(find(D.G.E(s,:)), 1);
+        end
     end
 end
 

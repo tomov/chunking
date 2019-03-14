@@ -19,7 +19,7 @@ filename
 
 sem = @(x) std(x) / sqrt(length(x));
 
-for i = 1:length(pl)
+for i = 1:length(pl) - 1 % TODO not counting mines10_map; find better way (we need it for analyzing the behavioral data...)
     for j = 1:length(pl(i).dirnames)
 
         if ~isnan(pl(i).m(j))
@@ -57,7 +57,7 @@ end
 filename
 save(filename, '-v7.3');
 
-for i = 1:length(pl)
+for i = 1:length(pl) - 1 % TODO not counting mines10_map; find better way (we need it for analyzing the behavioral data...)
     for j = 1:length(pl(i).dirnames)
 
         if ~isnan(pl(i).m(j))
