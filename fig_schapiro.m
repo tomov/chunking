@@ -5,7 +5,8 @@ if ~exist('filename', 'var') || isempty(filename)
     %load('schapiro_alpha=2_nsamples=20.mat');
 
     %load('schapiro_alpha=2_nsamples=100.mat'); % <-- preprint
-    load schapiro_N=30_alpha=1.0000_nsamples=10000_last.mat  % <-- sample_c
+    %load schapiro_N=30_alpha=1.0000_nsamples=10000_last.mat  % <-- sample_c
+    load schapiro_N=30_alpha=1.0000_nsamples=10000_eps=0.6000_last.mat  % <-- sample_c
 else
     load(filename);
 end
@@ -99,7 +100,6 @@ set(gca,'FontSize', axisfontsize);
 ylabel('Probability of parse', 'fontsize', axisfontsize);
 title('Data', 'fontsize', fontsize);
 
-
 % C: Model
 
 subplot(2,3,3);
@@ -128,6 +128,7 @@ lgd = legend({['Community' char(10) 'transition parse'], 'Other parse'});
 lgd.Position(1) = 0.86;
 title('Model', 'fontsize', fontsize);
 set(gca,'FontSize', axisfontsize);
+ylim([0 1]);
 
 % D: Hierarchies
 

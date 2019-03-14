@@ -51,6 +51,8 @@ save(filename, '-v7.3');
 
 load(filename);
 
+h = init_hyperparams;
+
 if take_map
     filename = sprintf('solway1_N=%d_alpha=%.4f_nsamples=%d_eps=%.4f_MAP.mat', N, h.alpha, nsamples, h.eps);
 else
@@ -84,7 +86,7 @@ for s = 1:N % for each simulated subject
 
     loc(s,:) = datasample(b, 3); % pick 3 at random (with replacement)
 
-    % eps-greedy: choose randomly w/ small prob
+    % eps-greedy: choose random node w/ small prob
     if rand() < 1 - h.eps
         loc(s,:) = datasample(1:D.G.N, 3);
     end

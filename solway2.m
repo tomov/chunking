@@ -32,6 +32,7 @@ else
 end
 disp(filename);
 
+%{
 tic
 
 for subj = 1:N % for each simulated subject
@@ -50,6 +51,17 @@ end
 toc
 
 save(filename, '-v7.3');
+%}
+load(filename);
+
+h = init_hyperparams;
+
+if take_map
+    filename = sprintf('solway2_N=%d_alpha=%.4f_nsamples=%d_eps=%.4f_MAP.mat', N, h.alpha, nsamples, h.eps);
+else
+    filename = sprintf('solway2_N=%d_alpha=%.4f_nsamples=%d_eps=%.4f_last.mat', N, h.alpha, nsamples, h.eps);
+end
+filename
 
 for subj = 1:N % for each simulated subject
     fprintf('HBFS subject %d\n', subj);

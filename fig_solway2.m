@@ -4,7 +4,8 @@ if ~exist('filename', 'var') || isempty(filename)
     %load('solway2.mat');
     %load('solway2_alpha=5_nsamples=1000.mat'); % <-- preprint
     %load old_mats/solway2_N=10_alpha=1.0000_nsamples=10000_last.mat  % <-- sample_c repro
-    load solway2_N=10_alpha=1.0000_nsamples=10000_last.mat % sample_c
+    %load solway2_N=10_alpha=1.0000_nsamples=10000_last.mat % sample_c
+    load solway2_N=10_alpha=1.0000_nsamples=10000_eps=0.6000_last.mat % sample_c
     %load('solway2_alpha=2_nsamples=100.mat');
 else
     load(filename);
@@ -84,8 +85,8 @@ ax = subplot(2,3,3);
 h = plot_solway2_graph(H, D);
 for i = 1:D.G.N
     f = sum(loc(corr(:)) == i);
-    f = f / length(corr(:)) * sum(sizes);
-    highlight(h, i, 'NodeColor', [0.6 0.6 0.6], 'MarkerSize', 10 + f);
+    f = f / sum(corr(:)) * sum(sizes);
+    highlight(h, i, 'NodeColor', [0.6 0.6 0.6], 'MarkerSize', 12 + f);
 end
 
 hold on;

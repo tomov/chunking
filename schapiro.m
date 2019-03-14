@@ -64,6 +64,8 @@ save(filename, '-v7.3');
 
 load(filename);
 
+h = init_hyperparams;
+
 if take_map
     filename = sprintf('schapiro_N=%d_alpha=%.4f_nsamples=%d_eps=%.4f_MAP.mat', N, h.alpha, nsamples, h.eps);
 else
@@ -95,8 +97,8 @@ for s = 1:N % for each simulated subject
         for j = 1:length(path) - 1 % for each transition
             u = path(j);
             v = path(j+1);
-            is_cross_cluster_trans = H.c(u) ~= H.c(v);
 
+            is_cross_cluster_trans = H.c(u) ~= H.c(v);
             % eps-greedy: flip choice w/ small prob
             if rand() < 1 - h.eps
                 is_cross_cluster_trans = ~is_cross_cluster_trans;

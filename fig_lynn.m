@@ -3,7 +3,8 @@ function fig_lynn(filename, do_save)
 if ~exist('filename', 'var') || isempty(filename)
     %load('lynn_alpha=2_nsamples=1000.mat'); % <--- preprint
     %load lynn_N=78_alpha=5.0000_nsamples=1000.mat  % <-- sample_c
-    load lynn_N=78_alpha=1.0000_nsamples=10000_last.mat  % <-- sample_c
+    %load lynn_N=78_alpha=1.0000_nsamples=10000_last.mat  % <-- sample_c
+    load lynn_N=78_alpha=1.0000_nsamples=10000_eps=0.6000_last.mat  % <-- sample_c
 else
     load(filename);
 end

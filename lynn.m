@@ -38,8 +38,7 @@ else
 end
 disp(filename);
 
-%load('lynn.mat');
-
+%{
 tic
 
 for subj = 1:N % for each simulated subject
@@ -58,6 +57,18 @@ end
 toc
 
 save(filename, '-v7.3');
+%}
+load(filename);
+
+h = init_hyperparams;
+
+if take_map
+    filename = sprintf('lynn_N=%d_alpha=%.4f_nsamples=%d_eps=%.4f_MAP.mat', N, h.alpha, nsamples, h.eps);
+else
+    filename = sprintf('lynn_N=%d_alpha=%.4f_nsamples=%d_eps=%.4f_last.mat', N, h.alpha, nsamples, h.eps);
+end
+filename
+
 
 for subj = 1:N % for each simulated subject
     fprintf('subject %d\n', subj);
@@ -77,7 +88,14 @@ for subj = 1:N % for each simulated subject
     for i = 1:nsteps
         next = find(A(v,:) == violations(i));
         next = datasample(next, 1);
-        cross = [cross H.c(v) ~= H.c(next)];
+
+        is_cross_cluster_trans = H.c(v) ~= H.c(next);
+        % eps-greedy: flip choice w/ small prob
+        if rand() < 1 - h.eps
+            is_cross_cluster_trans = ~is_cross_cluster_trans;
+        end
+
+        cross = [cross is_cross_cluster_trans];
         v = next;
     end
 

@@ -3,7 +3,8 @@ function fig_solway4(filename, do_save)
 if ~exist('filename', 'var') || isempty(filename)
     %load('solway4_alpha=2_10000.mat'); % <--- preprint
     %load old_mats/solway4_N=35_alpha=2.0000_nsamples=10000.mat  % <-- sample_c
-    load solway4_N=35_alpha=1.0000_nsamples=10000_last.mat  % <-- sample_c
+    %load solway4_N=35_alpha=1.0000_nsamples=10000_last.mat  % <-- sample_c
+    load solway4_N=35_alpha=1.0000_nsamples=10000_eps=0.6000_last.mat  % <-- sample_c
 else
     load(filename);
 end

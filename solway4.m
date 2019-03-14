@@ -44,8 +44,8 @@ else
 end
 disp(filename)
 
-%load('solway4.mat');
 
+%{
 tic
 
 clear move;
@@ -65,6 +65,17 @@ end
 toc
 
 save(filename, '-v7.3');
+%}
+load(filename);
+
+h = init_hyperparams;
+
+if take_map
+    filename = sprintf('solway4_N=%d_alpha=%.4f_nsamples=%d_eps=%.4f_MAP.mat', N, h.alpha, nsamples, h.eps);
+else
+    filename = sprintf('solway4_N=%d_alpha=%.4f_nsamples=%d_eps=%.4f_last.mat', N, h.alpha, nsamples, h.eps);
+end
+filename
 
 for subj = 1:N % for each simulated subject
     fprintf('HBFS subject %d\n', subj);
@@ -77,7 +88,7 @@ for subj = 1:N % for each simulated subject
         [path, hpath] = hbfs(s, g, H, D);
         move(subj, t) = path(2);
 
-        % eps-greedy: choose random node w/ small prob 
+        % eps-greedy: choose random neighbor w/ small prob 
         if rand() < 1 - h.eps
             move(subj, t) = datasample(find(D.G.E(s,:)), 1);
         end
