@@ -7,7 +7,8 @@ axisfontsize = 10;
 lettersize = 20;
 
 %modelfile = 'mines_alpha=2_nsamples=1000.mat'; % <--- preprint
-modelfile = 'mines_alpha=1_nsamples=10000_last.mat';
+%modelfile = 'mines_alpha=1_nsamples=10000_last.mat'; <-- sample_c
+modelfile = 'mines_alpha=1.0000_nsamples=10000_last.mat';
 
 % A: graph
 %
@@ -36,8 +37,8 @@ subplot(2,3,2);
 c1 = 24;
 n = 32;
 c2 = n - c1;
-m = c / n;
-se = std([ones(1,c) zeros(1,n-c)]) / sqrt(n);
+m = c1 / n;
+se = std([ones(1,c1) zeros(1,c2)]) / sqrt(n);
 p = 2 * binocdf(min(c1,c2),n,0.5);
 
 fprintf('Data: two-tailed binomial test c = %d, n = %d, p = %.4f\n', c1, n, p);
@@ -94,13 +95,7 @@ title('Model', 'fontsize', fontsize);
 for s = 1:12
     subplot(4,6, 12 + s);
 
-    H = H_all{s};
-    D = D;
-    P = P_all{s};
-    [~,I] = max(P); % MAP H
-    H = H(I);
-    map_H{s} = H;
-    h = plot_H(map_H{s}, D);
+    h = plot_H(chosen_H{s}, D);
     set(h, 'XData', xs);
     set(h, 'YData', ys);
 

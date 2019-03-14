@@ -15,9 +15,9 @@ take_map = false;
 D = init_D_from_txt('mines.txt');
 
 if take_map
-    filename = sprintf('mines_alpha=%d_nsamples=%d_MAP.mat', h.alpha, nsamples);
+    filename = sprintf('mines_alpha=%.4f_nsamples=%d_MAP.mat', h.alpha, nsamples);
 else
-    filename = sprintf('mines_alpha=%d_nsamples=%d_last.mat', h.alpha, nsamples);
+    filename = sprintf('mines_alpha=%.4f_nsamples=%d_last.mat', h.alpha, nsamples);
 end
 filename
 

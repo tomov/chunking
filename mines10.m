@@ -12,9 +12,9 @@ nsamples = 10000;
 take_map = false;
 
 if take_map
-    filename = sprintf('mines10_alpha=%d_nsamples=%d_MAP.mat', h.alpha, nsamples);
+    filename = sprintf('mines10_alpha=%.4f_nsamples=%d_MAP.mat', h.alpha, nsamples);
 else
-    filename = sprintf('mines10_alpha=%d_nsamples=%d_last.mat', h.alpha, nsamples);
+    filename = sprintf('mines10_alpha=%.4f_nsamples=%d_last.mat', h.alpha, nsamples);
 end
 
 D = init_D_from_txt('mines10.txt');

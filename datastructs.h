@@ -982,7 +982,6 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
     // cluster rewards
     //
     // TODO discuss w/ Sam 
-    /*
     ASSERT(this->cnt.size() == this->theta.size(), "this->cnt.size() == this->theta.size()");
     for (int k = 0; k < this->theta.size(); k++)
     {
@@ -1009,7 +1008,6 @@ double Hierarchy::LogPrior(const Data &D, const Hyperparams &h) const
             DEBUG_PRINT("N(theta[%d]): logp += %e = %e\n", k + 1, p, logP);
         }
     }
-    */
 
     // state rewards
     //
