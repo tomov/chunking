@@ -7,7 +7,8 @@ axisfontsize = 10;
 lettersize = 20;
 
 %modelfile = 'trash/model_all_data_100samples_MAP_5alpha.mat';
-modelfile = 'model_all_data_40samples_MAP_2alpha.mat';
+%modelfile = 'model_all_data_40samples_MAP_2alpha.mat'; % preprint
+modelfile = 'model_Exp_1_thru_4_samples=10000_alpha=1.0000_last.mat';
 
 ii = 3;
 jj = 1;
@@ -78,7 +79,8 @@ imshow(PICpng, 'InitialMagnification', 'fit');
 
 subplot(2,5,4);
 
-load('analyze_all_data.mat');
+%load('analyze_all_data.mat') % preprint;
+load('analyze_Exp_1_thru_5.mat');
 
 i = ii;
 m = pl(i).m ./ pl(i).n;
@@ -151,13 +153,9 @@ title('Model', 'fontsize', fontsize);
 for s = 1:12
     subplot(4,6, 12 + s);
 
-    H = pl(i).H{j}(s,:);
+    H = pl(i).H{j}(s);
     D = pl(i).D{j}(s);
-    P = pl(i).P{j}(s,:);
-    [~,I] = max(P); % MAP H
-    H = H(I);
-    map_H{s} = H;
-    h = plot_H(map_H{s}, D);
+    h = plot_H(H, D);
     set(h, 'XData', xs);
     set(h, 'YData', ys);
 

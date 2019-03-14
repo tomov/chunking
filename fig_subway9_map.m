@@ -9,8 +9,9 @@ lettersize = 20;
 ii = 2;
 jj = 1:4;
 
-modelfile = 'model_all_data_20samples_MAP_2alpha.mat'; % <--- preprint
+%modelfile = 'model_all_data_20samples_MAP_2alpha.mat'; % <--- preprint
 %modelfile = 'model_all_data_samples=40_MAP_alpha=2.0000.mat'; % <-- sample_c
+modelfile = 'model_Exp_1_thru_4_samples=10000_alpha=1.0000_last.mat';
 
 % A: graph
 %
@@ -79,7 +80,8 @@ imshow(PICpng, 'InitialMagnification', 'fit');
 
 subplot(3,2,3);
 
-load('analyze_all_data.mat');
+%load('analyze_all_data.mat') % preprint;
+load('analyze_Exp_1_thru_5.mat');
 
 i = ii;
 m = pl(i).m ./ pl(i).n;
@@ -178,13 +180,9 @@ j = [1 1 1 2 2 2 3 3 3 2 2 2];
 for s = 1:12
     subplot(6,6, 6*4 + s);
 
-    H = pl(i).H{j(s)}(s,:);
+    H = pl(i).H{j(s)}(s);
     D = pl(i).D{j(s)}(s);
-    P = pl(i).P{j(s)}(s,:);
-    [~,I] = max(P); % MAP H
-    H = H(I);
-    map_H{s} = H;
-    h = plot_H(map_H{s}, D);
+    h = plot_H(H, D);
     set(h, 'XData', xs);
     set(h, 'YData', ys);
 
