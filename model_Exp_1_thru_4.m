@@ -44,7 +44,7 @@ for i = 1:length(pl)
                 [~,I] = max(P);
                 H = H(I);
             else
-                [H, P] = sample_c(D(subj), h, 1, nsamples)
+                [H, P] = sample_c(D(subj), h, 1, nsamples);
             end
             pl(i).H{j}(subj) = H;
         end
@@ -76,7 +76,7 @@ for i = 1:length(pl)
         for subj = 1:length(D)
             H = pl(i).H{j}(subj);
             [path, hpath] = hbfs(s, g, H, D(subj));
-            move(k) = path(2);
+            move(subj) = path(2);
         end
 
         % TODO dedupe w/ analyze_all_data.m

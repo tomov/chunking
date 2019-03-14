@@ -41,6 +41,7 @@ else
 end
 disp(filename);
 
+%{
 tic
 
 for s = 1:N % for each simulated subject
@@ -59,6 +60,9 @@ end
 toc
 
 save(filename, '-v7.3');
+%}
+
+load(filename);
 
 
 for s = 1:N % for each simulated subject
@@ -84,9 +88,11 @@ for s = 1:N % for each simulated subject
         for j = 1:length(path) - 1 % for each transition
             u = path(j);
             v = path(j+1);
+            is_cross_cluster_trans = H.c(u) ~= H.c(v);
+
             if ismember([u v], comm_trans, 'rows') 
                 % this is a community transition
-                if H.c(u) ~= H.c(v)
+                if is_cross_cluster_trans 
                     % ...and also a cross-cluster transition according to H
                     comm_press = comm_press + 1;
                     if i > nwalks
@@ -102,7 +108,7 @@ for s = 1:N % for each simulated subject
                 end
             else
                 % this is NOT a community transition
-                if H.c(u) ~= H.c(v)
+                if is_cross_cluster_trans 
                     % ...but it is a cross-cluster transition according to H
                     other_press = other_press + 1;
                     if i > nwalks

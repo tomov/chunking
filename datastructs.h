@@ -1216,7 +1216,6 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
     }
 
 
-    /*
     // tasks
     //
     for (int i = 0; i < D.tasks.size(); i++)
@@ -1261,7 +1260,6 @@ double Hierarchy::LogLik(const Data &D, const Hyperparams &h) const
             }
         }
     }
-    */
 
     ASSERT(!isinf(logP), "!isinf(logP) in LogLik");
 

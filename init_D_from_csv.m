@@ -91,4 +91,6 @@ function D = init_D_from_csv(filename, test_phase_too)
     end
     assert(length(D.r) == D.G.N);
 
+    D.G.hidden_E = zeros(D.G.N, D.G.N); % TODO sparse?
+    D.G.hidden_edges = [];
 end
