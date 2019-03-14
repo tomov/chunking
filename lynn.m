@@ -12,13 +12,12 @@ if ~exist('N', 'var') || isempty(N)
 end
 if ~exist('h', 'var')
     h = init_hyperparams;
-    h.alpha = 5;
 end
 if ~exist('nsamples', 'var')
-    nsamples = 1000;
+    nsamples = 10000;
 end
 if ~exist('take_map', 'var')
-    take_map = true;
+    take_map = false;
 end
 
 

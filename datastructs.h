@@ -331,7 +331,7 @@ Hyperparams::Hyperparams(StructArray const matlabStructArrayHyperparams)
     const TypedArray<double> _std_r = matlabStructArrayHyperparams[0]["std_r"];
     std_r = _std_r[0];
 
-    const TypedArray<double> _std_r = matlabStructArrayHyperparams[0]["eps"];
+    const TypedArray<double> _eps = matlabStructArrayHyperparams[0]["eps"];
     eps = _eps[0];
 
     DEBUG_PRINT("h = %lf %lf %lf %lf %lf %lf\n", alpha, std_theta, theta_mean, std_mu, std_r, eps);
@@ -436,7 +436,9 @@ double Hierarchy::LogPost_c_i(int c_i_new, int i, const Data &D, const Hyperpara
 
     this->Undo_c_i(c_i_new, i, D, h, c_i_old, theta_old, E_old);
 
+#if (DEBUG)
     ASSERT(this->Equals(H), "this->Equals(H)"); // TODO rm in prod
+#endif
     this->Sanity(D, h);
 
     return logP;

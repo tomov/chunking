@@ -5,7 +5,7 @@ if ~exist('filename', 'var') || isempty(filename)
     %load('schapiro_alpha=2_nsamples=20.mat');
 
     %load('schapiro_alpha=2_nsamples=100.mat'); % <-- preprint
-    load schapiro_N=30_alpha=2.0000_nsamples=1000.mat  % <-- sample_c
+    load schapiro_N=30_alpha=1.0000_nsamples=10000_last.mat  % <-- sample_c
 else
     load(filename);
 end
@@ -133,7 +133,7 @@ set(gca,'FontSize', axisfontsize);
 
 for s = 1:12
     subplot(4,6, 12 + s);
-    h = plot_H(map_H{s}, D);
+    h = plot_H(chosen_H{s}, D);
 
     set(h, 'XData', x);
     set(h, 'YData', y);

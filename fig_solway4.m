@@ -2,7 +2,8 @@ function fig_solway4(filename, do_save)
 
 if ~exist('filename', 'var') || isempty(filename)
     %load('solway4_alpha=2_10000.mat'); % <--- preprint
-    load solway4_N=35_alpha=2.0000_nsamples=10000.mat  % <-- sample_c
+    %load old_mats/solway4_N=35_alpha=2.0000_nsamples=10000.mat  % <-- sample_c
+    load solway4_N=35_alpha=1.0000_nsamples=10000_last.mat  % <-- sample_c
 else
     load(filename);
 end
@@ -127,7 +128,7 @@ for t = 1:size(tasks,1)
     synth = [synth ones(1,c1) zeros(1,c2)];
 end
 n = c1 + c2;
-p = 1 - binocdf(c1, n, 0.5);
+p = 2 * binocdf(min(c1,c2), n, 0.5);
 y = binoinv([0.025 0.975], n, 0.5) / n;
 
 m = c1/n;
@@ -154,7 +155,7 @@ x = xs;
 y = ys;
 for s = 1:12
     subplot(4,6, 12 + s);
-    h = plot_H(map_H{s}, D);
+    h = plot_H(chosen_H{s}, D);
 
     set(h, 'XData', x);
     set(h, 'YData', y);
@@ -187,4 +188,4 @@ end
 
 % stats
 %
-fprintf('%f; right-tailed binomial test n = %d, p = %e\n', m, n, p);
+fprintf('%f; two-tailed binomial test (c1 = %d) n = %d, p = %e\n', m, c1, n, p);

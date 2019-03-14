@@ -3,7 +3,8 @@ function fig_solway2(filename, do_save)
 if ~exist('filename', 'var') || isempty(filename)
     %load('solway2.mat');
     %load('solway2_alpha=5_nsamples=1000.mat'); % <-- preprint
-    load solway2_N=10_alpha=5.0000_nsamples=1000.mat  % <-- sample_c
+    %load old_mats/solway2_N=10_alpha=1.0000_nsamples=10000_last.mat  % <-- sample_c repro
+    load solway2_N=10_alpha=1.0000_nsamples=10000_last.mat % sample_c
     %load('solway2_alpha=2_nsamples=100.mat');
 else
     load(filename);
@@ -128,7 +129,7 @@ x = [-3 -2 -1 -3 -2 -1 -3 -2 -1 0 1 2 3 1 2 3 1 2 3];
 y = [-1 -1 -1 0 0 0 1 1 1 0 -1 -1 -1 0 0 0 1 1 1];
 for s = 1:10
     subplot(4,5, 10 + s);
-    h = plot_H(map_H{s}, D);
+    h = plot_H(chosen_H{s}, D);
 
     set(h, 'XData', x);
     set(h, 'YData', y);

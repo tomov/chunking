@@ -1,6 +1,6 @@
 function h = init_hyperparams
 
-h.alpha = 2;
+h.alpha = 1;
 h.std_theta = 10;
 h.theta_mean = 15;
 h.std_mu = 10;

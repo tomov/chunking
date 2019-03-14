@@ -3,7 +3,7 @@ function fig_solway2(filename, do_save)
 if ~exist('filename', 'var') || isempty(filename)
     %load('solway1.mat');
     %load('solway1_alpha=2_nsamples=100.mat'); % <-- preprint
-    load solway1_N=40_alpha=2.0000_nsamples=100.mat  % <-- sample_c
+    load solway1_N=40_alpha=1.0000_nsamples=10000_last.mat  % <-- sample_c
 else
     load(filename);
 end
@@ -90,7 +90,7 @@ box on;
 c1 = sum(loc(:) == 5 | loc(:) == 6); % count 1
 c2 = sum(loc(:) ~= 5 & loc(:) ~= 6); % count 2
 n = c1 + c2;
-p = 1 - binocdf(c1, n, 2/10);
+p = 2 * (1 - binocdf(c1, n, 2/10));
 ci = binoinv([0.025 0.975], n, 2/10) / n;
 
 m = c1/n;
@@ -117,7 +117,7 @@ y = [-3 -3 -2 -1 -1 1 1 2 3 3];
 y = -y;
 for s = 1:12
     subplot(4,6, 12 + s);
-    h = plot_H(map_H{s}, D);
+    h = plot_H(chosen_H{s}, D);
 
     set(h, 'XData', x);
     set(h, 'YData', y);
@@ -149,4 +149,4 @@ end
 
 % stats
 %
-fprintf('right-tailed binomial test %f, n = %d, p = %e\n', c1/n, n, p);
+fprintf('two-tailed binomial test %f (c1 = %d), n = %d, p = %e\n', c1/n, c1, n, p);
