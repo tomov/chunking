@@ -1,4 +1,4 @@
-% simulate experiment 6
+% simulate Experiment 6
 %
 
 clear all;
@@ -8,7 +8,6 @@ sem = @(x) std(x) / sqrt(length(x));
 
 N = 95; % participants
 h = init_hyperparams();
-h.alpha = 1;
 nsamples = 10000;
 take_map = false;
 
@@ -20,24 +19,30 @@ end
 
 D = init_D_from_txt('mines10.txt');
 
+tic
 
-choices = [];
 for s = 1:N % for each simulated subject
-    fprintf('subject %d\n', s);
-
-    [H, P] = sample_c(D, h, nsamples);
-    H_all{s} = H;
-    P_all{s} = P;
+    fprintf('infer H for subject %d\n', s);
 
     if take_map
+        [H, P] = sample_c(D, h, nsamples);
         [~,I] = max(P); % MAP H
         H = H(I);
     else
-        H = H(end);
+        [H, P] = sample_c(D, h, 1, nsamples);
     end
-    map_H{s} = H;
+    chosen_H{s} = H;
+end
 
-    H
+toc
+
+save(filename, '-v7.3');
+
+choices = [];
+for s = 1:N % for each simulated subject
+    fprintf('HBFS for subject %d\n', s);
+
+    H = chosen_H{s};
 
     [path, hpath] = hbfs(6, 1, H, D);
 
@@ -51,14 +56,15 @@ for s = 1:N % for each simulated subject
 end
 
 
-c = sum(choices);
+c1 = sum(choices);
+c2 = sum(~choices);
 m = mean(choices);
 se = sem(choices);
 n = N;
-p = 1 - binocdf(c, n, 0.5);
+p = 2 * binocdf(min(c1, c2), n, 0.5);
 
 
-fprintf('right-tailed binomial test m = %.3f, n = %d, p = %.4f\n', m, n, p);
+fprintf('two-tailed binomial test c1 = %d (m = %.3f), n = %d, p = %.4f\n', c1, m, n, p);
 
 
 

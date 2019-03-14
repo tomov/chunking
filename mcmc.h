@@ -29,8 +29,8 @@ double logpost_c_i(int c_i, int i, Hierarchy& H, const Data &D, const Hyperparam
 std::vector<double> propP_c_i(int i, const Hierarchy& H, const Data &D, const Hyperparams &h)
 {
     std::vector<double> cnt(H.cnt.begin(), H.cnt.end()); // TODO optimize -- no need to copy, could be done in O(1) 
-    assertThis(H.c[i] - 1 < cnt.size());
-    assertThis(cnt[H.c[i] - 1] > 0);
+    ASSERT(H.c[i] - 1 < cnt.size());
+    ASSERT(cnt[H.c[i] - 1] > 0);
     cnt[H.c[i] - 1]--; // careful with off-by-one!
 
     DEBUG_PRINT("cnt = [");
@@ -256,7 +256,7 @@ bool MetropolisHastingsFlip(double logpost_new, double logpost_old, double logpr
 {
     double logA = std::min(log(1), (logpost_new - logprop_new) - (logpost_old - logprop_old)); // note logs
     double A = exp(logA);
-    assertThis(A >= 0 - EPS && A <= 1 + EPS, "A >= 0 && A <= 1");
+    ASSERT(A >= 0 - EPS && A <= 1 + EPS, "A >= 0 && A <= 1");
 
     double U = UnifRnd();
 
@@ -304,7 +304,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             else
             {
                 // reject
-                assertThis(H.c[i] == c_i_old);
+                ASSERT(H.c[i] == c_i_old);
             }
         }
 
@@ -331,7 +331,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             else
             {
                 // reject
-                assertThis(fabs(H.p - p_old) < EPS);
+                ASSERT(fabs(H.p - p_old) < EPS);
             }
         }
 
@@ -355,7 +355,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             else
             {
                 // reject
-                assertThis(fabs(H.q - q_old) < EPS);
+                ASSERT(fabs(H.q - q_old) < EPS);
             }
         }
 
@@ -379,7 +379,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             else
             {
                 // reject
-                assertThis(fabs(H.hp - hp_old) < EPS);
+                ASSERT(fabs(H.hp - hp_old) < EPS);
             }
         }
 
@@ -403,13 +403,13 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             else
             {
                 // reject
-                assertThis(fabs(H.tp - tp_old) < EPS);
+                ASSERT(fabs(H.tp - tp_old) < EPS);
             }
         }
 
         // update hierarchical edges
         //
-        assertThis(H.cnt.size() <= D.G.N, "H.cnt.size() <= D.G.N");
+        ASSERT(H.cnt.size() <= D.G.N, "H.cnt.size() <= D.G.N");
         for (int k = 0; k < H.cnt.size(); k++)
         {
             if (H.cnt[k] == 0)
@@ -440,8 +440,8 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
                 else
                 {
                     // reject
-                    assertThis(H.E[k][l] == E_k_l_old);
-                    assertThis(H.E[l][k] == E_k_l_old);
+                    ASSERT(H.E[k][l] == E_k_l_old);
+                    ASSERT(H.E[l][k] == E_k_l_old);
                 }
             }
         }
@@ -471,7 +471,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
                 else
                 {
                     // reject
-                    assertThis(fabs(H.theta[k] - theta_k_old) < EPS);
+                    ASSERT(fabs(H.theta[k] - theta_k_old) < EPS);
                 }
             }
         }
@@ -497,7 +497,7 @@ sample(const Data &D, const Hyperparams &h, const int nsamples, const int burnin
             else
             {
                 // reject
-                assertThis(fabs(H.mu[i] - mu_i_old) < EPS);
+                ASSERT(fabs(H.mu[i] - mu_i_old) < EPS);
             }
         }
         */

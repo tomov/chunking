@@ -32,25 +32,38 @@ for i = 4:-1:1 % important -- backwards
 end
 A(logical(eye(size(A)))) = 0; % never self-transition
 
+if take_map
+    filename = sprintf('lynn_N=%d_alpha=%.4f_nsamples=%d_MAP.mat', N, h.alpha, nsamples);
+else
+    filename = sprintf('lynn_N=%d_alpha=%.4f_nsamples=%d_last.mat', N, h.alpha, nsamples);
+end
+disp(filename);
+
 %load('lynn.mat');
+
+tic
+
+for subj = 1:N % for each simulated subject
+    fprintf('infer H subject %d\n', subj);
+
+    if take_map
+        [H, P] = sample_c(D, h, nsamples);
+        [~,I] = max(P); % MAP H
+        H = H(I);
+    else
+        [H, P] = sample_c(D, h, 1, nsamples);
+    end
+    chosen_H{subj} = H;
+end
+
+toc
+
+save(filename, '-v7.3');
 
 for subj = 1:N % for each simulated subject
     fprintf('subject %d\n', subj);
 
-    [H, P] = sample_c(D, h, nsamples);
-    H_all{subj} = H;
-    P_all{subj} = P;
-    %H = H_all{subj};
-    %P = P_all{subj};
-
-    if take_map
-        [~,I] = max(P); % MAP H
-        H = H(I);
-        map_H{subj} = H;
-    else
-        H = H(end); % last one
-        map_H{subj} = H; % TODO b/c of fig...
-    end
+    H = chosen_H{subj};
 
     cross = [];
     % 2 = short violation
@@ -75,12 +88,7 @@ for subj = 1:N % for each simulated subject
 end
 
 
-if take_map
-    filename = sprintf('lynn_N=%d_alpha=%.4f_nsamples=%d_MAP.mat', N, h.alpha, nsamples);
-else
-    filename = sprintf('lynn_N=%d_alpha=%.4f_nsamples=%d_last.mat', N, h.alpha, nsamples);
-end
-disp(filename);
+filename
 save(filename);
 
 %load('lynn.mat');

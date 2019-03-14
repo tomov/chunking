@@ -3,6 +3,9 @@ close all;
 
 init_all_plots;
 
+filename = 'analyze_Exp_1_thru_5.mat';
+filename
+
 sem = @(x) std(x) / sqrt(length(x));
 
 for i = 1:length(pl)
@@ -52,8 +55,10 @@ for i = 1:length(pl)
         switch pl(i).tests(j)
             case 1 % right-tailed
                 p = 1 - binocdf(c1, n, 0.5);
+                assert(false);
             case 2 % left-tailed
                 p = binocdf(c1, n, 0.5);
+                assert(false);
             case 3 % two-tailed
                 p = 2 * binocdf(min(c1,c2), n, 0.5);
             otherwise
@@ -68,7 +73,7 @@ for i = 1:length(pl)
     end
 end
 
-save('analyze_all_data.mat');
+save(filename, '-v7.3');
 
 %load('analyze_all_data.mat');
 

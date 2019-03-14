@@ -6,15 +6,14 @@ rng default;
 init_all_plots;
 
 h = init_hyperparams;
-h.alpha = 1;
-nsamples = 1000;
-take_map = true;
+nsamples = 10000;
+take_map = false;
 
 %filename = sprintf('model_all_data_%dsamples_MAP_%dalpha.mat', nsamples, h.alpha);
 if take_map
-    filename = sprintf('model_E6_samples=%d_alpha=%.4f_MAP.mat', nsamples, h.alpha);
+    filename = sprintf('model_Exp_1_thru_4_samples=%d_alpha=%.4f_MAP.mat', nsamples, h.alpha);
 else
-    filename = sprintf('model_E6_samples=%d_alpha=%.4f_last.mat', nsamples, h.alpha);
+    filename = sprintf('model_Exp_1_thru_4_samples=%d_alpha=%.4f_last.mat', nsamples, h.alpha);
 end
 filename
 
@@ -26,37 +25,57 @@ for i = 1:length(pl)
         if ~isnan(pl(i).m(j))
             continue;
         end
+        if contains(pl(i).title, 'mines') % we model it separately in mines10.m
+            continue;
+        end
 
-        fprintf('Modeling %d,%d: %s, %s\n', i, j, pl(i).title, pl(i).xticklabels{j});
+        fprintf('Inferring H %d,%d: %s, %s\n', i, j, pl(i).title, pl(i).xticklabels{j});
+        tic
+
         [D, filenames] = init_Ds_from_data(pl(i).dirnames{j});
         pl(i).D{j} = D;
 
         % TODO dedupe w/ demo5
-        clear H;
-        clear P;
-        for k = 1:length(D)
-            fprintf('      subject %d\n', k);
-            tic
-            [samples, post] = sample_c(D(k), h, nsamples);
-            for l = 1:length(samples)
-                H(k,l) = samples(l);
-                P(k,l) = post(l);
+        for subj = 1:length(D)
+            fprintf('      subject %d\n', subj);
+
+            if take_map
+                [H, P] = sample_c(D(subj), h, nsamples);
+                [~,I] = max(P);
+                H = H(I);
+            else
+                [H, P] = sample_c(D(subj), h, 1, nsamples)
             end
-            toc
+            pl(i).H{j}(subj) = H;
         end
-        pl(i).H{j} = H(:,end);
-        pl(i).P{j} = P(:,end);
+
+        toc
+
+    end
+end
+
+filename
+save(filename, '-v7.3');
+
+for i = 1:length(pl)
+    for j = 1:length(pl(i).dirnames)
+
+        if ~isnan(pl(i).m(j))
+            continue;
+        end
+        if contains(pl(i).title, 'mines') % we model it separately
+            continue;
+        end
+
+        fprintf('Running HBFS %d,%d: %s, %s\n', i, j, pl(i).title, pl(i).xticklabels{j});
+        tic
 
         s = pl(i).starts(j);
         g = pl(i).goals(j);
         clear move;
-        for k = 1:length(D)
-            if take_map
-                [~,I] = maxk(P(k,:), 1); % MAP H
-            else
-                I = length(P(k,:)); % last H
-            end
-            [path, hpath] = hbfs(s, g, H(k,I(1)), D(k));
+        for subj = 1:length(D)
+            H = pl(i).H{j}(subj);
+            [path, hpath] = hbfs(s, g, H, D(subj));
             move(k) = path(2);
         end
 
@@ -67,8 +86,10 @@ for i = 1:length(pl)
         switch pl(i).tests(j)
             case 1 % right-tailed
                 p = 1 - binocdf(c1, n, 0.5);
+                assert(false);
             case 2 % left-tailed
                 p = binocdf(c1, n, 0.5);
+                assert(false);
             case 3 % two-tailed
                 p = 2 * binocdf(min(c1,c2), n, 0.5);
             otherwise
@@ -81,6 +102,7 @@ for i = 1:length(pl)
         pl(i).m(j) = c1;
         pl(i).p(j) = p;
 
+        toc
     end
 end
 

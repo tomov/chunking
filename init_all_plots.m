@@ -14,7 +14,7 @@ pl(1).dirnames = {'exp/results/subway10_map/', ''};
 pl(1).starts = [6 6];
 pl(1).goals = [1 1];
 pl(1).nexts = [5 5];
-pl(1).tests = [1 3]; % 1 = right tailed, 2 = left tailed, 3 = two-tailed
+pl(1).tests = [3 3]; % 1 = right tailed, 2 = left tailed, 3 = two-tailed
 
 
 
@@ -34,7 +34,7 @@ pl(2).dirnames = {'exp/results/subway9_map/', 'exp/results/subway9_map_control_1
 pl(2).starts = [6 6 6 6];
 pl(2).goals = [1 1 1 1];
 pl(2).nexts = [5 5 5 5];
-pl(2).tests = [1 3 3 2]; % 1 = right tailed, 2 = left tailed, 3 = two-tailed
+pl(2).tests = [3 3 3 3]; % 1 = right tailed, 2 = left tailed, 3 = two-tailed
 
 
 
@@ -54,7 +54,7 @@ pl(3).dirnames = {'exp/results/subway10_repro/', ''};
 pl(3).starts = [6 6];
 pl(3).goals = [1 1];
 pl(3).nexts = [5 5];
-pl(3).tests = [1 3]; % 1 = right tailed, 2 = left tailed, 3 = two-tailed
+pl(3).tests = [3 3]; % 1 = right tailed, 2 = left tailed, 3 = two-tailed
 
 
 pl(4).m = [NaN NaN NaN];
@@ -73,7 +73,7 @@ pl(4).dirnames = {'exp/results/subway9/', 'exp/results/subway9_control/', 'exp/r
 pl(4).starts = [6 6 6];
 pl(4).goals = [1 1 1];
 pl(4).nexts = [5 5 5];
-pl(4).tests = [1 3 2]; % 1 = right tailed, 2 = left tailed, 3 = two-tailed
+pl(4).tests = [3 3 3]; % 1 = right tailed, 2 = left tailed, 3 = two-tailed
 
 pl(5).m = [NaN 50];
 pl(5).ci = [NaN 10];
@@ -91,4 +91,4 @@ pl(5).dirnames = {'exp/results/mines10_map/', ''};
 pl(5).starts = [6 6];
 pl(5).goals = [1 1];
 pl(5).nexts = [5 5];
-pl(5).tests = [1 3]; % 1 = right tailed, 2 = left tailed, 3 = two-tailed
+pl(5).tests = [3 3]; % 1 = right tailed, 2 = left tailed, 3 = two-tailed

@@ -11,33 +11,46 @@ if ~exist('N', 'var') || isempty(N)
 end
 if ~exist('h', 'var')
     h = init_hyperparams;
-    h.alpha = 2;
 end
 if ~exist('nsamples', 'var')
-    nsamples = 100;
+    nsamples = 10000;
 end
 if ~exist('take_map', 'var')
-    take_map = true;
+    take_map = false;
 end
 
 D = init_D_from_txt('solway1.txt');
 
+if take_map
+    filename = sprintf('solway1_N=%d_alpha=%.4f_nsamples=%d_MAP.mat', N, h.alpha, nsamples);
+else
+    filename = sprintf('solway1_N=%d_alpha=%.4f_nsamples=%d_last.mat', N, h.alpha, nsamples);
+end
+disp(filename);
+
+tic
 
 for s = 1:N % for each simulated subject
-    fprintf('subject %d\n', s);
-
-    [H, P] = sample_c(D, h, nsamples);
-    H_all{s} = H;
-    P_all{s} = P;
+    fprintf('infer H subject %d\n', s);
 
     if take_map
+        [H, P] = sample_c(D, h, nsamples);
         [~,I] = max(P); % MAP H
         H = H(I);
-        map_H{s} = H;
     else
-        H = H(end); % last one
-        map_H{s} = H; % TODO b/c of fig...
+        [H, P] = sample_c(D, h, 1, nsamples);
     end
+    chosen_H{s} = H;
+end
+
+toc;
+
+save(filename, '-v7.3');
+
+for s = 1:N % for each simulated subject
+    fprintf('pick bus stop subject %d\n', s);
+
+    H = chosen_H{s};
 
     H = populate_H(H, D); % fill up bridges
 
@@ -61,12 +74,7 @@ for s = 1:N % for each simulated subject
 end
 
 
-if take_map
-    filename = sprintf('solway1_N=%d_alpha=%.4f_nsamples=%d_MAP.mat', N, h.alpha, nsamples);
-else
-    filename = sprintf('solway1_N=%d_alpha=%.4f_nsamples=%d_last.mat', N, h.alpha, nsamples);
-end
-disp(filename);
+filename
 save(filename);
 
 %load('solway1.mat');

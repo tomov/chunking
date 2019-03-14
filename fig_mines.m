@@ -32,14 +32,15 @@ subplot(2,3,2);
 
 
 
-% from their paper
-c = 24;
+% from Agni & Samyu's paper
+c1 = 24;
 n = 32;
+c2 = n - c1;
 m = c / n;
 se = std([ones(1,c) zeros(1,n-c)]) / sqrt(n);
-p = 1 - binocdf(c,n,0.5);
+p = 2 * binocdf(min(c1,c2),n,0.5);
 
-fprintf('Data: right-tailed binomial test c = %d, n = %d, p = %.4f\n', c, n, p);
+fprintf('Data: two-tailed binomial test c = %d, n = %d, p = %.4f\n', c1, n, p);
 
 hold on;
 h = bar(m);
@@ -68,7 +69,7 @@ subplot(2,3,3);
 
 load(modelfile);
 
-fprintf('Model: right-tailed binomial test c = %d, n = %d, p = %.4f\n', c, n, p);
+fprintf('Model: two-tailed binomial test c1 = %d, n = %d, p = %.4f\n', c1, n, p);
 
 hold on;
 h = bar(m);

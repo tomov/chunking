@@ -9,7 +9,6 @@ sem = @(x) std(x) / sqrt(length(x));
 
 N = 32; % participants
 h = init_hyperparams();
-h.alpha = 1;
 nsamples = 10000;
 take_map = false;
 
@@ -22,21 +21,30 @@ else
 end
 filename
 
-choices = [];
+tic
+
 for s = 1:N % for each simulated subject
     fprintf('subject %d\n', s);
 
-    [H, P] = sample_c(D, h, nsamples);
-    H_all{s} = H;
-    P_all{s} = P;
-
     if take_map
+        [H, P] = sample_c(D, h, nsamples);
         [~,I] = max(P); % MAP H
         H = H(I);
     else
-        H = H(end);
+        [H, P] = sample_c(D, h, 1, nsamples);
     end
-    map_H{s} = H;
+    chosen_H{s} = H;
+end
+
+toc
+
+save(filename, '-v7.3');
+
+choices = [];
+for s = 1:N % for each simulated subject
+    fprintf('choice for subj %d', s);
+
+    H = chosen_H{s};
 
     for i = 1:D.G.N
         pred(i) = H.theta(H.c(i));
@@ -52,14 +60,15 @@ for s = 1:N % for each simulated subject
 end
 
 
-c = sum(choices);
+c1 = sum(choices);
+c2 = sum(~choices);
 m = mean(choices);
 se = sem(choices);
 n = N;
-p = 1 - binocdf(c, n, 0.5);
+p = 2 * binocdf(min(c1,c2), n, 0.5);
 
 
-fprintf('right-tailed binomial test m = %.3f, n = %d, p = %.4f\n', m, n, p);
+fprintf('two-tailed binomial test c1 = %d (m = %.3f), n = %d, p = %.4f\n', c1, m, n, p);
 
 
 

@@ -11,13 +11,12 @@ if ~exist('N', 'var') || isempty(N)
 end
 if ~exist('h', 'var')
     h = init_hyperparams;
-    h.alpha = 2;
 end
 if ~exist('nsamples', 'var')
     nsamples = 10000;
 end
 if ~exist('take_map', 'var')
-    take_map = true;
+    take_map = false;
 end
 
 D = init_D_from_txt('solway4.txt');
@@ -38,27 +37,39 @@ nexts = [
 8 19;
 20 9];
 
+if take_map
+    filename = sprintf('solway4_N=%d_alpha=%.4f_nsamples=%d_MAP.mat', N, h.alpha, nsamples);
+else
+    filename = sprintf('solway4_N=%d_alpha=%.4f_nsamples=%d_last.mat', N, h.alpha, nsamples);
+end
+disp(filename)
+
 %load('solway4.mat');
 
+tic
 
 clear move;
 for subj = 1:N % for each simulated subject
-    fprintf('subject %d\n', subj);
-
-    [H, P] = sample_c(D, h, nsamples);
-    H_all{subj} = H;
-    P_all{subj} = P;
-    %H = H_all{subj};
-    %P = P_all{subj};
+    fprintf('infer H subject %d\n', subj);
 
     if take_map
+        [H, P] = sample_c(D, h, nsamples);
         [~,I] = max(P); % MAP H
         H = H(I);
-        map_H{subj} = H;
     else
-        H = H(end); % last one
-        map_H{subj} = H; % TODO b/c of fig...
+        [H, P] = sample_c(D, h, 1, nsamples);
     end
+    chosen_H{subj} = H;
+end
+
+toc
+
+save(filename, '-v7.3');
+
+for subj = 1:N % for each simulated subject
+    fprintf('HBFS subject %d\n', subj);
+
+    H = chosen_H{subj};
 
     for t = 1:size(tasks,1)
         [path, hpath] = hbfs(tasks(t,1), tasks(t,2), H, D);
@@ -66,12 +77,7 @@ for subj = 1:N % for each simulated subject
     end
 end
 
-if take_map
-    filename = sprintf('solway4_N=%d_alpha=%.4f_nsamples=%d_MAP.mat', N, h.alpha, nsamples);
-else
-    filename = sprintf('solway4_N=%d_alpha=%.4f_nsamples=%d_last.mat', N, h.alpha, nsamples);
-end
-disp(filename)
+filename
 save(filename);
 
 %load('solway4.mat');

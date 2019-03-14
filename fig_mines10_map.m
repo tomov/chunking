@@ -139,7 +139,7 @@ set(gca, 'xtick', [1]);
 xticklabels({'fraction simulations'});
 hold off;
 
-fprintf('right-tailed binomial test m = %.3f, n = %d, p = %e\n', m, n, p);
+fprintf('two-tailed binomial test c1 = %d, n = %d, p = %e\n', c1, n, p);
 
 title('Model', 'fontsize', fontsize);
 
