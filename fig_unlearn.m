@@ -10,7 +10,7 @@ modelfile = 'model_exp_v2_3_circ_alpha=1.0000_nsamples=10000_div_eps=0.6000_last
 
 % A: graph
 %
-subplot(3,6,1);
+subplot(3,5,1);
 
 load(modelfile);
 
@@ -24,30 +24,31 @@ for i = 1:D.G.N
     text(h.XData(i) , h.YData(i) + 0.01, num2str(i), 'FontSize', 10, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
 end
 set(gca, 'xlim', [-1 3]);
-xlabel('bad');
+xlabel('stage 1');
 
 
 
-subplot(3,6,2);
+subplot(3,5,2);
 
-[h, xs, ys] = plot_unlearn_graph(H, D);
+c = [3 3 3 2 2 2 5 5 5 5];
+[h, xs, ys] = plot_unlearn_graph(H, D, c);
 %labelnode(h, 1:D.G.N, 1:D.G.N);
 for i = 1:D.G.N
     text(h.XData(i) , h.YData(i) + 0.01, num2str(i), 'FontSize', 10, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
 end
 set(gca, 'xlim', [-1 3]);
-xlabel('good');
+xlabel('stage 2');
 
 title('Experimental Design', 'fontsize', fontsize);
 
 
-h = subplot(6,6,3);
+h = subplot(6,5,3);
 pos = get(h, 'position');
-pos(1) = pos(1) * 0.96;
-pos(2) = pos(2) * 0.98;
+pos(1) = pos(1) * 1.02;
+pos(2) = pos(2) * 1.02;
 pos(3) = pos(3) * 1.2;
 pos(4) = pos(4) * 1.2;
-subplot(6,6,3, 'position', pos);
+subplot(6,5,3, 'position', pos);
 
 PICpng = imread('exp/images/new_trial_crop.png');
 [rows columns numberOfColorChannels] = size(PICpng);
@@ -55,13 +56,13 @@ imshow(PICpng, 'InitialMagnification', 'fit');
 
 
 
-h = subplot(6,6,9);
+h = subplot(6,5,8);
 pos = get(h, 'position');
-pos(1) = pos(1) * 0.95;
-pos(2) = pos(2) * 1.0;
+pos(1) = pos(1) * 1.02;
+pos(2) = pos(2) * 1.02;
 pos(3) = pos(3) * 1.2;
 pos(4) = pos(4) * 1.2;
-subplot(6,6,9, 'position', pos);
+subplot(6,5,8, 'position', pos);
 PICpng = imread('unlearn_crop.png');
 [rows columns numberOfColorChannels] = size(PICpng);
 imshow(PICpng, 'InitialMagnification', 'fit');  
@@ -69,14 +70,14 @@ imshow(PICpng, 'InitialMagnification', 'fit');
 
 
 
-h = subplot(3,2,2);
+h = subplot(3,3,3);
 pos = get(h, 'position');
-pos(1) = pos(1) * 0.90;
+pos(1) = pos(1) * 0.93;
 pos(2) = pos(2) * 0.98;
 pos(3) = pos(3) * 1.3;
 pos(4) = pos(4) * 1.3;
-subplot(3,2, 2, 'position', pos);
-PICpng = imread('subway9_map_trials.png');
+subplot(3,3, 3, 'position', pos);
+PICpng = imread('unlearn_trials.png');
 [rows columns numberOfColorChannels] = size(PICpng);
 imshow(PICpng, 'InitialMagnification', 'fit');  
 
@@ -94,17 +95,26 @@ load('analyze_exp_v2_3.mat');
 % swap action to be consistent with other plots
 ms = 1 - ms;
 
+stages = {[1:3], [4:6]}; % split in two
+
 hold on;
-bar(ms);
-errorbar(ms, sems, 'linestyle', 'none', 'color', 'black');
-plot([0 6], [0.5 0.5], '--', 'color', [0.5 0.5 0.5])
-plot([3.5 3.5], [0 0.8], '-', 'color', [0.5 0.5 0.5])
+for i = 1:2
+    bar(stages{i}, ms(stages{i}));
+end
+for i = 1:2
+    errorbar(stages{i}, ms(stages{i}), sems(stages{i}), 'linestyle', 'none', 'color', 'black');
+end
+plot([0 7], [0.5 0.5], '--', 'color', [0.5 0.5 0.5])
+plot([3.5 3.5], [0 1.0], '-', 'color', [0.5 0.5 0.5])
+xlim([0 7]);
+ylim([0 0.9]);
 hold off;
 assert(nexts(1,1) == 7);
 ylabel('P(action 6 \rightarrow 5)');
 xticks(1:6);
 xticklabels(1:6);
 xlabel('probe trial');
+legend({'stage 1', 'stage 2'}, 'location', 'northwest');
 
 hold off;
 
@@ -122,15 +132,22 @@ subplot(3,2,4);
 ms = 1 - ms;
 
 hold on;
-bar(ms);
-errorbar(ms, sems, 'linestyle', 'none', 'color', 'black');
-plot([0 6], [0.5 0.5], '--', 'color', [0.5 0.5 0.5])
-plot([3.5 3.5], [0 0.8], '-', 'color', [0.5 0.5 0.5])
+for i = 1:2
+    bar(stages{i}, ms(stages{i}));
+end
+for i = 1:2
+    errorbar(stages{i}, ms(stages{i}), sems(stages{i}), 'linestyle', 'none', 'color', 'black');
+end
+plot([0 7], [0.5 0.5], '--', 'color', [0.5 0.5 0.5])
+plot([3.5 3.5], [0 1.0], '-', 'color', [0.5 0.5 0.5])
+xlim([0 7]);
+ylim([0 0.9]);
 hold off;
 assert(nexts(1,1) == 7);
 xticks(1:6);
 xticklabels(1:6);
 xlabel('probe trial');
+legend({'stage 1', 'stage 2'}, 'location', 'northwest');
 
 
 
