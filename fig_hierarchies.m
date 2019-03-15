@@ -1,13 +1,13 @@
 
-figure('pos', [10 500 1000 600] * 3/4);
+figure('pos', [10 500 900 690]);
 fontsize = 13;
 axisfontsize = 10;
 lettersize = 20;
 
 
 
-plots_n = 14;
-plots_m = 6;
+plots_n = 7;
+plots_m = 12;
 plot_idx = 0;
 
 %
@@ -34,10 +34,10 @@ for s = 1:12
     labelnode(h, 1:D.G.N, '');
     set(gca, 'xtick', []);
     set(gca, 'ytick', []);
-    set(gca, 'xlim', [-2 4]);
+    set(gca, 'xlim', [-1 3]);
     h.MarkerSize = 6;
 
-    if s == 3
+    if s == 6
         title(['                            ', 'Experiment 1'], 'fontsize', fontsize);
     end
     xlabel(sprintf('subject %d', s));
@@ -66,10 +66,10 @@ for s = 1:12
     labelnode(h, 1:D.G.N, '');
     set(gca, 'xtick', []);
     set(gca, 'ytick', []);
-    set(gca, 'xlim', [-2 4]);
+    set(gca, 'xlim', [-1 3]);
     h.MarkerSize = 6;
 
-    if s == 3
+    if s == 6
         title(['                            ', 'Experiment 2'], 'fontsize', fontsize);
     end
     if s == 1
@@ -106,10 +106,10 @@ for i = 1:12
     labelnode(h, 1:D.G.N, '');
     set(gca, 'xtick', []);
     set(gca, 'ytick', []);
-    set(gca, 'xlim', [-2 4]);
+    set(gca, 'xlim', [-1 3]);
     h.MarkerSize = 6;
 
-    if i == 3
+    if i == 6
         title(['                            ', 'Experiment 3'], 'fontsize', fontsize);
     end
     if i == 1
@@ -121,6 +121,8 @@ for i = 1:12
     end
     if i >= 8
         xlabel(sprintf('probe #%d', i - 6));
+    else
+        xlabel(sprintf('probe #%d', i));
     end
 end
 
@@ -148,10 +150,10 @@ for s = 1:12
     labelnode(h, 1:D.G.N, '');
     set(gca, 'xtick', []);
     set(gca, 'ytick', []);
-    set(gca, 'xlim', [-2 4]);
+    set(gca, 'xlim', [-1 3]);
     h.MarkerSize = 6;
 
-    if s == 3
+    if s == 6
         title(['                            ', 'Experiment 4'], 'fontsize', fontsize);
     end
     xlabel(sprintf('subject %d', s));
@@ -179,10 +181,10 @@ for s = 1:12
     labelnode(h, 1:D.G.N, '');
     set(gca, 'xtick', []);
     set(gca, 'ytick', []);
-    set(gca, 'xlim', [-2 4]);
+    set(gca, 'xlim', [-1 3]);
     h.MarkerSize = 6;
 
-    if s == 3
+    if s == 6
         title(['                            ', 'Experiment 5'], 'fontsize', fontsize);
     end
     if s == 1
@@ -224,7 +226,7 @@ for s = 1:12
     set(gca, 'ylim', [-3 3]);
     h.MarkerSize = 6;
 
-    if s == 3
+    if s == 6
         title(['                            ', 'Experiment 6'], 'fontsize', fontsize);
     end
     xlabel(sprintf('subject %d', s));
@@ -253,11 +255,19 @@ for s = 1:12
     labelnode(h, 1:D.G.N, '');
     set(gca, 'xtick', []);
     set(gca, 'ytick', []);
-    set(gca, 'xlim', [-2 4]);
+    set(gca, 'xlim', [-1 3]);
     h.MarkerSize = 6;
 
-    if s == 3
+    if s == 6
         title(['                            ', 'Experiment 7'], 'fontsize', fontsize);
     end
     xlabel(sprintf('subject %d', s));
 end
+
+
+
+% save figure
+h = gcf;
+%set(h, 'PaperPositionMode', 'auto');
+set(h, 'PaperOrientation', 'landscape');
+print('figures/hierarchies.pdf', '-dpdf');
