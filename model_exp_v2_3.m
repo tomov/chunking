@@ -7,6 +7,7 @@ h = init_hyperparams;
 nsamples = 10000;
 take_map = false;
 
+sem = @(x) std(x) / sqrt(length(x));
 
 % from analyze_data
 % for exp_v2_3 subway 10 unlearn 
@@ -25,12 +26,14 @@ nexts = [
 ];
 
 % from model_all_data
-D = init_Ds_from_data('exp/results/exp_v2_3_subway10_unlearn_circ', true);
-D_full = D;
 
 assert(take_map == false); % don't support MAP
 filename = sprintf('model_exp_v2_3_circ_alpha=%.4f_nsamples=%d_div_eps=%.4f_last.mat', h.alpha, nsamples, h.eps);
 filename
+
+%{
+D = init_Ds_from_data('exp/results/exp_v2_3_subway10_unlearn_circ', true);
+D_full = D;
 
 tic
 
@@ -62,7 +65,10 @@ end
 toc
 
 save(filename, '-v7.3');
+%}
+load(filename);
 
+clear move;
 for subj = 1:length(D) % for each subject
     for i = 1:length(index)
 
@@ -74,7 +80,7 @@ for subj = 1:length(D) % for each subject
         assert(g == D_full(subj).tasks.g(index(i)));
        
         [path, hpath] = hbfs(s, g, chosen_H{subj, i}, D(subj));
-        move(subj, i) = path(2) == nexts(i,1);
+        move(subj, i) = path(2);
 
         % eps-greedy: choose random neighbor w/ small prob 
         if rand() < 1 - h.eps
@@ -83,15 +89,15 @@ for subj = 1:length(D) % for each subject
     end
 end
 
-disp(filename);
+mv = move == nexts(i,1);
+
+ms = mean(mv, 1);
+sems = std(mv, 1) / sqrt(size(mv, 1));
+
+% swap to be consistent with other plots
+
+filename
 save(filename);
-
-%load(filename);
-%[data, Ts, ~, ~, ~, ~, exclude] = load_data('exp/results/exp_v2_3_subway10_unlearn/', 246, false); % for exp_v2_3 (subway 10 unlearn)
-%move = move(~exclude, :);
-
-ms = mean(move, 1);
-sems = std(move, 1) / sqrt(size(move, 1));
 
 figure;
 hold on;
@@ -105,3 +111,5 @@ xticks(1:6);
 xticklabels(index);
 xlabel('trial #');
 title(sprintf('model N = %d', size(move,1)));
+
+

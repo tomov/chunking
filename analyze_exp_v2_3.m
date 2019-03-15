@@ -3,10 +3,7 @@
 clear all;
 close all;
 
-%[data, Ts] = load_data('exp/results/exp_v2_3_subway10_unlearn_circ', 246, false); % for exp_v2_3 (subway 10 unlearn)
-
-%save data.mat;
-load data.mat
+[data, Ts] = load_data('exp/results/exp_v2_3_subway10_unlearn_circ', 246, false); % for exp_v2_3 (subway 10 unlearn)
 
 
 sem = @(x) std(x) / sqrt(length(x));
@@ -230,3 +227,5 @@ result3 = fitglme(tbl, formula, 'Distribution', 'Binomial', 'Link', 'Logit', 'Fi
 H = [0 1];
 [p, F, DF1, DF2] = coefTest(result3, H);
 fprintf('Unlearning: is probe trial 4 below probe trial 3? coef for trial_idx = %f, p = %f, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
+
+save('analyze_exp_v2_3.mat');
