@@ -167,6 +167,7 @@ title('Model', 'fontsize', fontsize);
 
 % D: Hierarchies
 
+%{
 j = [1 1 1 1 1 1 3 3 3 3 3 3];
 for s = 1:12
     subplot(6,6, 6*4 + s);
@@ -193,6 +194,7 @@ for s = 1:12
         ylabel('good');
     end
 end
+%}
 
 
 ax1 = axes('Position',[0 0 1 1],'Visible','off');
@@ -200,7 +202,7 @@ axes(ax1);
 text(0.09, 0.96, 'A', 'FontSize', lettersize, 'FontWeight', 'bold');
 text(0.09, 0.67, 'B', 'FontSize', lettersize, 'FontWeight', 'bold');
 text(0.53, 0.67, 'C', 'FontSize', lettersize, 'FontWeight', 'bold');
-text(0.09, 0.35, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
+%text(0.09, 0.35, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 
 
 

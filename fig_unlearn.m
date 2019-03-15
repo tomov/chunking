@@ -158,6 +158,7 @@ title('Model', 'fontsize', fontsize);
 
 % D: Hierarchies
 
+%{
 idx = [1 2 3 4 5 6 1 2 3 4 5 6];
 subj = [1 1 1 1 1 1 2 2 2 2 2 2];
 for i = 1:12
@@ -188,6 +189,7 @@ for i = 1:12
         xlabel(sprintf('probe #%d', i - 6));
     end
 end
+%}
 
 
 
@@ -196,7 +198,7 @@ axes(ax1);
 text(0.09, 0.96, 'A', 'FontSize', lettersize, 'FontWeight', 'bold');
 text(0.09, 0.67, 'B', 'FontSize', lettersize, 'FontWeight', 'bold');
 text(0.53, 0.67, 'C', 'FontSize', lettersize, 'FontWeight', 'bold');
-text(0.09, 0.35, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
+%text(0.09, 0.35, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 
 
 
@@ -313,7 +315,7 @@ load(modelfile);
 %
 [h, p, ci, stats] = ttest2(mv(:,3), mv(:,4));
 
-fprintf('probe trial #3 vs. #4: is there a difference? two-sample t-test: t(%d) = %.4f, p = %e\n', stats.df, stats.tstat, p);
+fprintf('probe trial #3 vs. #4: is there a difference? two-sample t-test: t(%d) = %.4f, p = %f\n', stats.df, stats.tstat, p);
 
 
 % stats for LEARNING -- is there a ramp?
@@ -376,4 +378,4 @@ result3 = fitglme(tbl, formula, 'Distribution', 'Binomial', 'Link', 'Logit', 'Fi
 
 H = [0 1];
 [p, F, DF1, DF2] = coefTest(result3, H);
-fprintf('Unlearning: is probe trial 4 below probe trial 3? coef for trial_idx = %f, p = %f, F(%d,%d) = %e\n', H * beta, p, DF1, DF2, F);
+fprintf('Unlearning: is probe trial 4 below probe trial 3? coef for trial_idx = %f, p = %f, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);

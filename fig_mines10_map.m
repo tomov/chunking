@@ -150,6 +150,7 @@ title('Model', 'fontsize', fontsize);
 
 % D: Hierarchies
 
+%{
 for s = 1:12
     subplot(4,6, 12 + s);
 
@@ -167,6 +168,7 @@ for s = 1:12
         title(['                            ', 'Example hierarchies'], 'fontsize', fontsize);
     end
 end
+%}
 
 
 ax1 = axes('Position',[0 0 1 1],'Visible','off');
@@ -174,7 +176,7 @@ axes(ax1);
 text(0.10, 0.96, 'A', 'FontSize', lettersize, 'FontWeight', 'bold');
 text(0.64, 0.96, 'B', 'FontSize', lettersize, 'FontWeight', 'bold');
 text(0.80, 0.96, 'C', 'FontSize', lettersize, 'FontWeight', 'bold');
-text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
+%text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 
 
 % save figure
