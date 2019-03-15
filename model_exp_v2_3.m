@@ -2,7 +2,10 @@
 clear all;
 close all;
 
-%[data, Ts] = load_data('exp/results/exp_v2_3_subway10_unlearn_circ', 246, false); % for exp_v2_3 (subway 10 unlearn with right stimuli)
+
+h = init_hyperparams;
+nsamples = 10000;
+take_map = false;
 
 
 % from analyze_data
@@ -24,17 +27,12 @@ nexts = [
 % from model_all_data
 D = init_Ds_from_data('exp/results/exp_v2_3_subway10_unlearn_circ', true);
 D_full = D;
-% TODO rm & uncomment above
-save tmp.mat;
-%load tmp.mat;
 
-h = init_hyperparams;
-nsamples = 10000;
-burnin = 1;
-lag = 1;
+assert(take_map == false); % don't support MAP
+filename = sprintf('model_exp_v2_3_circ_alpha=%.4f_nsamples=%d_div_eps=%.4f_last.mat', h.alpha, nsamples, h.eps);
+filename
 
-filename = sprintf('model_exp_v2_3_circ_samples=%d_alpha=%.4f_last.mat', nsamples, h.alpha);
-disp(filename);
+tic
 
 for subj = 1:length(D) % for each subject
     D(subj).tasks.s = [];
@@ -42,35 +40,46 @@ for subj = 1:length(D) % for each subject
     for i = 1:D(subj).G.N
         D(subj).r{i} = [];
     end
-    subj
 
-    [samples, post] = sample_c(D(subj), h, nsamples, burnin, lag);
-    H(subj) = samples(end);
+    fprintf('infer H: subject %d\n', subj);
+
+    H(subj) = sample_c(D(subj), h, 1); % take 1 sample to start with
 
     t = 1;
     for i = 1:length(index)
-        i
         while t < index(i)
             D(subj).tasks.s = [D(subj).tasks.s D_full(subj).tasks.s(t)];
             D(subj).tasks.g = [D(subj).tasks.g D_full(subj).tasks.g(t)];
             t = t + 1;
         end
         
+        H(subj) = sample_c(D(subj), h, 1, round(nsamples / length(index)), 1, H(subj));
+
+        chosen_H{subj, i} = H(subj);
+    end
+end
+
+toc
+
+save(filename, '-v7.3');
+
+for subj = 1:length(D) % for each subject
+    for i = 1:length(index)
+
+        fprintf('HBFS: subject %d\n', subj);
+
         s = start(i);
         g = goal(i);
-        assert(s == D_full(subj).tasks.s(t));
-        assert(g == D_full(subj).tasks.g(t));
+        assert(s == D_full(subj).tasks.s(index(i)));
+        assert(g == D_full(subj).tasks.g(index(i)));
        
-        [samples, post] = sample_c(D(subj), h, nsamples, burnin, lag, H(subj));
-        H(subj) = samples(end);
-
-        %{
-        [~,I] = max(post); % MAP H
-        H(subj) = samples(I);
-        %}
-
-        [path, hpath] = hbfs(s, g, H(subj), D(subj));
+        [path, hpath] = hbfs(s, g, chosen_H{subj, i}, D(subj));
         move(subj, i) = path(2) == nexts(i,1);
+
+        % eps-greedy: choose random neighbor w/ small prob 
+        if rand() < 1 - h.eps
+            move(subj, i) = datasample(find(D(subj).G.E(s,:)), 1);
+        end
     end
 end
 
