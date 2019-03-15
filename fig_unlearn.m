@@ -7,6 +7,8 @@ axisfontsize = 10;
 lettersize = 20;
 
 modelfile = 'model_exp_v2_3_circ_alpha=1.0000_nsamples=10000_div_eps=0.6000_last.mat';
+datafile = 'analyze_exp_v2_3.mat';
+
 
 % A: graph
 %
@@ -90,7 +92,7 @@ imshow(PICpng, 'InitialMagnification', 'fit');
 
 subplot(3,2,3);
 
-load('analyze_exp_v2_3.mat');
+load(datafile);
 
 % swap action to be consistent with other plots
 ms = 1 - ms;
@@ -206,3 +208,172 @@ print('figures/unlearn.pdf', '-dpdf');
 
 
 
+%
+%             stats
+%
+
+
+fprintf('\n\n --------------- DATA -----------------\n\n');
+
+load(datafile);
+
+% compare 3rd probe and 4th probe trial
+%
+which_g1 = t_id == index(3);
+which_g2 = t_id == index(4);
+assert(nexts(3,2) == nexts(4,2));  % to be consistent w/ other experiments
+
+[h, p, ci, stats] = ttest2(dir(which_g1) == nexts(3,2), dir(which_g2) == nexts(4,2));
+
+fprintf('probe trial #3 vs. #4: is there a difference? two-sample t-test: t(%d) = %.4f, p = %.4f\n', stats.df, stats.tstat, p);
+
+
+% stats for LEARNING -- is there a ramp?
+%
+assert(nexts(3,2) == 5);
+assert(nexts(4,2) == 5);
+direction = dir == 5; % to be consistent w/ other experiments
+[~,trial_idx] = max(t_id == index, [], 2); % convert to 1..3 
+subject = s_id;
+% subset
+which_probes = ismember(t_id, index(1:3));
+direction = direction(which_probes);
+trial_idx = trial_idx(which_probes);
+subject = subject(which_probes);
+% create table
+tbl = table(direction, trial_idx, subject);
+
+formula = 'direction ~ 1 + trial_idx + (1 + trial_idx | subject)';
+result1 = fitglme(tbl, formula, 'Distribution', 'Binomial', 'Link', 'Logit', 'FitMethod', 'Laplace');
+[beta, names, stats] = fixedEffects(result1);
+
+H = [0 1];
+[p, F, DF1, DF2] = coefTest(result1, H);
+fprintf('Learning: is there a ramp on probe trials 1..3? coef for trial_idx = %f, p = %f, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
+
+
+
+% stats for UNLEARNing: trials 4..6
+%
+assert(nexts(3,2) == 5);
+assert(nexts(4,2) == 5);
+direction = dir == 5; % to be consistent w/ other experiments
+[~,trial_idx] = max(t_id == index, [], 2); % convert to 1..3 
+subject = s_id;
+% subset
+which_probes = ismember(t_id, index(4:6));
+direction = direction(which_probes);
+trial_idx = trial_idx(which_probes);
+subject = subject(which_probes);
+% create table
+tbl = table(direction, trial_idx, subject);
+
+formula = 'direction ~ 1 + trial_idx + (1 + trial_idx | subject)';
+result2 = fitglme(tbl, formula, 'Distribution', 'Binomial', 'Link', 'Logit', 'FitMethod', 'Laplace');
+[beta, names, stats] = fixedEffects(result2);
+
+H = [1 0];
+[p, F, DF1, DF2] = coefTest(result2, H);
+fprintf('Unlearning: are probe trials 4..6 below 0.5? intercept = %f, p = %f, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
+
+
+% stats for UNLEARNing: trials 3 and 4
+%
+assert(nexts(3,2) == 5);
+assert(nexts(4,2) == 5);
+direction = dir == 5; % to be consistent w/ other experiments
+
+[~,trial_idx] = max(t_id == index, [], 2); % convert to 1..3 
+subject = s_id;
+% subset
+which_probes = ismember(t_id, index(3:4));
+direction = direction(which_probes);
+trial_idx = trial_idx(which_probes);
+subject = subject(which_probes);
+% create table
+tbl = table(direction, trial_idx, subject);
+
+formula = 'direction ~ 1 + trial_idx + (1 + trial_idx | subject)';
+result3 = fitglme(tbl, formula, 'Distribution', 'Binomial', 'Link', 'Logit', 'FitMethod', 'Laplace');
+[beta, names, stats] = fixedEffects(result3);
+
+H = [0 1];
+[p, F, DF1, DF2] = coefTest(result3, H);
+fprintf('Unlearning: is probe trial 4 below probe trial 3? coef for trial_idx = %f, p = %f, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
+
+
+
+
+fprintf('\n\n --------------- MODEL -----------------\n\n');
+
+load(modelfile);
+
+
+% compare 3rd probe and 4th probe trial
+%
+[h, p, ci, stats] = ttest2(mv(:,3), mv(:,4));
+
+fprintf('probe trial #3 vs. #4: is there a difference? two-sample t-test: t(%d) = %.4f, p = %e\n', stats.df, stats.tstat, p);
+
+
+% stats for LEARNING -- is there a ramp?
+%
+direction = 1 - mv(:,1:3); % to be consistent
+direction = direction(:);
+s = 1:length(D);
+subject = repmat(s', [1 3]);
+subject = subject(:);
+trial_idx = repmat(1:3, [length(D), 1]);
+trial_idx = trial_idx(:);
+% create table
+tbl = table(direction, trial_idx, subject);
+
+formula = 'direction ~ 1 + trial_idx + (1 + trial_idx | subject)';
+result1 = fitglme(tbl, formula, 'Distribution', 'Binomial', 'Link', 'Logit', 'FitMethod', 'Laplace');
+[beta, names, stats] = fixedEffects(result1);
+
+H = [0 1];
+[p, F, DF1, DF2] = coefTest(result1, H);
+fprintf('Learning: is there a ramp on probe trials 1..3? coef for trial_idx = %f, p = %f, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
+
+
+% stats for UNLEARNing: trials 4..6
+%
+direction = 1 - mv(:,4:6); % to be consistent
+direction = direction(:);
+s = 1:length(D);
+subject = repmat(s', [1 3]);
+subject = subject(:);
+trial_idx = repmat(4:6, [length(D), 1]);
+trial_idx = trial_idx(:);
+% create table
+tbl = table(direction, trial_idx, subject);
+
+formula = 'direction ~ 1 + trial_idx + (1 + trial_idx | subject)';
+result2 = fitglme(tbl, formula, 'Distribution', 'Binomial', 'Link', 'Logit', 'FitMethod', 'Laplace');
+[beta, names, stats] = fixedEffects(result2);
+
+H = [1 0];
+[p, F, DF1, DF2] = coefTest(result2, H);
+fprintf('Unlearning: are probe trials 4..6 below 0.5? intercept = %f, p = %f, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
+
+
+% stats for UNLEARNing: trials 3 and 4
+%
+direction = 1 - mv(:,3:4); % to be consistent
+direction = direction(:);
+s = 1:length(D);
+subject = repmat(s', [1 2]);
+subject = subject(:);
+trial_idx = repmat(3:4, [length(D), 1]);
+trial_idx = trial_idx(:);
+% create table
+tbl = table(direction, trial_idx, subject);
+
+formula = 'direction ~ 1 + trial_idx + (1 + trial_idx | subject)';
+result3 = fitglme(tbl, formula, 'Distribution', 'Binomial', 'Link', 'Logit', 'FitMethod', 'Laplace');
+[beta, names, stats] = fixedEffects(result3);
+
+H = [0 1];
+[p, F, DF1, DF2] = coefTest(result3, H);
+fprintf('Unlearning: is probe trial 4 below probe trial 3? coef for trial_idx = %f, p = %f, F(%d,%d) = %e\n', H * beta, p, DF1, DF2, F);

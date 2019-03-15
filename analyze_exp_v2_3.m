@@ -146,6 +146,10 @@ xlabel('trial # (probe)');
 title(sprintf('human N = %d', length(data)));
 
 
+save('analyze_exp_v2_3.mat');
+
+%{
+
 % compare 3rd probe and 4th probe trial
 %
 which_g1 = t_id == index(3);
@@ -228,4 +232,5 @@ H = [0 1];
 [p, F, DF1, DF2] = coefTest(result3, H);
 fprintf('Unlearning: is probe trial 4 below probe trial 3? coef for trial_idx = %f, p = %f, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
 
-save('analyze_exp_v2_3.mat');
+%}
+
