@@ -189,7 +189,7 @@ exp_v2_1.html in master (subway 10 no adj, no assoc)
     ARCHIVE/exp_v2_1_batch_1 
     ARCHIVE/exp_v2_1_batch_2 <------------ 90%, 100+ hits!
 
-    in exp_v2_1_subway_noadj_noassoc
+    in exp_v2_1_subway10_noadj_noassoc
 
 exp_v2_3.html in master (subway 10 unlearn, fucked -- arrows only...)
 

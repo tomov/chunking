@@ -93,3 +93,7 @@ pl(5).starts = [6 6];
 pl(5).goals = [1 1];
 pl(5).nexts = [5 5];
 pl(5).tests = [3 3]; % 1 = right tailed, 2 = left tailed, 3 = two-tailed
+
+
+
+

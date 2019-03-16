@@ -16,6 +16,7 @@
 %[data, Ts] = load_data('exp/results/ARCHIVE/exp_v2_3_subway10_unlearn_batch2', 246, false); % for exp_v2_3 (subway 10 unlearn)
 %[data, Ts] = load_data('exp/results/exp_', 246, false); % for exp_v2_3 (subway 10 unlearn)
 %[data, Ts] = load_data('exp/results/mines10_map', 101, false); % for exp_v2_3 (subway 10 unlearn)
+%[data, Ts] = load_data('exp/results/exp_v2_1_subway10_noadj_noassoc', 101, false); 
 
 load data.mat
 
@@ -34,7 +35,7 @@ subj_len = [];
 s_id = []; % subject index
 t_id = []; % trial index
 for subj = 1:size(data,1) % for each subject
-    phase = 2; % = 1 for training exp_v3_7, usually it's 2 = test; TODO DON'T FORGET TO CHANGE TO 2 for subway10 and other old stuff
+    phase = 1; % = 1 for training exp_v3_7, usually it's 2 = test; TODO DON'T FORGET TO CHANGE TO 2 for subway10 and other old stuff
     for i = 1:length(data(subj, phase).s) % for each trial 
         which = find(data(subj, phase).s == data(subj, phase).s(i) & data(subj, phase).g == data(subj, phase).g(i));
         clear o;
@@ -46,6 +47,8 @@ for subj = 1:size(data,1) % for each subject
         dir = [dir; data(subj, phase).path{i}(2)];
         group = [group; data(subj, phase).group(i)];
         s_id = [s_id; subj];
+
+        t_id = [t_id; i];
         %t_id = [t_id; i + (phase - 1) * 103]; % TODO hack for exp_v2_3
     end
     subj_group = [subj_group; data(subj,1).group(1)];
@@ -101,13 +104,25 @@ title('all trials');
 % show test choices
 %
 
+% for exp_v2_1.html (subway 10 no adj no assoc)
+start = [6];
+goal = [1];
+%ordinal = [1];
+index = [101]; % from html -- @ ..
+nexts = [
+5 7
+];
+
+
 % for exp_v4.html (mines 10 map)
+%{
 start = [6];
 goal = [1];
 ordinal = [1];
 nexts = [
 5 7
 ];
+%}
 
 % for exp_v1_6.html (subway 10 no assoc), exp_v2_1.html
 %start = [6];
@@ -197,8 +212,8 @@ test_kind = 3; % 1 = right tailed, 2 = left tailed, 3 = two-tailed
 ms = [];
 sems = [];
 for t = 1:length(start)
-    which = s == start(t) & g == goal(t) & ord == ordinal(t); % ord is usually just 1
-    %which = s == start(t) & g == goal(t) & t_id == index(t); % for exp_v2_3 -- it compares trial indices proper
+    %which = s == start(t) & g == goal(t) & ord == ordinal(t); % ord is usually just 1
+    which = s == start(t) & g == goal(t) & t_id == index(t); % for exp_v2_3 -- it compares trial indices proper
     move = dir(which);
     m = nexts(t,:);
     c1 = sum(move == m(1)); % count 1

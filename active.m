@@ -9,7 +9,6 @@ sem = @(x) std(x) / sqrt(length(x));
 
 N = 40; % participants
 h = init_hyperparams();
-h.alpha = 2;
 burnin = 500; % TODO x 10
 lag = 10; % TODO x 10
 nsamples = 100;

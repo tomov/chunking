@@ -113,6 +113,7 @@ hold off;
 
 % D: Hierarchies
 
+%{
 x = [-3 -1 -2 -3 -1 1 3 2 1 3];
 y = [-3 -3 -2 -1 -1 1 1 2 3 3];
 y = -y;
@@ -130,6 +131,7 @@ for s = 1:12
         title(['                            ', 'Example hierarchies'], 'fontsize', fontsize);
     end
 end
+%}
 
 
 ax1 = axes('Position',[0 0 1 1],'Visible','off');
@@ -137,7 +139,7 @@ axes(ax1);
 text(0.10, 0.96, 'A', 'FontSize', lettersize, 'FontWeight', 'bold');
 text(0.36, 0.96, 'B', 'FontSize', lettersize, 'FontWeight', 'bold');
 text(0.64, 0.96, 'C', 'FontSize', lettersize, 'FontWeight', 'bold');
-text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
+%text(0.10, 0.52, 'D', 'FontSize', lettersize, 'FontWeight', 'bold');
 
 
 % save figure

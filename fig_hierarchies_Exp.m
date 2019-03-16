@@ -270,4 +270,4 @@ end
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-print('figures/hierarchies.pdf', '-dpdf');
+print('figures/hierarchies_Exp.pdf', '-dpdf');
