@@ -58,7 +58,8 @@ for i = 1:length(pl) - 1 % TODO handle mines10 better
             otherwise
                 assert(false);
         end
-        fprintf('m = %.3f +- %.3f, binomial %s, c = %d, n = %d, p = %e\n', m(j), se(j), type, pl(i).m(j), pl(i).n(j), pl(i).p(j));
+        %fprintf('m = %.3f +- %.3f, binomial %s, c = %d, n = %d, p = %e\n', m(j), se(j), type, pl(i).m(j), pl(i).n(j), pl(i).p(j));
+        fprintf('%d out of %d, $p = %.4f$, %s binomial test\n', pl(i).m(j), pl(i).n(j), pl(i).p(j), type);
     end
     [tbl, chi2stat, pval] = chi2(pl(i).m, pl(i).n);
     tbl

@@ -79,4 +79,4 @@ save(filename, '-v7.3');
 
 %load('analyze_all_data.mat');
 
-plot_all_data;
+plot_Exp_1_thru_4;

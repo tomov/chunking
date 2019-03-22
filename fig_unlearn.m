@@ -205,8 +205,8 @@ text(0.53, 0.67, 'C', 'FontSize', lettersize, 'FontWeight', 'bold');
 % save figure
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
-set(h, 'PaperOrientation', 'landscape');
-print('figures/unlearn.pdf', '-dpdf');
+%set(h, 'PaperOrientation', 'landscape');
+%print('figures/unlearn.pdf', '-dpdf');
 
 
 
@@ -218,6 +218,18 @@ print('figures/unlearn.pdf', '-dpdf');
 fprintf('\n\n --------------- DATA -----------------\n\n');
 
 load(datafile);
+
+% 3rd probe trial
+%
+which = t_id == index(3);
+move = dir(which);
+c1 = sum(move == nexts(3,1)); % count 1
+c2 = sum(move ~= nexts(3,1)); % count 2
+n = sum(which);
+p = 2 * binocdf(min(c1,c2), n, 0.5);
+
+fprintf('probe trial #3: %d out of %d participants, $p = %.2f$, two-tailed binomial test\n', c1, n, p);
+
 
 % compare 3rd probe and 4th probe trial
 %
@@ -251,7 +263,7 @@ result1 = fitglme(tbl, formula, 'Distribution', 'Binomial', 'Link', 'Logit', 'Fi
 
 H = [0 1];
 [p, F, DF1, DF2] = coefTest(result1, H);
-fprintf('Learning: is there a ramp on probe trials 1..3? coef for trial_idx = %f, p = %f, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
+fprintf('Learning: is there a ramp on probe trials 1..3? slope = %.2f, F(%d,%d) = %.2f, p = %.2f, mixed effects logistic regression with probe trials 1-3\n', H * beta, DF1, DF2, F, p);
 
 
 
@@ -301,7 +313,7 @@ result3 = fitglme(tbl, formula, 'Distribution', 'Binomial', 'Link', 'Logit', 'Fi
 
 H = [0 1];
 [p, F, DF1, DF2] = coefTest(result3, H);
-fprintf('Unlearning: is probe trial 4 below probe trial 3? coef for trial_idx = %f, p = %f, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
+fprintf('Unlearning: is probe trial 4 below probe trial 3? slope = %.2f, F(%d,%d) = %.2f, p = %.10f, mixed effects logistic regression with probe trials 3-4\n', H * beta, DF1, DF2, F, p);
 
 
 
@@ -310,12 +322,21 @@ fprintf('\n\n --------------- MODEL -----------------\n\n');
 
 load(modelfile);
 
+% 3rd probe trial
+%
+move = mv(:,3);
+n = length(move);
+c1 = sum(move); %  count 1
+c2 = sum(1 - move); % count 2
+p = 2 * binocdf(min(c1,c2), n, 0.5);
+
+fprintf('probe trial #3: %d out of %d simulated participants, $p = %e$, two-tailed binomial test\n', c1, n, p);
 
 % compare 3rd probe and 4th probe trial
 %
 [h, p, ci, stats] = ttest2(mv(:,3), mv(:,4));
 
-fprintf('probe trial #3 vs. #4: is there a difference? two-sample t-test: t(%d) = %.4f, p = %f\n', stats.df, stats.tstat, p);
+fprintf('probe trial #3 vs. #4: is there a difference? two-sample t-test: t(%d) = %.4f, p = %e\n', stats.df, stats.tstat, p);
 
 
 % stats for LEARNING -- is there a ramp?
@@ -336,7 +357,7 @@ result1 = fitglme(tbl, formula, 'Distribution', 'Binomial', 'Link', 'Logit', 'Fi
 
 H = [0 1];
 [p, F, DF1, DF2] = coefTest(result1, H);
-fprintf('Learning: is there a ramp on probe trials 1..3? coef for trial_idx = %f, p = %f, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
+fprintf('Learning: is there a ramp on probe trials 1..3? slope = %.2f, F(%d,%d) = %.2f, p = %e, mixed effects logistic regression with probe trials 1-3\n', H * beta, DF1, DF2, F, p);
 
 
 % stats for UNLEARNing: trials 4..6
@@ -356,8 +377,11 @@ result2 = fitglme(tbl, formula, 'Distribution', 'Binomial', 'Link', 'Logit', 'Fi
 [beta, names, stats] = fixedEffects(result2);
 
 H = [1 0];
-[p, F, DF1, DF2] = coefTest(result2, H);
-fprintf('Unlearning: are probe trials 4..6 below 0.5? intercept = %f, p = %f, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
+[p, F, DF1, DF2] = coefTest(result2, H); 
+
+
+
+fprintf('Unlearning: are probe trials 4..6 below 0.5? intercept = %f, p = %e, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
 
 
 % stats for UNLEARNing: trials 3 and 4
@@ -378,4 +402,4 @@ result3 = fitglme(tbl, formula, 'Distribution', 'Binomial', 'Link', 'Logit', 'Fi
 
 H = [0 1];
 [p, F, DF1, DF2] = coefTest(result3, H);
-fprintf('Unlearning: is probe trial 4 below probe trial 3? coef for trial_idx = %f, p = %f, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
+fprintf('Unlearning: is probe trial 4 below probe trial 3? slope = %.2f, F(%d,%d) = %.2f, p = %e, mixed effects logistic regression with probe trials 3-4\n', H * beta, DF1, DF2, F, p);

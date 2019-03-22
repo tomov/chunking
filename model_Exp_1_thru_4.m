@@ -16,9 +16,9 @@ else
 end
 filename
 
+%{
 sem = @(x) std(x) / sqrt(length(x));
 
-%{
 for i = 1:length(pl) - 1 % TODO not counting mines10_map; find better way (we need it for analyzing the behavioral data...)
     for j = 1:length(pl(i).dirnames)
 
@@ -56,6 +56,7 @@ end
 
 filename
 save(filename, '-v7.3');
+
 %}
 
 load(filename);
@@ -88,14 +89,15 @@ for i = 1:length(pl) - 1 % TODO not counting mines10_map; find better way (we ne
         s = pl(i).starts(j);
         g = pl(i).goals(j);
         clear move;
-        for subj = 1:length(D)
+        for subj = 1:length(pl(i).H{j})
             H = pl(i).H{j}(subj);
-            [path, hpath] = hbfs(s, g, H, D(subj));
+            D = pl(i).D{j}(subj);
+            [path, hpath] = hbfs(s, g, H, D);
             move(subj) = path(2);
 
             % eps-greedy: choose random neighbor w/ small prob 
             if rand() < 1 - h.eps
-                move(subj) = datasample(find(D(subj).G.E(s,:)), 1);
+                move(subj) = datasample(find(D.G.E(s,:)), 1);
             end
         end
 
@@ -130,4 +132,4 @@ filename
 save(filename, '-v7.3');
 
 
-plot_all_data;
+plot_Exp_1_thru_4;

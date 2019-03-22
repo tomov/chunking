@@ -9,7 +9,7 @@ function [data, Ts, f_chunk, durs, RT_all, RT_new, exclude] = load_data(dirname,
     end
 
     if ~exist('use_cutoff', 'var')
-        use_cutoff = true;
+        use_cutoff = false;
     end
     %bad_dirname = 'exp/results/mines10_map_good/exclude';
 
