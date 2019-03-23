@@ -59,7 +59,7 @@ for i = 1:length(pl) - 1 % TODO handle mines10 better
                 assert(false);
         end
         %fprintf('m = %.3f +- %.3f, binomial %s, c = %d, n = %d, p = %e\n', m(j), se(j), type, pl(i).m(j), pl(i).n(j), pl(i).p(j));
-        fprintf('%d out of %d, $p = %.4f$, %s binomial test\n', pl(i).m(j), pl(i).n(j), pl(i).p(j), type);
+        fprintf('%d out of %d, $p = %.4f$, %s binomial test (p = %e)\n', pl(i).m(j), pl(i).n(j), pl(i).p(j), type, pl(i).p(j));
     end
     [tbl, chi2stat, pval] = chi2(pl(i).m, pl(i).n);
     tbl
@@ -73,7 +73,8 @@ for i = 1:length(pl) - 1 % TODO handle mines10 better
             [tbl, chi2stat, pval] = chi2(pl(i).m([j k]), pl(i).n([j k]));
             N = sum(pl(i).n([j k]));
             df = (2 - 1) * (2 - 1);
-            fprintf('              chi2(%d, %d) = %.3f, p = %e\n', df, N, chi2stat, pval);
+            %fprintf('              chi2(%d, %d) = %.3f, p = %e\n', df, N, chi2stat, pval);
+            fprintf('              $\\chi^2(%d, %d) = %.3f, p = %.4f$, chi-square test of independence (p = %e)\n', df, N, chi2stat, pval, pval);
         end
     end
 

@@ -114,7 +114,8 @@ ylabel('P(action 6 \rightarrow 5)');
 hold off;
 
 assert(pl(i).tests(j) == 3);
-fprintf('two-tailed binomial test c1 = %d, n = %d, p = %e\n', pl(i).m(j), pl(i).n(j), pl(i).p(j));
+%fprintf('two-tailed binomial test c1 = %d, n = %d, p = %e\n', pl(i).m(j), pl(i).n(j), pl(i).p(j));
+fprintf('%d out of %d participants, $p = %.2f$, two-tailed binomial test\n', pl(i).m(j), pl(i).n(j), pl(i).p(j));
 
 
 title('Data', 'fontsize', fontsize);
@@ -143,7 +144,8 @@ set(gca, 'xtick', [1]);
 xticklabels({'fraction simulations'});
 hold off;
 
-fprintf('two-tailed binomial test c1 = %d, n = %d, p = %e\n', c1, n, p);
+%fprintf('two-tailed binomial test c1 = %d, n = %d, p = %e\n', c1, n, p);
+fprintf('%d out of %d simulated participants, $p = %.2f$, two-tailed binomial test\n', pl(i).m(j), pl(i).n(j), pl(i).p(j));
 
 title('Model', 'fontsize', fontsize);
 

@@ -126,6 +126,6 @@ text(0.65, 0.96, 'C', 'FontSize', lettersize, 'FontWeight', 'bold');
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-print('figures/mines.pdf', '-dpdf');
+%print('figures/mines.pdf', '-dpdf');
 
 
