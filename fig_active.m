@@ -56,8 +56,13 @@ title('Experimental Design');
 %
 
 
-c_two = [34, 34, 19, 10];
-c_three = [37, 31, 6];
+human_data = [34, 19, 31, 34, 10, 37, 6];
+graphs_with_two_edges = [1 4 2 5];
+graphs_with_three_edges = [6 3 7];
+
+% we show the graphs in a weird order
+c_two = human_data(graphs_with_two_edges);
+c_three = human_data(graphs_with_three_edges);
 n = 40;
 
 m_two = c_two / n;
@@ -156,13 +161,26 @@ hold off;
 
 % C: Model
 
+% from Wanqian:
+% model is in https://github.com/Wanqianxn/hierarchy-edge-unveiling
+%
+% Human     {34, 19, 31, 34, 10, 37, 06} # human data from last year
+% 1.0e1.0   {36, 00, 29, 37, 00, 31, 12} # model data without tiebreaks, epsilon=1.0 (no exploring)
+% 1.0e0.8   {33, 03, 26, 34, 05, 30, 11} # model data without tiebreaks, epsilon=0.8
+% 1.0e0.6   {32, 09, 29, 33, 07, 24, 10} # model data without tiebreaks, epsilon=0.6
+% 1.0te1.0  {20, 00, 29, 26, 00, 31, 12} # model data with tiebreaks, epsilon=1.0 (no exploring)
+% 1.0te0.8  {15, 05, 24, 28, 07, 27, 12} # model data with tiebreaks, epsilon=0.8
+% 1.0te0.6  {17, 12, 22, 28, 09, 24, 16} # model data with tiebreaks, epsilon=0.6 % <-- this is it
+
+h = init_hyperparams;
+assert(abs(h.alpha - 1) < 1e-10);
+assert(abs(h.eps - 0.6) < 1e-10);
+
+model_data = [17, 12, 22, 28, 09, 24, 16]; % from Wan's simulations with alpha = 1, eps = 0.6
 
 
-
-
-
-c_two = [20 30 3 5];
-c_three = [33 27 11];
+c_two = model_data(graphs_with_two_edges);
+c_three = model_data(graphs_with_three_edges);
 n = 40;
 
 m_two = c_two / n;
@@ -258,8 +276,8 @@ hold off;
 
 
 
-[rho,p] = corr(m_data', m_model', 'type', 'Spearman');
-fprintf('Spearman rho = %.4f, p = %.4f\n', rho, p);
+[r,p] = corr(m_data', m_model');
+fprintf('Pearson r = %.4f, p = %.4f\n', r, p);
 
 
 
