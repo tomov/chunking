@@ -166,9 +166,7 @@ end
 
 % stats
 %
-pos = find(m <= null_p);
-if isempty(pos) 
-    pos = 0;
-end
-pos = pos(end);
-fprintf('%f; MC test (%d samples from null), p = %e\n', m, null_iters, pos / length(null_p));
+pvalue = mean(null_p >= m); % what fraction of the null is "better" than m? = P(we got a value as extreme as m under the null)
+fprintf('%f; MC test (%d samples from null), p = %e\n', m, null_iters, pvalue);
+
+save wtf.mat

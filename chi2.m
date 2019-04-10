@@ -1,4 +1,4 @@
-function [tbl, chi2stat, pval] = chi2(n, N)
+function [tbl, chi2stat, pval, x, y] = chi2(n, N)
     
     y = [];
     x = [];

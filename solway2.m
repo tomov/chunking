@@ -129,7 +129,7 @@ hold off;
 
 
 
-pos = find(m <= null_p);
+pos = find(m <= null_p); <----------- THIS IS WRONG; see fig_solway2.m
 if isempty(pos) 
     pos = 0;
 end
