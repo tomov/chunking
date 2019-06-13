@@ -64,9 +64,9 @@ html{6} = 'exp/exp_v1_5.html';
 
 % for subway_unlearn 
 %
-action_chunk_transitions{7} = [1 9; 8 7; 7 6; 2 3; 3 4; 4 5];
-state_chunk_transitions{7} = flip(action_chunk_transitions{7},2);
-bridges{7} = [8 9; 9 8; 6 5; 5 6; 1 2; 2 1];
+action_chunk_transitions{7} = [2 3; 4 5; 10 9; 9 8; 8 7];
+state_chunk_transitions{7} = flip(action_chunk_transitions{1},2);
+bridges{7} = [1 2; 2 1; 3 4; 4 3; 5 6; 6 5; 1 10; 10 1; 7 6; 6 7];
 dirname{7} = 'exp/results/exp_v2_3_subway10_unlearn_circ';
 nrows{7} = 246;
 html{7} = 'exp/exp_v2_3.html';
@@ -90,12 +90,27 @@ for f = 7:7  %length(dirname)
     fprintf('\n\n ---------------- Data dir %s -------------- \n\n', dirname{f});
 
     [data, Ts] = load_data(dirname{f}, nrows{f});
+    save RT_analysis_tmp.mat
 
     % TODO this works only for the full map view; the others have weird shit like rotations
     ex_noflipped = readExp(html{f});
     ex_flipped = ex_noflipped;
-    ex_flipped.adj(:,1) = ex_noflipped.adj(:,3);
-    ex_flipped.adj(:,3) = ex_noflipped.adj(:,1);
+
+
+    exs = {ex_noflipped, ex_noflipped, ex_noflipped, ex_noflipped}; % flipped vertically or horizontally or both
+
+    exs{2}.adj(:,1) = exs{1}.adj(:,3);
+    exs{2}.adj(:,3) = exs{1}.adj(:,1);
+
+    exs{3}.adj(:,2) = exs{1}.adj(:,4);
+    exs{3}.adj(:,4) = exs{1}.adj(:,2);
+
+    exs{4}.adj(:,1) = exs{1}.adj(:,3);
+    exs{4}.adj(:,3) = exs{1}.adj(:,1);
+    exs{4}.adj(:,2) = exs{1}.adj(:,4);
+    exs{4}.adj(:,4) = exs{1}.adj(:,2);
+
+
     move_keys = [39 38 37 40];
 
     % RT analysis
@@ -103,8 +118,7 @@ for f = 7:7  %length(dirname)
     for subj = 1:size(data,1) % for each subject
         phase = 1; % training phase
 
-        flipped_count = 0;
-        noflipped_count = 0;
+        ex_ruled_out = [0 0 0 0]; % rule out different orientations in exs{} one by one, i.e. see if any moves rule those out
 
         % first pass -- figure out which keys are movements
         % skip trial when there are more keys/RTs than button presses.... whoops
@@ -120,13 +134,11 @@ for f = 7:7  %length(dirname)
                     key = keys(j);
                     dir = find(move_keys == key);
 
-                    if ex_noflipped.adj(u, dir) ~= v % can't be non-flipped
-                        flipped_count = flipped_count + 1;
-%                        fprintf('impossible nonflipped: %d press %d (%d) -> %d when adj is %d\n', u, key, dir, v, ex_noflipped.adj(u, dir));
-                    end
-                    if ex_flipped.adj(u, dir) ~= v % can't be flipped
-                        noflipped_count = noflipped_count + 1;
-%                        fprintf('impossible flipped: %d press %d (%d) -> %d when adj is %d\n', u, key, dir, v, ex_flipped.adj(u, dir));
+                    for k = 1:length(exs)
+                        if exs{k}.adj(u, dir) ~= v % can't be this one
+                            ex_ruled_out(k) = 1;
+                            fprintf('impossible %k: %d press %d (%d) -> %d when adj is %d\n', k, u, key, dir, v, ex_noflipped.adj(u, dir));
+                        end
                     end
 
                     if any(ismember(bridges{f}, [u v], 'rows'))
@@ -135,7 +147,6 @@ for f = 7:7  %length(dirname)
                         action_chunk_RTs = [action_chunk_RTs RT];
                     else
                         assert(any(ismember(state_chunk_transitions{f}, [u v], 'rows')));
-                        save wtf.mat
                         state_chunk_RTs = [state_chunk_RTs RT];
                     end
                 end
@@ -145,12 +156,9 @@ for f = 7:7  %length(dirname)
         end
 
         % figure out if subject did flipped or non-flipped version of experiment
-        assert(flipped_count == 0 || noflipped_count == 0);
-        if flipped_count > 0
-            ex = ex_flipped;
-        else
-            ex = ex_noflipped;
-        end
+        save wtf.mat
+        assert(any(ex_ruled_out == 0));
+        ex = exs{find(ex_ruled_out == 0)};
 
         % second pass pass -- deal with skipped trials...
         for i = 1:length(data(subj, phase).s) % for each trial

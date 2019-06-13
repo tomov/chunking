@@ -212,5 +212,5 @@ text(0.52, 0.50, 'F', 'FontSize', lettersize, 'FontWeight', 'bold');
 % save figure
 h = gcf;
 %set(h, 'PaperPositionMode', 'auto');
-set(h, 'PaperOrientation', 'landscape');
-print('figures/neuro.pdf', '-dpdf');
+%set(h, 'PaperOrientation', 'landscape');
+%print('figures/neuro.pdf', '-dpdf');

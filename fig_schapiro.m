@@ -99,6 +99,7 @@ xticklabels({'All trials', 'Hamiltonian paths'});
 set(gca,'FontSize', axisfontsize);
 ylabel('Probability of parse', 'fontsize', axisfontsize);
 title('Data', 'fontsize', fontsize);
+ylim([0 0.8]);
 
 % C: Model
 
@@ -128,7 +129,7 @@ lgd = legend({['Community' char(10) 'transition parse'], 'Other parse'});
 lgd.Position(1) = 0.86;
 title('Model', 'fontsize', fontsize);
 set(gca,'FontSize', axisfontsize);
-ylim([0 1]);
+ylim([0 0.8]);
 
 % D: Hierarchies
 

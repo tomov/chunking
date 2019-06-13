@@ -96,4 +96,5 @@ pl(5).tests = [3 3]; % 1 = right tailed, 2 = left tailed, 3 = two-tailed
 
 
 
-
+% subway_unlearn is 
+% [data, Ts] = load_data('exp/results/exp_v2_3_subway10_unlearn_circ', 246, false); % for exp_v2_3 (subway 10 unlearn)
