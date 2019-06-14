@@ -108,10 +108,11 @@ function [data, Ts, f_chunk, durs, RT_all, RT_new, exclude] = load_data(dirname,
             assert(length(path) == T.length(i));
             group = strip(T.group{i});
             RT_tot = T.RT_tot(i);
+            keys = str2num(T.keys{i});
             if any(strcmp('valid_keys', T.Properties.VariableNames))
-                keys = str2num(T.valid_keys{i});
+                valid_keys = str2num(T.valid_keys{i});
             else
-                keys = str2num(T.keys{i});
+                valid_keys = NaN;
             end
             switch group
                 case 'A'
@@ -144,6 +145,7 @@ function [data, Ts, f_chunk, durs, RT_all, RT_new, exclude] = load_data(dirname,
             data(subj, phase).RTs{j} = RTs;
             data(subj, phase).RT_tot(j) = RT_tot;
             data(subj, phase).keys{j} = keys;
+            data(subj, phase).valid_keys{j} = valid_keys;
 
             if (s == 1 && g == 3) || (s == 4 && g == 6) || (s == 9 && g == 7)
                 RT_chunk = [RT_chunk RT_tot];

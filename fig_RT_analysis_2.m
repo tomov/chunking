@@ -1,6 +1,7 @@
 % using fitglme mixed effects
 
-load('RT_analysis_forglme.mat');
+%load('RT_analysis_forglme.mat');  <-- from original draft
+load('RT_analysis_forglme_v2_3.mat');
 
 type = categorical(type); % 1 = action chunk, 2 = state chunk, 3 = bridge
 experiment = categorical(experiment);
@@ -20,6 +21,14 @@ H = [0 -1 1 ]; % bridge - state chunk
 [p, F, DF1, DF2] = coefTest(result, H);
 fprintf('fitglme bridge - state chunk contrast: = %f (expect positive), p = %f, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
 
+
+H = [0 0 1 ]; % bridge - action chunk (note action chunk == intercept)
+[p, F, DF1, DF2] = coefTest(result, H);
+fprintf('fitglme bridge vs action chunk contrast: = %f (expect positive), p = %e, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
+
+H = [0 1 0 ]; % state - action chunk (note action chunk == intercept)
+[p, F, DF1, DF2] = coefTest(result, H);
+fprintf('fitglme state vs action chunk contrast: = %f (expect positive), p = %e, F(%d,%d) = %f\n', H * beta, p, DF1, DF2, F);
 
 
 

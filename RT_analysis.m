@@ -86,7 +86,7 @@ experiment = []; %
 
 % aggregate across datasets for more power NOTE -- we only do the map ones
 %
-for f = 7:7  %length(dirname)
+for f = 1:3  %length(dirname)
     fprintf('\n\n ---------------- Data dir %s -------------- \n\n', dirname{f});
 
     [data, Ts] = load_data(dirname{f}, nrows{f});
@@ -120,6 +120,11 @@ for f = 7:7  %length(dirname)
                     key = keys(j);
                     dir = find(move_keys == key);
 
+                    % for fitglme
+                    rt = [rt; RT];
+                    subject = [subject; subj];
+                    experiment = [experiment; f];
+
                     if ex_noflipped.adj(u, dir) ~= v % can't be non-flipped
                         flipped_count = flipped_count + 1;
 %                        fprintf('impossible nonflipped: %d press %d (%d) -> %d when adj is %d\n', u, key, dir, v, ex_noflipped.adj(u, dir));
@@ -131,12 +136,14 @@ for f = 7:7  %length(dirname)
 
                     if any(ismember(bridges{f}, [u v], 'rows'))
                         bridge_RTs = [bridge_RTs RT];
+                        type = [type; 3];
                     elseif any(ismember(action_chunk_transitions{f}, [u v], 'rows'))
                         action_chunk_RTs = [action_chunk_RTs RT];
+                        type = [type; 1];
                     else
                         assert(any(ismember(state_chunk_transitions{f}, [u v], 'rows')));
-                        save wtf.mat
                         state_chunk_RTs = [state_chunk_RTs RT];
+                        type = [type; 2];
                     end
                 end
             else
@@ -192,7 +199,7 @@ for f = 7:7  %length(dirname)
                     v = path(j+1);
                     key = keys(j);
 
-                    % for fitglme
+                    % for fitglme TODO dedupe
                     rt = [rt; RT];
                     subject = [subject; subj];
                     experiment = [experiment; f];
@@ -258,5 +265,5 @@ errorbar(m, se, 'linestyle', 'none', 'color', 'black');
 ylabel('RT (ms)');
 xticklabels({'action chunks', 'state chunks', 'bridges'});
 
-save('RT_analysis_forglme_v2_3.mat');
-
+save('RT_analysis_forglme.mat');
+% see fig_RT_analysis_2.m

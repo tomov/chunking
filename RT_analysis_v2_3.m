@@ -84,31 +84,12 @@ type = []; % RT category 1 = action chunk, 2 = state chunk, 3 = bridge
 subject = [];  % subject
 experiment = []; %
 
-% aggregate across datasets for more power NOTE -- we only do the map ones
-%
 for f = 7:7  %length(dirname)
     fprintf('\n\n ---------------- Data dir %s -------------- \n\n', dirname{f});
 
-    [data, Ts] = load_data(dirname{f}, nrows{f});
-    save RT_analysis_tmp.mat
-
-    % TODO this works only for the full map view; the others have weird shit like rotations
-    ex_noflipped = readExp(html{f});
-    ex_flipped = ex_noflipped;
-
-
-    exs = {ex_noflipped, ex_noflipped, ex_noflipped, ex_noflipped}; % flipped vertically or horizontally or both
-
-    exs{2}.adj(:,1) = exs{1}.adj(:,3);
-    exs{2}.adj(:,3) = exs{1}.adj(:,1);
-
-    exs{3}.adj(:,2) = exs{1}.adj(:,4);
-    exs{3}.adj(:,4) = exs{1}.adj(:,2);
-
-    exs{4}.adj(:,1) = exs{1}.adj(:,3);
-    exs{4}.adj(:,3) = exs{1}.adj(:,1);
-    exs{4}.adj(:,2) = exs{1}.adj(:,4);
-    exs{4}.adj(:,4) = exs{1}.adj(:,2);
+    %[data, Ts] = load_data(dirname{f}, nrows{f});
+    %save RT_analysis_tmp.mat
+    load RT_analysis_tmp.mat
 
 
     move_keys = [39 38 37 40];
@@ -126,99 +107,39 @@ for f = 7:7  %length(dirname)
             RTs = data(subj,phase).RTs{i};
             path = data(subj,phase).path{i};
             keys = data(subj,phase).keys{i};
-            if length(RTs) == length(path) % we log all key presses but not all of them are moves... oops
-                for j = 2:length(path) - 1 % skip first RT; it's always slow
-                    RT = RTs(j);
-                    u = path(j);
-                    v = path(j+1);
-                    key = keys(j);
-                    dir = find(move_keys == key);
+            valid_keys = data(subj,phase).valid_keys{i};
 
-                    for k = 1:length(exs)
-                        if exs{k}.adj(u, dir) ~= v % can't be this one
-                            ex_ruled_out(k) = 1;
-                            fprintf('impossible %k: %d press %d (%d) -> %d when adj is %d\n', k, u, key, dir, v, ex_noflipped.adj(u, dir));
-                        end
-                    end
+            % only use valid keys that resulted in movements
+            RTs = [RTs(valid_keys) RTs(end)];
+            keys = [keys(valid_keys) keys(end)]; % last key is always space
 
-                    if any(ismember(bridges{f}, [u v], 'rows'))
-                        bridge_RTs = [bridge_RTs RT];
-                    elseif any(ismember(action_chunk_transitions{f}, [u v], 'rows'))
-                        action_chunk_RTs = [action_chunk_RTs RT];
-                    else
-                        assert(any(ismember(state_chunk_transitions{f}, [u v], 'rows')));
-                        state_chunk_RTs = [state_chunk_RTs RT];
-                    end
-                end
-            else
-                fprintf('skipping subj %d trial %d\n', subj, i);
-            end
-        end
+            assert(length(RTs) == length(path));
+            for j = 2:length(path) - 1 % skip first RT; it's always slow; also skip last one, it's always space
+                RT = RTs(j);
+                u = path(j);
+                v = path(j+1);
+                key = keys(j);
+                dir = find(move_keys == key);
 
-        % figure out if subject did flipped or non-flipped version of experiment
-        save wtf.mat
-        assert(any(ex_ruled_out == 0));
-        ex = exs{find(ex_ruled_out == 0)};
+                % for fitglme
+                rt = [rt; RT];
+                subject = [subject; subj];
+                experiment = [experiment; f];
 
-        % second pass pass -- deal with skipped trials...
-        for i = 1:length(data(subj, phase).s) % for each trial
-            path = data(subj,phase).path{i};
-            all_RTs = data(subj,phase).RTs{i};
-            all_keys = data(subj,phase).keys{i};
-            RTs = [];
-            keys = [];
-            if length(RTs) ~= length(path)
-                k = 1;
-                % remove incorrect key presses 
-                for j = 1:length(path)-1
-                    u = path(j);
-                    while true
-                        if k > length(all_keys)
-                            break;
-                        end
-                        key = all_keys(k);
-                        dir = find(move_keys == key);
-                        if ~isempty(dir) && ex.adj(u, dir) >= 0
-                            break;
-                        end
-                        k = k + 1;
-                    end
-                    assert(k <= length(all_keys));
-                    keys = [keys all_keys(k)];
-                    RTs = [RTs all_RTs(k)];
-                end
-                % special care for last key press (space)
-                keys = [keys all_keys(end)];
-                RTs = [RTs all_RTs(end)];
-                assert(length(RTs) == length(path));
-                assert(length(keys) == length(path));
-
-                % NOW do the RT stuff like in the first pass...
-                for j = 2:length(path) - 1 % skip first RT; it's always slow
-                    RT = RTs(j);
-                    u = path(j);
-                    v = path(j+1);
-                    key = keys(j);
-
-                    % for fitglme
-                    rt = [rt; RT];
-                    subject = [subject; subj];
-                    experiment = [experiment; f];
-
-                    if any(ismember(bridges{f}, [u v], 'rows'))
-                        bridge_RTs = [bridge_RTs RT];
-                        type = [type; 3];
-                    elseif any(ismember(action_chunk_transitions{f}, [u v], 'rows'))
-                        action_chunk_RTs = [action_chunk_RTs RT];
-                        type = [type; 1];
-                    else
-                        assert(any(ismember(state_chunk_transitions{f}, [u v], 'rows')));
-                        state_chunk_RTs = [state_chunk_RTs RT];
-                        type = [type; 2];
-                    end
+                if any(ismember(bridges{f}, [u v], 'rows'))
+                    bridge_RTs = [bridge_RTs RT];
+                    type = [type; 3];
+                elseif any(ismember(action_chunk_transitions{f}, [u v], 'rows'))
+                    action_chunk_RTs = [action_chunk_RTs RT];
+                    type = [type; 1];
+                else
+                    assert(any(ismember(state_chunk_transitions{f}, [u v], 'rows')));
+                    state_chunk_RTs = [state_chunk_RTs RT];
+                    type = [type; 2];
                 end
             end
         end
+
     end
 end
 
@@ -267,4 +188,5 @@ ylabel('RT (ms)');
 xticklabels({'action chunks', 'state chunks', 'bridges'});
 
 save('RT_analysis_forglme_v2_3.mat');
+% see fig_RT_analysis_2.m
 
