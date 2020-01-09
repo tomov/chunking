@@ -4,7 +4,7 @@ clear all;
 figure('pos', [10 1200 1000 600] * 3/4);
 fontsize = 13;
 axisfontsize = 10;
-lettersize = 20;
+lettersize = 14;
 
 %modelfile = 'trash/model_all_data_100samples_MAP_5alpha.mat';
 %modelfile = 'model_all_data_40samples_MAP_2alpha.mat'; % preprint

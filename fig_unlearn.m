@@ -4,7 +4,7 @@ clear all;
 figure('pos', [10 500 1000 600] * 3/4);
 fontsize = 13;
 axisfontsize = 10;
-lettersize = 20;
+lettersize = 14;
 
 modelfile = 'model_exp_v2_3_circ_alpha=1.0000_nsamples=10000_div_eps=0.6000_last.mat';
 datafile = 'analyze_exp_v2_3.mat';
@@ -204,9 +204,9 @@ text(0.53, 0.67, 'C', 'FontSize', lettersize, 'FontWeight', 'bold');
 
 % save figure
 h = gcf;
-%set(h, 'PaperPositionMode', 'auto');
-%set(h, 'PaperOrientation', 'landscape');
-%print('figures/unlearn.pdf', '-dpdf');
+set(h, 'PaperPositionMode', 'auto');
+set(h, 'PaperOrientation', 'landscape');
+print('figures/unlearn.pdf', '-dpdf');
 
 
 

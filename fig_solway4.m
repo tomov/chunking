@@ -17,7 +17,7 @@ end
 figure('pos', [10 500 1000 600] * 3/4);
 fontsize = 13;
 axisfontsize = 10;
-lettersize = 20;
+lettersize = 14;
 
 % A: graph
 %

@@ -4,7 +4,7 @@ clear all;
 figure('pos', [2000 1200 1000 600] * 3/4);
 fontsize = 13;
 axisfontsize = 10;
-lettersize = 20;
+lettersize = 14;
 
 ii = 1;
 jj = 1;

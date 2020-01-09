@@ -1,5 +1,8 @@
 function fig_solway2(filename, do_save)
 
+null = [];
+corr = [];
+
 if ~exist('filename', 'var') || isempty(filename)
     %load('solway2.mat');
     %load('solway2_alpha=5_nsamples=1000.mat'); % <-- preprint
@@ -19,7 +22,7 @@ end
 figure('pos', [2000 1200 1000 600] * 3/4);
 fontsize = 13;
 axisfontsize = 10;
-lettersize = 20;
+lettersize = 14;
 
 % A: graph
 %
@@ -169,4 +172,3 @@ end
 pvalue = mean(null_p >= m); % what fraction of the null is "better" than m? = P(we got a value as extreme as m under the null)
 fprintf('%f; MC test (%d samples from null), p = %e\n', m, null_iters, pvalue);
 
-save wtf.mat

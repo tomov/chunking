@@ -4,7 +4,7 @@ clear all;
 figure('pos', [1000 500 1000 600] * 3/4);
 fontsize = 13;
 axisfontsize = 10;
-lettersize = 20;
+lettersize = 14;
 
 %modelfile = 'mines_alpha=2_nsamples=1000.mat'; % <--- preprint
 %modelfile = 'mines_alpha=1_nsamples=10000_last.mat'; <-- sample_c
@@ -124,8 +124,8 @@ text(0.65, 0.96, 'C', 'FontSize', lettersize, 'FontWeight', 'bold');
 
 % save figure
 h = gcf;
-%set(h, 'PaperPositionMode', 'auto');
+set(h, 'PaperPositionMode', 'auto');
 set(h, 'PaperOrientation', 'landscape');
-%print('figures/mines.pdf', '-dpdf');
+print('figures/mines.pdf', '-dpdf');
 
 

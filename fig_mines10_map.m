@@ -6,7 +6,7 @@ clear all;
 figure('pos', [2000 500 1000 600] * 3/4);
 fontsize = 13;
 axisfontsize = 10;
-lettersize = 20;
+lettersize = 14;
 
 %modelfile = 'mines10_alpha=2_nsamples=1000.mat'; % <--- preprint
 %modelfile = 'mines10_alpha=1_nsamples=10000_last.mat'; <-- sample_c
