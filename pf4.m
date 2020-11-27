@@ -2,7 +2,7 @@
 % c/p isl_MH.m
 
 h = init_hyperparams;
-nsamples = 10000;
+nsamples = 1000;
 num_particles = 10;
 
 index = [34 68 103 47+103 94+103 143+103]; % from html -- @ ..; ORDER CRUCIAL
