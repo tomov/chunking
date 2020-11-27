@@ -59,6 +59,7 @@ function D = init_D_from_csv(filename, test_phase_too)
         D.G.N = max([D.G.N s g]);
 
         path = strsplit(strip(T.path{t}), ' ');
+        D.path{t} = str2num(T.path{t});
         for k = 1:length(path) - 1
             i = str2num(path{k});
             j = str2num(path{k + 1});

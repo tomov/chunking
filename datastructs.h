@@ -135,7 +135,7 @@ class Data
         std::vector<double> *rewards;
 };
 
-const std::vector<std::string> Data::fieldNames = {"name", "G", "tasks", "r"};
+const std::vector<std::string> Data::fieldNames = {"name", "G", "tasks", "r", "path"};
 const std::vector<ArrayType> Data::fieldTypes = {ArrayType::CHAR, ArrayType::STRUCT, ArrayType::STRUCT, ArrayType::CELL};
 
 const std::vector<std::string> Data::Graph::fieldNames = {"N", "E", "edges", "hidden_E", "hidden_edges"}; // D.G
