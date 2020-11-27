@@ -85,6 +85,8 @@ for subj = 1:length(D) % for each subject
     lme_probes(subj,:) = sum(log(liks(index)));
 
     toc
+
+    save(filename, '-v7.3');
 end
 
 save(filename, '-v7.3');
