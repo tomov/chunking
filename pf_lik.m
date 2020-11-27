@@ -16,7 +16,7 @@ function [lik, out] = pf_lik(t, particle, D, h)
         s = D.tasks.s(t);
         g = D.tasks.g(t);
 
-        lik = exp(loglik_task(H, D, h, s, g));
+        lik = exp(loglik_task(particle.H, D, h, s, g));
     end
 
 

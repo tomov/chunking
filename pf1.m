@@ -42,7 +42,7 @@ for subj = 1:length(D) % for each subject
 
     init_fn = @() MH_init(D(subj), h);
     choice_fn = @(t, particle) MH_choice(t, particle, D_full(subj), h);
-    update_fn = @(t, particle) MH_update(t, particle, D_full(subj), h, nsamples, T);
+    %update_fn = @(t, particle) MH_update(t, particle, D_full(subj), h, nsamples, T);
 
     clear particles;
     clear w;
