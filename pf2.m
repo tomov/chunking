@@ -23,7 +23,7 @@ sem = @(x) std(x) / sqrt(length(x));
 
 % from model_all_data
 
-filename = sprintf('pf2_alpha=%.4f_nsamples=%d_div_eps=%.4f_last_np=%d.mat', h.alpha, nsamples, h.eps, num_particles);
+filename = sprintf('mat/pf2_alpha=%.4f_nsamples=%d_div_eps=%.4f_last_np=%d.mat', h.alpha, nsamples, h.eps, num_particles);
 filename
 
 
