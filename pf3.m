@@ -1,11 +1,11 @@
-% simple particle filter for experiment 3
+% parallel MCMC for experiment 3, like pf2 but no weights
 % note this is NOT ISL, but approximately ideal observer
-% c/p isl_MH.m
+% c/p pf2.m
 %
 % for each particle,
 %   H ~ P(H)
 %   for each trial,
-%     w = P(D|H)   % i.e. likelihood weighing, with full data D (so far)
+%     H ~ MCMC(H)
 %
 
 clear all;
@@ -22,7 +22,7 @@ sem = @(x) std(x) / sqrt(length(x));
 
 % from model_all_data
 
-filename = sprintf('pf1_alpha=%.4f_nsamples=%d_div_eps=%.4f_last_np=%d.mat', h.alpha, nsamples, h.eps, num_particles);
+filename = sprintf('pf3_alpha=%.4f_nsamples=%d_div_eps=%.4f_last_np=%d.mat', h.alpha, nsamples, h.eps, num_particles);
 filename
 
 
@@ -68,6 +68,7 @@ for subj = 1:length(D) % for each subject
         end
         liks(t) = sum(lik .* w); % marginalize choice probability over particles
 
+        %{
         % include observation t in data
         D(subj).tasks.s(t) = D_full(subj).tasks.s(t);
         D(subj).tasks.g(t) = D_full(subj).tasks.g(t);
@@ -79,6 +80,12 @@ for subj = 1:length(D) % for each subject
         log_w = log_w - logsumexp(log_w);
         w = exp(log_w);
         w = w / sum(w);
+        %}
+
+        % rejuvinate particles
+        for i = 1:num_particles
+            particles(i) = update_fn(t, particles(i));
+        end
     end
 
     lme(subj,:) = sum(log(liks));

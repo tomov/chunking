@@ -2,6 +2,7 @@
 
 function particle = MH_update(t, particle, D, h, nsamples, T)
 
+    % b/c D is full data
     D.tasks.s = D.tasks.s(1:t);
     D.tasks.g = D.tasks.g(1:t);
 

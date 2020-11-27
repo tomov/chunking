@@ -15,8 +15,7 @@ function results = forward(T, num_particles, init_fn, choice_fn, update_fn)
             particles(i) = update_fn(t-1, particles(i));
             [w(i) c(i)] = choice_fn(t, particles(i));
         end
-        liks(n) = mean(w);
-        choices = [choices; mean(c)]; % TOTE this only works for Bernoulli choices!
+        liks(t) = mean(w);
     
         particles = resample_particles(particles, w);
     end
@@ -26,5 +25,6 @@ function results = forward(T, num_particles, init_fn, choice_fn, update_fn)
     end
 
     results.liks = liks;
+    results.particles = particles;
 
     %save forward.mat

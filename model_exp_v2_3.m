@@ -27,7 +27,6 @@ nexts = [
 
 % from model_all_data
 
-assert(take_map == false); % don't support MAP
 filename = sprintf('model_exp_v2_3_circ_alpha=%.4f_nsamples=%d_div_eps=%.4f_last.mat', h.alpha, nsamples, h.eps);
 filename
 

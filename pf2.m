@@ -1,11 +1,12 @@
-% simple particle filter for experiment 3
+% simple particle filter for experiment 3, with rejuvination
 % note this is NOT ISL, but approximately ideal observer
-% c/p isl_MH.m
+% c/p pf1.m
 %
 % for each particle,
 %   H ~ P(H)
 %   for each trial,
 %     w = P(D|H)   % i.e. likelihood weighing, with full data D (so far)
+%     H ~ MCMC(H)
 %
 
 clear all;
@@ -22,7 +23,7 @@ sem = @(x) std(x) / sqrt(length(x));
 
 % from model_all_data
 
-filename = sprintf('pf1_alpha=%.4f_nsamples=%d_div_eps=%.4f_last_np=%d.mat', h.alpha, nsamples, h.eps, num_particles);
+filename = sprintf('pf2_alpha=%.4f_nsamples=%d_div_eps=%.4f_last_np=%d.mat', h.alpha, nsamples, h.eps, num_particles);
 filename
 
 
@@ -79,6 +80,11 @@ for subj = 1:length(D) % for each subject
         log_w = log_w - logsumexp(log_w);
         w = exp(log_w);
         w = w / sum(w);
+
+        % rejuvinate particles
+        for i = 1:num_particles
+            particles(i) = update_fn(t, particles(i));
+        end
     end
 
     lme(subj,:) = sum(log(liks));
