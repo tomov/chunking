@@ -13,7 +13,14 @@ sem = @(x) std(x) / sqrt(length(x));
 % from model_all_data
 
 filename = sprintf('mat/pf4_alpha=%.4f_nsamples=%d_div_eps=%.4f_last_np=%d.mat', h.alpha, nsamples, h.eps, num_particles);
-filename
+if ~isempty(strfind(name, 'omchil')) || ~isempty(strfind(name, 'dhcp-'))
+    % local
+    filename
+else
+    % cannon
+    filename = fullfile(getenv('MY_SCRATCH'), 'chunking', filename);
+    filename
+end
 
 
 [D, filenames] = init_Ds_from_data('exp/results/exp_v2_3_subway10_unlearn_circ', true);
