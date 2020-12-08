@@ -1,7 +1,7 @@
 
 mkdir output
 
-num_particles=1000;
+num_particles=10;
 
 echo ---------------- >> jobs.txt
 echo --- Running isl_MH_subj.sh for num_particles ${num_particles} >> jobs.txt
@@ -15,7 +15,7 @@ do
 
     # send the job to NCF
     #
-    sbatch_output=`sbatch -p shared --mem 2000 -t 0-4:20 -o ${outfileprefix}_%j.out -e ${outfileprefix}_%j.err --wrap="matlab -nodisplay -nosplash -nojvm -r $'isl_MH_subj(${subj}, ${num_particles});exit'"`
+    sbatch_output=`sbatch -p shared --mem 4001 -t 0-4:20 -o ${outfileprefix}_%j.out -e ${outfileprefix}_%j.err --wrap="matlab -nodisplay -nosplash -nojvm -r $'isl_MH_subj(${subj}, ${num_particles});exit'"`
     # for local testing
     #sbatch_output=`echo Submitted batch job 88725418`
     echo $sbatch_output

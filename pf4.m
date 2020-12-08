@@ -43,10 +43,10 @@ for subj = 1:length(D) % for each subject
     choice_fn = @(t, particle) pf_lik(t, particle, D(subj), h);
     update_fn = @(t, particle) MH_update(t, particle, D(subj), h, nsamples, T);
 
-    results(subj) = forward(T, num_particles, init_fn, choice_fn, update_fn);
+    results = forward(T, num_particles, init_fn, choice_fn, update_fn);
 
-    lme(subj,:) = sum(log(results(subj).liks));
-    lme_probes(subj,:) = sum(log(results(subj).liks(index)));
+    lme(subj,:) = sum(log(results.liks));
+    lme_probes(subj,:) = sum(log(results.liks(index)));
 
     toc
     
