@@ -48,6 +48,7 @@ for subj = 1:length(D) % for each subject
     assert(T == 246);
     assert(T == length(D(subj).tasks.g));
     assert(T == length(D(subj).path));
+    %T = index(3); % first half only
 
     init_fn = @() MH_init(D(subj), h);
     choice_fn = @(t, particle) MH_choice(t, particle, D_full(subj), h);
@@ -65,7 +66,6 @@ for subj = 1:length(D) % for each subject
     % init particles
     for i = 1:num_particles
         particles(i) = init_fn(); 
-        particles(i).H = sample_c(D, h, 1, 100, 1, particles(i).H); % 100 MCMC iterations to find H that is not disconnected TODO should be kosher b/c like rejuvination? keeps posterior invariant?
         w(i) = 1; % b/c sample from prior
     end
     w = w / sum(w);
@@ -76,6 +76,12 @@ for subj = 1:length(D) % for each subject
             [lik(i)] = choice_fn(t, particles(i)); % choice likelihood, P(a|D,H)
         end
         liks(t) = sum(lik .* w); % marginalize choice probability over particles
+
+        if ismember(t, index)
+            fname = sprintf('%s_subj=%d_t=%d.mat', filename, subj, t);
+            fprintf('saving %s\n', fname);
+            save(fname, '-v7.3');
+        end
 
         % include observation t in data
         D(subj).tasks.s(t) = D_full(subj).tasks.s(t);

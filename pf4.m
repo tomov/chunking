@@ -38,12 +38,13 @@ for subj = 1:length(D) % for each subject
     assert(T == 246);
     assert(T == length(D(subj).tasks.g));
     assert(T == length(D(subj).path));
+    %T = index(3); % first half only
 
     init_fn = @() MH_init(D(subj), h);
     choice_fn = @(t, particle) pf_lik(t, particle, D(subj), h);
     update_fn = @(t, particle) MH_update(t, particle, D(subj), h, nsamples, T);
 
-    results = forward(T, num_particles, init_fn, choice_fn, update_fn);
+    results = forward(T, num_particles, init_fn, choice_fn, update_fn, filename, index, subj);
 
     lme(subj,:) = sum(log(results.liks));
     lme_probes(subj,:) = sum(log(results.liks(index)));
