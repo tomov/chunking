@@ -2,9 +2,10 @@ clear all;
 close all;
 
 prefix = 'pf2'; % isl_MH or pf2
+%prefix = 'isl_MH'; % isl_MH or pf2
 
-template = sprintf('mat/%s_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=10.mat_subj=*_t=103.mat', prefix);
-filename = sprintf('mat/%s_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=10.mat', prefix);
+template = sprintf('mat/%s_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat_subj=*_t=103.mat', prefix);
+filename = sprintf('mat/%s_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat', prefix);
 
 [~, name] = system('hostname');
 if ~isempty(strfind(name, 'omchil')) || ~isempty(strfind(name, 'dhcp-'))
@@ -30,6 +31,8 @@ load(filename, 'D');
 H = [1 1 1 2 2 2 3 3 3 3]; % ground truth
 
 for i = 1:length(files)
+    files(i).name
+
     load(fullfile(files(i).folder, files(i).name), 'subj', 'particles');
 
     for j = 1:length(particles)
@@ -38,6 +41,8 @@ for i = 1:length(files)
     r(subj) = mean(rs); % mean rand index
     c(subj) = D(subj).path{103}(2); % choice on last probe trial in first half
 end
+
+save('isl_fig_pf2.mat')
 
 sem = @(x) std(x) / sqrt(length(x));
 
