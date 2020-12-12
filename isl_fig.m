@@ -1,6 +1,8 @@
 clear all;
 close all;
 
+%{
+
 prefix = 'pf2'; % isl_MH or pf2
 
 template = sprintf('mat/%s_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=10.mat_subj=*_t=103.mat', prefix);
@@ -39,6 +41,11 @@ for i = 1:length(files)
     c(subj) = D(subj).path{103}(2); % choice on last probe trial in first half
 end
 
+%}
+
+%load('mat/isl_fig_isl_MH.mat');
+load('mat/isl_fig_pf2.mat');
+
 sem = @(x) std(x) / sqrt(length(x));
 
 ms = [mean(r(c == 5)) mean(r(c == 7))];
@@ -58,4 +65,9 @@ xlabel('subject choice on trial 103');
 ylabel('avg particle rand index');
 set(gca, 'xtick', [1 2]);
 xticklabels({'5', '7'});
+
+
+%[h,p,ci,stats] = ttest2(r(c == 5), r(c == 7))
+
+[p,h,stats] = ranksum(r(c == 5), r(c == 7))
 
