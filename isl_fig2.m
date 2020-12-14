@@ -22,8 +22,8 @@ nexts = [
 H = [1 1 1 2 2 2 3 3 3 3]; % ground truth
 
 
-prefix = 'pf4'; % isl_MH or pf2
-cachefile = 'isl_fig2_pf4.mat';
+prefix = 'isl_MH'; % isl_MH or pf2
+cachefile = 'mat/isl_fig2_isl_MH.mat';
 %prefix = 'isl_MH'; % isl_MH or pf2
 
 templates = {sprintf('mat/%s_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat_subj=*_t=34.mat', prefix), 
@@ -73,11 +73,16 @@ for t = 1:length(templates)
         j = randi(length(particles)); % alternative: mode, or average
 
         [path, hpath] = hbfs(s, g, particles(j).H, D(subj));
-        move(subj, t) = path(2);
+
+        if length(path) < 1
+            warning('BAD H!');
+        end
 
         % eps-greedy: choose random neighbor w/ small prob 
-        if rand() < 1 - h.eps
+        if rand() < 1 - h.eps || length(path) < 1
             move(subj, t) = datasample(find(D(subj).G.E(s,:)), 1);
+        else
+            move(subj, t) = path(2);
         end
     end
     

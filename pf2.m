@@ -39,7 +39,7 @@ D = init_Ds_from_data('exp/results/exp_v2_3_subway10_unlearn_circ', true);
 D_full = D;
 
 
-for subj = 108:length(D) % for each subject
+for subj = 1:length(D) % for each subject
     fprintf('infer H: subject %d\n', subj);
 
     tic

@@ -2,10 +2,17 @@ addpath('/n/home04/mtomov13/libs/mfit');
 
 models = {'ISL', 'PF1', 'PF2', 'PF3', 'PF4'};
 
+
 files = {'mat/isl_MH_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat', ...
          'mat/pf1_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat', ...
-      %   'mat/pf2_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat', ...
+         %'mat/pf2_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat', ...
          'mat/pf3_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat', ...
+         'mat/pf4_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat'};
+%files = {'mat/pf1_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat', ...
+%         'mat/pf2_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat', ...
+%         'mat/pf3_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat', ...
+%         'mat/pf4_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat'};
+files = {'mat/isl_MH_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat', ...
          'mat/pf4_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat'};
 [~, name] = system('hostname');
 
@@ -21,6 +28,7 @@ for i = 1:numel(files);
     else
         % cannon
         filename = fullfile(getenv('MY_SCRATCH'), 'chunking', filename);
+        files{i} = filename
         filename
     end
 
@@ -28,8 +36,8 @@ for i = 1:numel(files);
 
     size(lme)
 
-    LME = [LME lme(1:107,:)];
-    LME_probes = [LME_probes lme_probes(1:107,:)];
+    LME = [LME lme(1:127,:)];
+    LME_probes = [LME_probes lme_probes(1:127,:)];
 
 end
 
