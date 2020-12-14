@@ -88,7 +88,7 @@ for subj = 1:length(D) % for each subject
     end
 end
 
-mv = move == nexts(i,1);
+mv = move == 5; %nexts(i,1);
 
 ms = mean(mv, 1);
 sems = std(mv, 1) / sqrt(size(mv, 1));

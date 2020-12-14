@@ -2,7 +2,7 @@ clear all;
 close all;
 
 
-prefix = 'pf2'; % isl_MH or pf2
+prefix = 'pf4'; % isl_MH or pf2
 %prefix = 'isl_MH'; % isl_MH or pf2
 
 template = sprintf('mat/%s_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat_subj=*_t=103.mat', prefix);
@@ -44,7 +44,7 @@ for i = 1:length(files)
 end
 
 %save('isl_fig_isl_MH_adj.mat')
-save('isl_fig_pf2_adj.mat')
+save('isl_fig_pf4_adj.mat')
 
 %load('mat/isl_fig_isl_MH.mat');
 %load('mat/isl_fig_pf2.mat');
