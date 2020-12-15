@@ -2,10 +2,10 @@ clear all;
 close all;
 
 
-prefix = 'isl_MH'; % isl_MH or pf2
-cachefile = 'mat/isl_fig2_isl_MH_6.mat';
-%prefix = 'isl_MH'; % isl_MH or pf2
+prefix = 'pf2'; % isl_MH or pf2
+cachefile = 'mat/isl_fig_pf2_6.mat';
 
+%{
 H = [1 1 1 2 2 2 3 3 3 3]; % ground truth
 
 index = [34 68 103 47+103 94+103 143+103]; % from html -- @ ..; ORDER CRUCIAL
@@ -58,33 +58,68 @@ end
 
 cachefile
 save(cachefile);
-% load(cachefile);
 
-r = [rs{1} rs{2} rs{3}];
-c = [cs{1} cs{2} cs{3}];
+%}
+load(cachefile);
+
+%r = [rs{1} rs{2} rs{3}];
+%c = [cs{1} cs{2} cs{3}];
 
 sem = @(x) std(x) / sqrt(length(x));
+
+figure;
+
+% ------------ 1st half
+
+subplot(1,2,1);
+
+r = rs{3};
+c = cs{3};
 
 ms = [mean(r(c == 5)) mean(r(c == 7))];
 sems = [sem(r(c == 5)) sem(r(c == 7))];
 
-figure;
-
-hold on;
 bar([1 2], ms);
+hold on;
 errorbar([1 2], ms, sems, 'linestyle', 'none', 'color', 'black');
-
 x(c == 5) = 1;
 x(c == 7) = 2;
 swarmchart(x, r);
 
+title('first half');
 xlabel('subject choice on trial 103');
 ylabel('avg particle rand index');
 set(gca, 'xtick', [1 2]);
 xticklabels({'5', '7'});
 
+[h,p,ci,stats] = ttest2(r(c == 5), r(c == 7))
+[p,h,stats] = ranksum(r(c == 5), r(c == 7))
 
-%[h,p,ci,stats] = ttest2(r(c == 5), r(c == 7))
 
+% ------------ 2nd half
+
+
+subplot(1,2,2);
+
+r = rs{6};
+c = cs{6};
+
+ms = [mean(r(c == 5)) mean(r(c == 7))];
+sems = [sem(r(c == 5)) sem(r(c == 7))];
+
+bar([1 2], ms);
+hold on;
+errorbar([1 2], ms, sems, 'linestyle', 'none', 'color', 'black');
+x(c == 5) = 1;
+x(c == 7) = 2;
+swarmchart(x, r);
+
+title('second half');
+xlabel('subject choice on trial 246');
+ylabel('avg particle rand index');
+set(gca, 'xtick', [1 2]);
+xticklabels({'5', '7'});
+
+[h,p,ci,stats] = ttest2(r(c == 5), r(c == 7))
 [p,h,stats] = ranksum(r(c == 5), r(c == 7))
 

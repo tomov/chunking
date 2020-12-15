@@ -22,10 +22,11 @@ nexts = [
 H = [1 1 1 2 2 2 3 3 3 3]; % ground truth
 
 
-prefix = 'isl_MH'; % isl_MH or pf2
-cachefile = 'mat/isl_fig2_isl_MH.mat';
+prefix = 'pf2'; % isl_MH or pf2
+cachefile = 'mat/isl_fig2_pf2.mat';
 %prefix = 'isl_MH'; % isl_MH or pf2
 
+%{
 templates = {sprintf('mat/%s_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat_subj=*_t=34.mat', prefix), 
              sprintf('mat/%s_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat_subj=*_t=68.mat', prefix),
              sprintf('mat/%s_alpha=1.0000_nsamples=1000_div_eps=0.6000_last_np=1000.mat_subj=*_t=103.mat', prefix),
@@ -92,7 +93,9 @@ end
 cachefile
 save(cachefile);
 
-% load(cachefile);
+%}
+
+load(cachefile);
 
 
 mv = move == 5; %nexts(i,1);
@@ -101,9 +104,6 @@ ms = mean(mv, 1);
 sems = std(mv, 1) / sqrt(size(mv, 1));
 
 % swap to be consistent with other plots
-
-filename
-save(filename);
 
 figure;
 hold on;

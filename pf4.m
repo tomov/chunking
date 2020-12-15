@@ -46,7 +46,8 @@ for subj = 1:length(D) % for each subject
 
     results = forward(T, num_particles, init_fn, choice_fn, update_fn, filename, index, subj);
 
-    lme(subj,:) = sum(log(results.liks));
+   % lme(subj,:) = sum(log(results.liks)); this is wrong
+   blah blah
     lme_probes(subj,:) = sum(log(results.liks(index)));
 
     toc
